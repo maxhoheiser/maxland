@@ -11,16 +11,19 @@ class Stimulus():
         self.still_show_event = threading.Event()
         self.exit_trial_event = threading.Event()
         self.GAIN = settings.GAIN
-        self.THRESHOLD = settings.THRESHOLD
+        if self.GAIN < 0:
+            self.GAIN = 0.01
         self.FPS = settings.FPS
         self.SCREEN_WIDTH = settings.SCREEN_WIDTH
         self.SCREEN_HEIGHT = settings.SCREEN_HEIGHT
         self.STIMULUS = settings.STIMULUS
         self.surf = pygame.image.load(self.STIMULUS)
         self.screen_dim = [self.SCREEN_WIDTH, self.SCREEN_HEIGHT]
-        self.TRIAL_NUM = settings.TRIAL_NUM
         self.fpsClock=pygame.time.Clock()
         self.rotary_encoder = rotary_encoder
+        self.TRIAL_NUM = 0
+        for block in settings.BLOCKS:
+            self.TRIAL_NUM += block[TRIAL_NUM_BLOCK]
 
     def present_stimulus(self):
         self.display_stim_event.set()
@@ -84,7 +87,7 @@ class Stimulus():
             #=========================
             # py game loop
             # loop is running while open loop active
-            data_pref = [[0,0,0]]
+            last_position = 0
             self.move_stim_event.wait()
             self.rotary_encoder.enable_stream()
             while self.run_open_loop:
@@ -98,19 +101,19 @@ class Stimulus():
                 # on soft code of state 2
                 #-------------------------------------------------------------------------
                 # read rotary encoder stream
-                data = self.rotary_encoder.read_stream()
-                if len(data)==0:
+                current_position = self.rotary_encoder.read_position()
+                if current_position == None:
                     continue
                 else:
-                    pos_change = (data[-1][2])-(data_pref[-1][2])
-                    data_pref = data
-                    #repositin based on changes
-                    if data[0][2]<0:
-                        #player.move_left(pos_change)
-                        position[0] -= (pos_change*self.GAIN)
-                    if data[0][2]>0:
-                        #player.move_right(pos_change)
-                        position[0] += (pos_change*self.GAIN)
+                    change_position = last_position - int(current_position)
+                    last_position = current_position
+                    # move to the left
+                    if change_position > 0:
+                        position[0] -= int(change_position*self.GAIN)
+                    # move to the right
+                    else:
+                        position[0] -= int(change_position*self.GAIN)
+                print(position)
                 pygame.display.update()
             self.rotary_encoder.disable_stream()
             #show stimulus after closed loop period is over until reward gieven

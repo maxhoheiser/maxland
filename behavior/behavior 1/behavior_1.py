@@ -9,21 +9,16 @@ from pybpodapi.com.arcom import ArCOM, ArduinoTypes
 from stimulus import Stimulus
 from statemachine import StateMachineBuilder
 from probability import ProbabilityConstuctor
-import user_settings
-import system_settings
+from rotaryencoder import BpodRotaryEncoder
+import settings
 
 
 bpod=Bpod()
 
 # rotary encoder config
-rotary_encoder = [x for x in bpod.modules if x.name == "RotaryEncoder1"][0]
-bpod.load_serial_message(rotary_encoder, settings.RESET_ROTARY_ENCODER, [ord('Z'), ord('E')])
-
-rotary_encoder=RotaryEncoderModule('COM6')
-rotary_encoder.set_thresholds(settings.ALL_THRESHOLDS)
-rotary_encoder.enable_thresholds(settings.ENABLE_THRESHOLDS)
-rotary_encoder.enable_evt_transmission()
-
+rotary_encoder_module = BpodRotaryEncoder('COM4', settings)
+rotary_encoder_module.load_message(bpod)
+rotary_encoder = rotary_encoder_module.configure()
 
 # softcode handler
 def softcode_handler(data):
@@ -45,12 +40,17 @@ bpod.softcode_handler_function = softcode_handler
 stimulus_game = Stimulus(settings, rotary_encoder)
 
 
-# state machine configs
+#probability constructor
 probability = ProbabilityConstuctor(settings)
+
+# state machine configs
 def trial():
-    for trial in range(settings.TRIAL_NUM):
+    TRIAL_NUM = 0
+    for block in settings.BLOCKS:
+        TRIAL_NUM += block[settings.TRIAL_NUM_BLOCK]
+    for trial in range(TRIAL_NUM):
         # define states
-        sma = StateMachineBuilder(bpod, settings, probability[trial]):
+        sma = StateMachineBuilder(bpod, settings, probability.probability_list[trial])
         bpod.send_state_machine(sma)
         # Run state machine
         if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
