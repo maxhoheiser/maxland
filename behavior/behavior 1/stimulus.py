@@ -23,25 +23,31 @@ class Stimulus():
         self.rotary_encoder = rotary_encoder
         self.TRIAL_NUM = 0
         for block in settings.BLOCKS:
-            self.TRIAL_NUM += block[TRIAL_NUM_BLOCK]
+            self.TRIAL_NUM += block[settings.TRIAL_NUM_BLOCK]
 
     def present_stimulus(self):
         self.display_stim_event.set()
+        print("present stimulus")
 
     def start_open_loop(self):
         self.move_stim_event.set()
+        print("start open loop")
 
     def stop_open_loop(self):
         self.run_open_loop = False
+        print("stop open loop")
 
     def end_present_stimulus(self):
         self.still_show_event.set()
+        print("end present stimulus")
 
     def end_trial(self):
         self.display_stim_event.clear()
         self.move_stim_event.clear()
         self.still_show_event.clear()
         self.run_open_loop = True
+        print("end trial")
+
 
     def stim_center(self):
         stim_dim = (Image.open(self.STIMULUS)).size
@@ -50,16 +56,6 @@ class Stimulus():
         y = ( self.screen_dim[1]/2 - ( stim_dim[0]/2) )
         return([x, y])
 
-    # ==== helper ===== remove later =================================
-
-    def fps_clock(self):
-        font = pygame.font.SysFont("Arial", 180)
-        fr = str(int(self.fpsClock.get_fps()))
-        frt = font.render(fr, 1, pygame.Color("coral"))
-        return frt
-
-
-    # ==== helper ===== remove later =================================
 
     def run_game(self):
         # pygame config
@@ -70,10 +66,10 @@ class Stimulus():
         pygame.display.init()
         screen = pygame.display.set_mode(self.screen_dim, pygame.FULLSCREEN)
         screen.fill((0, 0, 0))
-
         for trial in range(self.TRIAL_NUM):
             # Create player
             position = self.stim_center()
+            print(f"position = {position}")
             # create inital stimulus
             screen.blit(self.surf, position)
 
@@ -91,8 +87,6 @@ class Stimulus():
             self.move_stim_event.wait()
             self.rotary_encoder.enable_stream()
             while self.run_open_loop:
-                self.fpsClock.tick(self.FPS)
-                screen.blit(self.fps_clock(), (2600,0))
                 # Fill the background with white
                 screen.fill((0, 0, 0))
                 screen.blit(self.surf, position)
@@ -113,7 +107,6 @@ class Stimulus():
                     # move to the right
                     else:
                         position[0] -= int(change_position*self.GAIN)
-                print(position)
                 pygame.display.update()
             self.rotary_encoder.disable_stream()
             #show stimulus after closed loop period is over until reward gieven
@@ -121,5 +114,4 @@ class Stimulus():
             screen.fill((0, 0, 0))
             pygame.display.flip()
             self.end_trial()
-
-    pygame.quit()
+        pygame.quit()
