@@ -59,7 +59,9 @@ REWARD_TIME = 10
 # time valve open for big reard
 BIG_REWARD_TIME = 5
 # time valve open for small reward
-SMALL_REWARD_TIME = 5
+SMALL_REWARD_TIME = 2
+# time at end of each trial_num
+INTER_TRIAL_TIME = 5
 
 # stimulus ========================
 STIMULUS = r"C:\test_projekt\test_projekt\tasks\behavior_1_test\stimulus.png"
