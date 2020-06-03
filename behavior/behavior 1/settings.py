@@ -67,7 +67,7 @@ INTER_TRIAL_TIME = 5
 STIMULUS = r"C:\test_projekt\test_projekt\tasks\behavior_1_test\stimulus.png"
 
 # rotary Encoder ==================
-ALL_THRESHOLDS = [-150, 150, -2, 2]
+ALL_THRESHOLDS = [-100, 100, -2, 2]
 
 
 

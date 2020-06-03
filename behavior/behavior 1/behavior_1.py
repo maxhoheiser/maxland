@@ -32,11 +32,11 @@ def softcode_handler(data):
         stimulus_game.end_present_stimulus()
         print("sc 4")
     # for debugging#================================================================================
-    # elif data == 5:
-    #     print("wheel not stopping")
-    # elif data == 6:
-    #     print("stop open loop fail")
-    #     stimulus_game.stop_open_loop()
+    elif data == 5:
+        print("wheel not stopping")
+    elif data == 6:
+        print("stop open loop fail")
+        stimulus_game.stop_open_loop()
 bpod.softcode_handler_function = softcode_handler
 
 #stimulus
@@ -85,8 +85,8 @@ def trial():
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings.TIME_WHEEL_STOPPING_PUNISH,
             state_change_conditions={"Tup":"start1"},
-            output_actions=[]
-            #output_actions=[("SoftCode", 5)], #================================================================================
+            #output_actions=[]
+            output_actions=[("SoftCode", 5)], #================================================================================
         )
 
         # ==========================================
@@ -123,8 +123,8 @@ def trial():
             state_name="stop_open_loop_fail",
             state_timer=0,
             state_change_conditions={"Tup": "open_loop_fail_punish"},
-            output_actions=[("SoftCode", settings.SC_STOP_OPEN_LOOP)] # stop open loop in py game
-            #output_actions=[("SoftCode", 6)]#================================================================================
+            #output_actions=[("SoftCode", settings.SC_STOP_OPEN_LOOP)] # stop open loop in py game
+            output_actions=[("SoftCode", 6)]#================================================================================
         )
         # open loop fail punish time & exit trial
         sma.add_state(
