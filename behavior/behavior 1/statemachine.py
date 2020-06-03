@@ -4,7 +4,8 @@ State machine constructor
 from pybpodapi.state_machine import StateMachine
 
 class StateMachineBuilder():
-    def __init__(self, bpod, settings, probability_dict):
+    def __init__(self, bpod, settings, probability):
+        self.probability = probability
         self.sma = StateMachine(bpod)
         self.TIME_START = settings.TIME_START
         self.TIME_WHEEL_STOPPING_CHECK = settings.TIME_WHEEL_STOPPING_CHECK
@@ -194,4 +195,4 @@ class StateMachineBuilder():
         return self.sma.update_state_numbers()
 
     def build_message(self):
-        return self.sma.build_message()
+        retunr self.sma.build_message()

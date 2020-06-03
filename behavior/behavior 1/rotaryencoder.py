@@ -42,6 +42,7 @@ class BpodRotaryEncoder():
         self.rotary_encoder.enable_thresholds(self.enable_thresholds)
         self.rotary_encoder.enable_evt_transmission()
         self.set_wrap_point(self.WRAP_POINT)
+        return self.rotary_encoder
 
     def close(self):
         self.rotary_encoder.close()
