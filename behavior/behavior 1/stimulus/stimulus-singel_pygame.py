@@ -10,6 +10,7 @@ class Stimulus():
         self.display_stim_event = threading.Event()
         self.move_stim_event = threading.Event()
         self.still_show_event = threading.Event()
+        self.exit_trial_event = threading.Event()
         self.GAIN = settings.GAIN
         if self.GAIN < 0:
             self.GAIN = 0.01
@@ -48,6 +49,7 @@ class Stimulus():
         self.run_open_loop = True
         print("end trial")
 
+
     def stim_center(self):
         stim_dim = (Image.open(self.STIMULUS)).size
         rect = self.surf.get_rect()
@@ -65,46 +67,56 @@ class Stimulus():
         screen = pygame.display.set_mode(self.screen_dim,  pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
         screen.fill((0, 0, 0))
         pygame.display.flip()
-        # Create player
-        position = self.stim_center()
-        # create inital stimulus
-        screen.blit(self.surf, position)
-        #-----------------------------------------------------------------------------
-        # on soft code of state 1
-        #-----------------------------------------------------------------------------
-        # present initial stimulus
-        self.display_stim_event.wait()
-        pygame.display.flip()
-        # py game loop
-        last_position = 0
-        self.move_stim_event.wait()
-        self.rotary_encoder.enable_stream()
-        while self.run_open_loop:
-            # Fill the background with white
+
+        for trial in range(self.TRIAL_NUM):
+            # Create player
+            position = self.stim_center()
+            # create inital stimulus
             screen.fill((0, 0, 0))
+            pygame.display.flip()
+
             screen.blit(self.surf, position)
-            #-------------------------------------------------------------------------
-            # on soft code of state 2
-            #-------------------------------------------------------------------------
-            # read rotary encoder stream
-            current_position = self.rotary_encoder.read_position()
-            if current_position == None:
-                continue
-            else:
-                change_position = last_position - int(current_position)
-                last_position = current_position
-                # move to the left
-                if change_position > 0:
-                    position[0] -= int(change_position*self.GAIN)
-                # move to the right
+
+            #-----------------------------------------------------------------------------
+            # on soft code of state 1
+            #-----------------------------------------------------------------------------
+            # present initial stimulus
+            self.display_stim_event.wait()
+            pygame.display.flip()
+
+            #=========================
+            # py game loop
+            # loop is running while open loop active
+            last_position = 0
+            self.move_stim_event.wait()
+            self.rotary_encoder.enable_stream()
+            while self.run_open_loop:
+                # Fill the background with white
+                screen.fill((0, 0, 0))
+                screen.blit(self.surf, position)
+
+                #-------------------------------------------------------------------------
+                # on soft code of state 2
+                #-------------------------------------------------------------------------
+                # read rotary encoder stream
+                current_position = self.rotary_encoder.read_position()
+                if current_position == None:
+                    continue
                 else:
-                    position[0] -= int(change_position*self.GAIN)
-            pygame.display.update()
-        self.rotary_encoder.disable_stream()
-        #show stimulus after closed loop period is over until reward gieven
-        self.still_show_event.wait()
-        screen.fill((0, 0, 0))
-        pygame.display.flip()
-        self.end_trial()
-        pygame.display.quit()
+                    change_position = last_position - int(current_position)
+                    last_position = current_position
+                    # move to the left
+                    if change_position > 0:
+                        position[0] -= int(change_position*self.GAIN)
+                    # move to the right
+                    else:
+                        position[0] -= int(change_position*self.GAIN)
+                pygame.display.update()
+            self.rotary_encoder.disable_stream()
+            #show stimulus after closed loop period is over until reward gieven
+            self.still_show_event.wait()
+            screen.fill((0, 0, 0))
+            pygame.display.flip()
+            self.end_trial()
+        self.rotary_ecnoder.close()
         pygame.quit()

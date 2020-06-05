@@ -9,6 +9,7 @@ class BpodRotaryEncoder():
     def __init__(self, com_port, settings):
         # rotary encoder settings
         self.com_port = com_port
+        self.rotary_encoder=RotaryEncoderModule(self.com_port)
         self.RESET_ROTARY_ENCODER = settings.RESET_ROTARY_ENCODER
         self.WRAP_POINT = 0
         # configure wheel
@@ -26,7 +27,6 @@ class BpodRotaryEncoder():
             for x in list(range(1, len(self.all_thresholds) + 1))
         ]
 
-
     def get_events(self):
         return self.events
 
@@ -37,7 +37,6 @@ class BpodRotaryEncoder():
 
     def configure(self):
         "loads rotary enoder module with thresholds"
-        self.rotary_encoder=RotaryEncoderModule(self.com_port)
         self.rotary_encoder.set_thresholds(self.all_thresholds)
         self.rotary_encoder.enable_thresholds(self.enable_thresholds)
         self.rotary_encoder.enable_evt_transmission()
