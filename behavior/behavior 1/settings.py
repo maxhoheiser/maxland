@@ -1,4 +1,4 @@
-TRIAL_RANGE_BLOCK = "trial_range_block"
+TRIAL_NUM_BLOCK = "trial_num_block"
 PROB_REWARD_GAMBL_BLOCK = "prob_reward_gambl_block"
 PROB_REWARD_SAVE_BLOCK = "prob_reward_save_block"
 
@@ -7,39 +7,39 @@ PROB_REWARD_SAVE_BLOCK = "prob_reward_save_block"
 
 # main settings ====================
 GAMB_SIDE_LEFT = True #False if side = right
-# Blocks ========================================================
+# Blocks ============================
 """
 Construct a Block like this:
     {
-    TRIAL_NUM_BLOCK: [int, int], #(50 - 80) #will chose a random length in between
-    PROB_REWARD_GAMBL_BLOCK: int,  #(0-100)
-    PROB_REWARD_SAVE_BLOCK: int  #(0-100)
+    TRIAL_NUM_BLOCK: XX,
+    PROB_REWARD_GAMBL_BLOCK: XX,  #(0-100)
+    PROB_REWARD_SAVE_BLOCK: XX  #(0-100)
     },
 """
 
 BLOCKS = [
             # block 1
             {
-            TRIAL_RANGE_BLOCK: [50, 80],
+            TRIAL_NUM_BLOCK: 50,
             PROB_REWARD_GAMBL_BLOCK: 12.5,  #(0-100)
             PROB_REWARD_SAVE_BLOCK: 90  #(0-100)
             },
             # block 1
             {
-            TRIAL_RANGE_BLOCK: [10, 50],
+            TRIAL_NUM_BLOCK: 50,
             PROB_REWARD_GAMBL_BLOCK: 25.5,  #(0-100)
             PROB_REWARD_SAVE_BLOCK: 90  #(0-100)
             },
             # block 1
             {
-            TRIAL_RANGE_BLOCK: [50, 100],
+            TRIAL_NUM_BLOCK: 50,
             PROB_REWARD_GAMBL_BLOCK: 75.5,  #(0-100)
             PROB_REWARD_SAVE_BLOCK: 90  #(0-100)
             },
         ]
 
 
-# state machine settings ======================================
+# state machine settings ==========
 # waiting time beginning of each trial
 TIME_START = 2
 # time the wheel has to be stopped
@@ -63,26 +63,13 @@ SMALL_REWARD_TIME = 2
 # time at end of each trial_num
 INTER_TRIAL_TIME = 5
 
-# stimulus ====================================================
+# stimulus ========================
 STIMULUS = r"C:\test_projekt\test_projekt\tasks\behavior_1_test\stimulus.png"
 
-# rotary Encoder ==============================================
-"""
-[-float, float, -float, float]
-"""
-# threhsolds for event signaling between rotary encoder and bpod
-ALL_THRESHOLDS = [
-                    -90, 90, # stimulus position in degrees of wheel movement
-                    -1, 1    # wheel not stoping sthreshold in degrees of wheel movement
-                 ]
+# rotary Encoder ==================
+ALL_THRESHOLDS = [-100, 100, -2, 2]
 
-# speed of movement
-STIM_END_POS = [-1920, 1920] # pixel
-"""
-end of 1st screen from center = 960 px
-end of 2nd screen from center = 960 + 1920px
-"""
-# (e.g. -/+ 1920 = center of side screens)
+
 
 
 
@@ -93,7 +80,9 @@ end of 2nd screen from center = 960 + 1920px
 #=======================================================================================================================
 #=======================================================================================================================
 # trial numbers:
-
+# TRIAL_NUM = 0
+# for block in BLOCKS:
+#     TRIAL_NUM += block["trial_num_block"]
 
 # state machine
 big_reward_waiting_time = REWARD_TIME - BIG_REWARD_TIME
@@ -114,6 +103,7 @@ STIMULUS_LEFT = "RotaryEncoder1_1"
 STIMULUS_RIGHT = "RotaryEncoder1_2"
 
 # stimulus
+GAIN = 3
 FPS=120
 SCREEN_WIDTH = 5760
 SCREEN_HEIGHT = 1200

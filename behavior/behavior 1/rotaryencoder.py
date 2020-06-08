@@ -12,8 +12,11 @@ class BpodRotaryEncoder():
         self.rotary_encoder=RotaryEncoderModule(self.com_port)
         self.RESET_ROTARY_ENCODER = settings.RESET_ROTARY_ENCODER
         self.WRAP_POINT = 0
-        # set thresholds
-        self.all_thresholds = settings.ALL_THRESHOLDS
+        # configure wheel
+        self.wheel_circumference = settings.WHEEL_DIAMETER * np.pi
+        self.mm_deg = self.wheel_circumference / 360
+        self.factor = 1 / (self.mm_deg)
+        self.all_thresholds = [x * self.factor for x in settings.ALL_THRESHOLDS]
         self.enable_thresholds = [
             (True if x != 0 else False) for x in self.all_thresholds
         ]
