@@ -10,9 +10,8 @@ class Stimulus():
         self.display_stim_event = threading.Event()
         self.move_stim_event = threading.Event()
         self.still_show_event = threading.Event()
-        self.GAIN = settings.GAIN
-        if self.GAIN < 0:
-            self.GAIN = 0.01
+        # set gain
+        self.GAIN =  [abs(y/x) for x in settings.ALL_THRESHOLDS[0:1] for y in settings.STIM_END_POS ]
         self.FPS = settings.FPS
         self.SCREEN_WIDTH = settings.SCREEN_WIDTH
         self.SCREEN_HEIGHT = settings.SCREEN_HEIGHT
@@ -21,9 +20,6 @@ class Stimulus():
         self.screen_dim = [self.SCREEN_WIDTH, self.SCREEN_HEIGHT]
         self.fpsClock=pygame.time.Clock()
         self.rotary_encoder = rotary_encoder
-        self.TRIAL_NUM = 0
-        for block in settings.BLOCKS:
-            self.TRIAL_NUM += block[settings.TRIAL_NUM_BLOCK]
 
     def present_stimulus(self):
         self.display_stim_event.set()
@@ -92,7 +88,7 @@ class Stimulus():
                 continue
             else:
                 change_position = last_position - int(current_position)
-                last_position = current_position
+                last_position = int(current_position)
                 # move to the left
                 if change_position > 0:
                     position[0] -= int(change_position*self.GAIN)
