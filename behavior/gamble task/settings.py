@@ -1,3 +1,20 @@
+
+gamble_side = "left"
+
+
+
+
+
+
+
+
+
+
+
+
+
+#==================================================================================================================
+
 TRIAL_RANGE_BLOCK = "trial_range_block"
 PROB_REWARD_GAMBL_BLOCK = "prob_reward_gambl_block"
 PROB_REWARD_SAVE_BLOCK = "prob_reward_save_block"

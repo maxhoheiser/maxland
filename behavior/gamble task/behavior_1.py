@@ -1,4 +1,3 @@
-import numpy as np
 import threading
 
 from pybpodapi.bpod import Bpod
@@ -9,9 +8,7 @@ from probability import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
 import settings
 
-#debugging
-# 83, 34,
-
+# create bpod object
 bpod=Bpod()
 
 # rotary encoder config
@@ -45,14 +42,10 @@ stimulus_game = Stimulus(settings, rotary_encoder_module)
 #probability constructor
 probability_object = ProbabilityConstuctor(settings)
 probability_list = probability_object.probability_list
+trial_num = probability_object.trial_num
 
 # state machine configs
-TRIAL_NUM = 0
-for block in settings.BLOCKS:
-    TRIAL_NUM += block[settings.TRIAL_NUM_BLOCK]
-
-
-for trial in range(TRIAL_NUM):
+for trial in range(trial_num):
     probability_dict = probability_list[trial]
     sma = StateMachine(bpod)
     # define states

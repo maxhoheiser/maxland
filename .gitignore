@@ -1,3 +1,5 @@
 
 examples/stimulus/__pycache__/
 behavior/behavior 1/wd/
+*.pyc
+*.pyc
