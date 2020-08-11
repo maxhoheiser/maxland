@@ -6,15 +6,10 @@ import random
 class ProbabilityConstuctor():
     def __init__(self, settings):
         self.BLOCKS = settings.BLOCKS
-        self.trial_num = self.block_trial_builder(settings.TRIAL_RANGE_BLOCK)
+        self.trial_num = self.block_trial_builder("trial_range_block")
         self.probability_list = []
         for block in self.BLOCKS:
-            self.probability_list.extend( self.block_list_builder(block, \
-                                                        settings.GAMB_SIDE_LEFT ,\
-                                                        settings.PROB_REWARD_GAMBL_BLOCK, \
-                                                        settings.PROB_REWARD_SAVE_BLOCK, \
-                                                        )
-                                                    )
+            self.probability_list.extend( self.block_list_builder(block, settings.GAMB_SIDE_LEFT))
 
     def block_trial_builder(self, TRIAL_RANGE_BLOCK):
         '''randomly choose block trial length from range and add to block dict'''
@@ -41,10 +36,10 @@ class ProbabilityConstuctor():
         random.shuffle(list_rand)
         return list_rand
 
-    def block_list_builder(self, block, gambl_left, PROB_REWARD_GAMBL_BLOCK, PROB_REWARD_SAVE_BLOCK):
+    def block_list_builder(self, block, gambl_left):
         '''create a dictionary for each trial in given block with both save and gamble reward based on given probability in settings'''
-        gamble_reward_list = self.probability_builder((block[PROB_REWARD_GAMBL_BLOCK]/100), block["block_trial_num"])
-        save_reward_list = self.probability_builder((block[PROB_REWARD_SAVE_BLOCK]/100), block["block_trial_num"])
+        gamble_reward_list = self.probability_builder((block["prob_reward_gambl_block"]/100), block["block_trial_num"])
+        save_reward_list = self.probability_builder((block["prob_reward_save_block"]/100), block["block_trial_num"])
         block_list = []
         for trial in range(block["block_trial_num"]):
             trial_dict = {"gambl_left": gambl_left,

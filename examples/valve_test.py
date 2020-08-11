@@ -1,5 +1,4 @@
 from pybpodapi.bpod import Bpod
-
 from pybpodapi.state_machine import StateMachine
 
 bpod = Bpod()
@@ -13,21 +12,24 @@ for trial in range(trials):
     # send ttl to bnc1
     sma = StateMachine(bpod)
 
-    # initial state blink = trial start
+    # initial state
     sma.add_state(
-        state_name="signal_bnc1",
+        state_name="start",
         state_timer=5,
         state_change_conditions={"Tup": "reward"},
         output_actions=[("BNC1", 1)],
     )
 
 
-    # open valve1 for 10 seconds
+    # open valve1 for 20 seconds
     sma.add_state(
         state_name="reward",
+        # output action will be performed for whole time state is active
         state_timer=20,
         state_change_conditions={"Tup": "exit"},
-        output_actions=[("Valve2", 255)],
+        # output action for valve open = 255
+        # notation for valve alsways Valve + numer of port connected to
+        output_actions=[("Valve1", 255)],
     )
 
 
@@ -36,10 +38,7 @@ for trial in range(trials):
     # Run state machine
     if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         break
-    print("test ob das geprintet wird\n")
+
     print("Current trial info: {0}".format(bpod.session.current_trial))
 
 bpod.close()
-
-if __name__ == "__main__":
-    print("main")
