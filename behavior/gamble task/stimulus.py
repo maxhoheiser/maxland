@@ -6,18 +6,30 @@ import os
 
 class Stimulus():
     def __init__(self, settings, rotary_encoder):
+        """[summary]
+
+        Args:
+            settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
+            rotary_encoder (RotaryEncoder object): object handeling rotary encoder module
+        """         
+        self.settings = settings    
         self.run_open_loop = True
         self.display_stim_event = threading.Event()
         self.move_stim_event = threading.Event()
         self.still_show_event = threading.Event()
         # set gain
-        self.GAIN =  [abs(y/x) for x in settings.ALL_THRESHOLDS[0:1] for y in settings.STIM_END_POS ]
+        self.gain =  [abs(y/x) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
+        # gain to the left first - position
+        self.gain_left = self.gain[0]
+        # gain to the right second + position
+        self.gain_right = self.gain[1]
         self.FPS = settings.FPS
         self.SCREEN_WIDTH = settings.SCREEN_WIDTH
         self.SCREEN_HEIGHT = settings.SCREEN_HEIGHT
-        self.STIMULUS = settings.STIMULUS
-        self.surf = pygame.image.load(self.STIMULUS)
-        self.screen_dim = [self.SCREEN_WIDTH, self.SCREEN_HEIGHT]
+        self.stim = settings.stim
+        #self.stim = "C:\\test_projekt\\test_projekt\\tasks\\behavior_1_test\\stimulus.png"
+        self.surf = pygame.image.load(self.stim)
+        self.screen_dim = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.fpsClock=pygame.time.Clock()
         self.rotary_encoder = rotary_encoder
 
@@ -45,20 +57,25 @@ class Stimulus():
         print("end trial")
 
     def stim_center(self):
-        stim_dim = (Image.open(self.STIMULUS)).size
+        """calculate the x,y coordinates for the stimulus so it is based centered on the middle screen
+        """        
+        stim_dim = (Image.open(self.stim)).size
         rect = self.surf.get_rect()
         x = ( self.screen_dim[0]/2 - ( stim_dim[0]/2) )
         y = ( self.screen_dim[1]/2 - ( stim_dim[0]/2) )
         return([x, y])
 
     def run_game(self):
+        """main loop running the pygame controlling the stimulus and enableing interaction via the rotary encoder
+        """        
         # pygame config
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "3840,0"#"2195,0"
         pygame.init()
         #===========================
         # Set up the drawing window
         pygame.display.init()
-        screen = pygame.display.set_mode(self.screen_dim,  pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
+        #screen = pygame.display.set_mode(self.screen_dim,  pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
+        screen = pygame.display.set_mode((6144,1536),  pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
         screen.fill((0, 0, 0))
         pygame.display.flip()
         # Create player
@@ -91,10 +108,10 @@ class Stimulus():
                 last_position = int(current_position)
                 # move to the left
                 if change_position > 0:
-                    position[0] -= int(change_position*self.GAIN)
+                    position[0] -= int(change_position*self.gain_left)
                 # move to the right
                 else:
-                    position[0] -= int(change_position*self.GAIN)
+                    position[0] -= int(change_position*self.gain_right)
             pygame.display.update()
         self.rotary_encoder.disable_stream()
         #show stimulus after closed loop period is over until reward gieven
