@@ -2,6 +2,7 @@ from PIL import Image
 import pygame
 import threading
 import os
+import time
 
 
 class Stimulus():
@@ -32,42 +33,64 @@ class Stimulus():
         self.screen_dim = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
         self.fpsClock=pygame.time.Clock()
         self.rotary_encoder = rotary_encoder
+        self.stimulus_position = []
+        self.stim_center = self.get_stim_center()
+        self.stim_end_pos_left = settings.stim_end_pos[0]+self.stim_center[0]
+        self.stim_end_pos_right = settings.stim_end_pos[1]+self.stim_center[0]
 
+    # flags
     def present_stimulus(self):
+        """flag bevore stimulus appears on screen, set from softcode in bpood state"""        
         self.display_stim_event.set()
         print("present stimulus")
 
     def start_open_loop(self):
+        """flag bevore open loop where wheel moves stimulus is started, set from softcode in bpod state"""        
         self.move_stim_event.set()
         print("start open loop")
 
     def stop_open_loop(self):
+        """flag bevore open loop - while loop is stopped, time sleep so latent wheel movement which already triggered threshold
+        can also move stimulus to final posititon
+        """        
+        time.sleep(0.05)
         self.run_open_loop = False
         print("stop open loop")
 
     def end_present_stimulus(self):
+        """flag, which keeps stimulus frozen on end postition"""        
         self.still_show_event.set()
         print("end present stimulus")
 
     def end_trial(self):
+        """routine that resets all flags and variables for new trial"""        
         self.display_stim_event.clear()
         self.move_stim_event.clear()
         self.still_show_event.clear()
         self.run_open_loop = True
-        print("end trial")
+        print("end pygame")
 
-    def stim_center(self):
-        """calculate the x,y coordinates for the stimulus so it is based centered on the middle screen
-        """        
+    def get_stim_center(self):
+        """calculate the x,y coordinates for the stimulus so it is based centered on the middle screen"""        
         stim_dim = (Image.open(self.stim)).size
         rect = self.surf.get_rect()
         x = ( self.screen_dim[0]/2 - ( stim_dim[0]/2) )
         y = ( self.screen_dim[1]/2 - ( stim_dim[0]/2) )
         return([x, y])
 
-    def run_game(self):
-        """main loop running the pygame controlling the stimulus and enableing interaction via the rotary encoder
+    def keep_on_scrren(self, position_x):
+        """keep the stimulus postition in user defined boundaries
+
+        Args:
+            position_x (int): current stimulus screen positition in pixel
+
+        Returns:
+            int: updated stimulus position
         """        
+        return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
+
+    def run_game(self):
+        """main loop running the pygame controlling the stimulus and enableing interaction via the rotary encoder"""        
         # pygame config
         os.environ['SDL_VIDEO_WINDOW_POS'] = "3840,0"#"2195,0"
         pygame.init()
@@ -79,7 +102,7 @@ class Stimulus():
         screen.fill((0, 0, 0))
         pygame.display.flip()
         # Create player
-        position = self.stim_center()
+        position = self.get_stim_center()
         # create inital stimulus
         screen.blit(self.surf, position)
         #-----------------------------------------------------------------------------
@@ -91,7 +114,9 @@ class Stimulus():
         # py game loop
         last_position = 0
         self.move_stim_event.wait()
-        self.rotary_encoder.enable_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.rotary_encoder.enable_stream()
+        self.rotary_encoder.rotary_encoder.current_position()
         while self.run_open_loop:
             # Fill the background with white
             screen.fill((0, 0, 0))
@@ -100,24 +125,27 @@ class Stimulus():
             # on soft code of state 2
             #-------------------------------------------------------------------------
             # read rotary encoder stream
-            current_position = self.rotary_encoder.read_position()
-            if current_position == None:
-                continue
-            else:
-                change_position = last_position - int(current_position)
-                last_position = int(current_position)
+            stream = self.rotary_encoder.rotary_encoder.read_stream()
+
+            if len(stream)>0:
+                change_position = last_position - stream[-1][2]
+                #print(stream)
+                last_position = stream[-1][2]
                 # move to the left
-                if change_position > 0:
-                    position[0] -= int(change_position*self.gain_left)
-                # move to the right
-                else:
-                    position[0] -= int(change_position*self.gain_right)
+                # if change_position > 20:
+                #     change_postition = 20
+                position[0] += int(change_position*self.gain_right)
+                position[0] = self.keep_on_scrren(position[0])
+
             pygame.display.update()
-        self.rotary_encoder.disable_stream()
+            self.stimulus_position.append( (time.time(),position) )
+        
+        self.rotary_encoder.rotary_encoder.disable_stream()
         #show stimulus after closed loop period is over until reward gieven
         self.still_show_event.wait()
+        self.end_trial()
         screen.fill((0, 0, 0))
         pygame.display.flip()
-        self.end_trial()
         pygame.display.quit()
         pygame.quit()
+        

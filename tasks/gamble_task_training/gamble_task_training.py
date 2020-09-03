@@ -27,7 +27,7 @@ from pybpodapi.state_machine import StateMachine
 from stimulus import Stimulus
 from probability import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
-from parameter import TrialParameterHandler
+from parameter_handler import TrialParameterHandler
 from userinput import UserInput
 
 # import usersettings
@@ -36,8 +36,8 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gambl_task_training")
-settings_obj = TrialParameterHandler(usersettings, settings_folder)
+settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
+settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
 bpod=Bpod()
@@ -50,9 +50,12 @@ settings_obj = window.update_settings()
 settings_obj.update_userinput_file()
 
 # rotary encoder config
-rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj)
-rotary_encoder_module.load_message(bpod)
+# enable thresholds
+rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)
+rotary_encoder_module.load_message()
 rotary_encoder_module.configure()
+rotary_encoder_module.enable_stream()
+
 
 # softcode handler
 def softcode_handler(data):
@@ -64,6 +67,10 @@ def softcode_handler(data):
         stimulus_game.stop_open_loop()
     elif data == settings_obj.SC_END_PRESENT_STIM:
         stimulus_game.end_present_stimulus()
+    elif data == settings_obj.SC_START_LOGGING:
+        rotary_encoder_module.enable_logging()
+    elif data == settings_obj.SC_END_LOGGING:
+        rotary_encoder_module.disable_logging()
 
 bpod.softcode_handler_function = softcode_handler
 
@@ -76,9 +83,7 @@ probability_obj = ProbabilityConstuctor(settings_obj)
 # update settings object
 settings_obj.probability_list = probability_obj.probability_list
 settings_obj.trial_num = probability_obj.trial_num
-# create session summary json file
-with open(os.path.join(session_folder,'session_settings.py'), 'w') as f:
-    f.write(settings_obj.toJSON())
+
 
 
 # create main state machine aka trial loop ====================================================================
@@ -91,14 +96,14 @@ for trial in range(settings_obj.trial_num):
         state_name="start1",
         state_timer=settings_obj.time_dict["time_start"],
         state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
-        output_actions=[],
+        output_actions=[], #("SoftCode", settings_obj.SC_START_LOGGING)
     )
     # reset rotary encoder bevore checking for wheel not stoping
     sma.add_state(
         state_name="reset_rotary_encoder_wheel_stopping_check",
         state_timer=0,
         state_change_conditions={"Tup":"wheel_stopping_check"},
-        output_actions=[("Serial5", settings_obj.RESET_ROTARY_ENCODER)], # activate white light while waiting
+        output_actions=[("Serial1", settings_obj.RESET_ROTARY_ENCODER)], # activate white light while waiting
     )
     #wheel not stoping check
     sma.add_state(
@@ -130,7 +135,7 @@ for trial in range(settings_obj.trial_num):
         state_name="reset_rotary_encoder_open_loop",
         state_timer=0,
         state_change_conditions={"Tup": "open_loop"},
-        output_actions=[("Serial5", settings_obj.RESET_ROTARY_ENCODER)], # reset rotary encoder postition to 0
+        output_actions=[("Serial1", settings_obj.RESET_ROTARY_ENCODER)], # reset rotary encoder postition to 0
     )
 
     # open loop detection
@@ -156,7 +161,7 @@ for trial in range(settings_obj.trial_num):
     sma.add_state(
         state_name="open_loop_fail_punish",
         state_timer=settings_obj.time_dict["time_open_loop_fail_punish"],
-        state_change_conditions={"Tup": "exit"},
+        state_change_conditions={"Tup": "inter_trial"},
         output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
     )
 
@@ -169,9 +174,9 @@ for trial in range(settings_obj.trial_num):
     )
 
     # check for gmble side:
-    if probability_dict["gambl_left"]:
+    if probability_dict["gamble_left"]:
         # check for probability of big reard
-        if probability_dict["gambl_reward"]:
+        if probability_dict["gamble_reward"]:
             # big rewaerd
             sma.add_state(
                 state_name="reward_left",
@@ -242,9 +247,9 @@ for trial in range(settings_obj.trial_num):
     )
 
     # check for gmble side:
-    if not probability_dict["gambl_left"]:
+    if not probability_dict["gamble_left"]:
         # check for probability of big reard
-        if probability_dict["gambl_reward"]:
+        if probability_dict["gamble_reward"]:
             # big rewaerd
             sma.add_state(
                 state_name="reward_right",
@@ -309,8 +314,16 @@ for trial in range(settings_obj.trial_num):
     sma.add_state(
         state_name="inter_trial",
         state_timer=settings_obj.time_dict["time_inter_trial"],
-        state_change_conditions={"Tup": "exit"},
-        output_actions=[]
+        state_change_conditions={"Tup": "end_state"},
+        output_actions=[] #("SoftCode", settings_obj.SC_END_LOGGING)
+    )
+
+    # end state
+    sma.add_state(
+        state_name="end_state",
+        state_timer=0,
+        state_change_conditions={"Tup":"exit"},
+        output_actions=[],
     )
 
     # create pygame daemon
@@ -322,6 +335,13 @@ for trial in range(settings_obj.trial_num):
     # wiat until state machine finished
     if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         break
+
+    # post trial cleanup
+    # append wheel postition
+    #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
+    # append stimulus postition
+    #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
+
     print(f"trial: {trial} \n probability: {probability_dict} \n")
 
 #==========================================================================================================
@@ -329,11 +349,18 @@ for trial in range(settings_obj.trial_num):
 print("finished")
 
 # save session settings
-session_folder
+session_name = bpod.session_name
+# save usersettings of session
+settings_obj.save_usersettings(session_name)
+# save wheel movement of session
+#settings_obj.save_wheel_movement(session_name)
+# save stimulus postition of session
+#settings_obj.save_stimulus_postition(session_name)
 
 # push session to alyx
 
 
+#print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
 
 rotary_encoder_module.close()

@@ -4,7 +4,7 @@ from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
 
 
 class BpodRotaryEncoder():
-    def __init__(self, com_port, settings):
+    def __init__(self, com_port, settings, bpod):
         """helper class to deal with rotary encoder module, set thresholds, set and reset position aswell as read prosition
 
         Args:
@@ -14,10 +14,12 @@ class BpodRotaryEncoder():
         # rotary encoder settings
         self.com_port = com_port
         self.rotary_encoder=RotaryEncoderModule(self.com_port)
-        self.RESET_ROTARY_ENCODER = settings.RESET_ROTARY_ENCODER
+        self.bpod = bpod
+        self.reset = settings.RESET_ROTARY_ENCODER
         self.WRAP_POINT = 0
+
         # set thresholds
-        self.all_thresholds = settings.thresholds
+        self.all_thresholds = settings.thresholds 
         self.enable_thresholds = [
             (True if x != 0 else False) for x in self.all_thresholds
         ]
@@ -31,28 +33,40 @@ class BpodRotaryEncoder():
     def get_events(self):
         return self.events
 
-    def load_message(self, bpod):
+    def load_message(self):
         """load reset messag to rotary encoder so bpod can reset rotary encoder position
 
         Args:
             bpod (Bpod object): 
         """        
-        rotary_encoder = [x for x in bpod.modules if x.name == "RotaryEncoder1"][0]
-        bpod.load_serial_message(rotary_encoder, self.RESET_ROTARY_ENCODER, [ord('Z'), ord('E')])
+        rotary_encoder = [x for x in self.bpod.modules if x.name == "RotaryEncoder1"][0]
+        self.bpod.load_serial_message(rotary_encoder, self.reset, [ord('Z'), ord('E')])
 
     def configure(self):
         """loads rotary enoder module with thresholds
-        """        
+        """    
         self.rotary_encoder.set_thresholds(self.all_thresholds)
         self.rotary_encoder.enable_thresholds(self.enable_thresholds)
+
         self.rotary_encoder.enable_evt_transmission()
         self.set_wrap_point(self.WRAP_POINT)
+
 
     def close(self):
         self.rotary_encoder.close()
 
     def enable_stream(self):
         self.rotary_encoder.enable_stream()
+
+    # log postition
+    def enable_logging(self):
+        self.rotary_encoder.enable_logging()
+    def disable_logging(self):
+        self.rotary_encoder.disable_logging()
+    def get_logging(self):
+        return self.rotary_encoder.get_logged_data()
+        
+
 
     def disable_stream(self):
         self.rotary_encoder.disable_stream()

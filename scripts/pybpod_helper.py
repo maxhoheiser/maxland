@@ -17,46 +17,50 @@ class pybpod_helper():
         self.hostname = os.environ['COMPUTERNAME']
 
     def populate_project_folder(self):
-            '''copy all the necessary files and folders'''
-            # create project
-            self.create_project()
-            # boards
-            print("Creating: Bpod board")
-            board = self.create_board()
+        """copy all the necessary files for the bpod setup to the folder of this setup"""        
+        # create project
+        self.create_project()
+        # boards
+        print("Creating: Bpod board")
+        board = self.create_board()
 
-            # create project.json files
-            user, subject = self.create_defaults()
+        # create project.json files
+        user, subject = self.create_defaults()
 
-            # tasks
-            # gambl task
-            exp_gamble = self.create_experiment("gamble_task")
-            #   habituatin
-            #   training
-            task_name = 'gamble_task_training'
-            self.create_task(task_name)
-            self.create_setup(exp_gamble, task_name, board, subject)
-            #   recording
+        # tasks
+        # gambl task
+        exp_gamble = self.create_experiment("gamble_task")
+        #   habituatin
+        #   training
+        task_name = 'gamble_task_training'
+        self.create_task(task_name)
+        self.create_setup(exp_gamble, task_name, board, subject)
+        #   recording
 
-            # choice task
-            self.create_experiment("choice_task")
-            #   habituation
-            #   training
-            #   recording
+        # choice task
+        self.create_experiment("choice_task")
+        #   habituation
+        #   training
+        #   recording
 
-            # calibration, administer reward etc
-            self.create_experiment("calibration_etc")
+        # calibration, administer reward etc
+        self.create_experiment("calibration_etc")
 
 
-            print("Creating: default usersettings, user, and subject")
-            self.create_defaults()
-            # create project.json files
+        print("Creating: default usersettings, user, and subject")
+        self.create_defaults()
+        # create project.json files
 
 
 
     # helper functions for task folder createion =======================================
 
     def create_task(self, task_name):
-        '''copy files for given task to poject dir'''
+        """copy files for given task to poject dir
+
+        Args:
+            task_name (str): name of the task
+        """        
         print(f"Creating {task_name} setup")
         task = self.project.find_task(task_name)
         if task != None:
@@ -86,8 +90,13 @@ class pybpod_helper():
             self.copytree(src, dest)
             print(f"Created task: {task_name}")
 
+
     def create_board(self):
-        '''copy files for given task to poject dir'''
+        """create new bpod board for new setup
+
+        Returns:
+            bpod.board:
+        """        
         if not self.project.boards:
             # copy files to new board
             board = self.project.create_board()
@@ -101,13 +110,30 @@ class pybpod_helper():
 
 
     def create_experiment(self,exp_name):
+        """create new experiment for setup
+
+        Args:
+            exp_name (str): name of the experiment to create
+
+        Returns:
+            bpod.experiment:
+        """        
         exp = self.project.create_experiment()
         exp.name = exp_name
         self.project.save(self.project_path)
         print(f"Created experiment: {exp.name}")
         return exp
 
+
     def create_setup(self, experiment, setup_name, board, subject):
+        """create new setup for setup
+
+        Args:
+            experiment (bpod.experiment): experminet under which the setup is created
+            setup_name (str): name of the setup
+            board (bpod.board): board which will be added as default to the setup
+            subject (bpod.subject): subject which will be added as default to the setup
+        """        
         # create experiment
         setup = experiment.create_setup()
         setup.name = setup_name
@@ -118,6 +144,14 @@ class pybpod_helper():
 
 
     def create_defaults(self):
+        """routine to create default elements for new bpod setup
+                user: create new default user - test_user
+                subject: create new default subject - test_subject
+
+        Returns:
+            bpod.user:
+            bpod.subject:
+        """        
         # copy usersettings
         src = self.root_path/("scripts/user_settings.py")
         dest = self.project_path/"user_settings.py"
@@ -146,7 +180,9 @@ class pybpod_helper():
             print(f"Skipping creation: Subject <{subject.name}> already exists")
         return user, subject
 
+
     def create_project(self):
+        """create maxland project for new setup"""        
         print("Creating default project")
         try:
             self.project.load(self.project_path)
@@ -158,6 +194,14 @@ class pybpod_helper():
 
 
     def copytree(self, src, dst, symlinks=False, ignore=None):
+        """helper function to copy all files from one directory to another
+
+        Args:
+            src (os.path): path to source folder
+            dst (os.path): path to destination folder
+            symlinks (bool, optional): dont copy but use symbolic links to original files. Defaults to False.
+            ignore (list, optional): ignore items in source. Defaults to None.
+        """        
         for item in os.listdir(src):
             s = os.path.join(src, item)
             d = os.path.join(dst, item)

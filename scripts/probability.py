@@ -56,22 +56,22 @@ class ProbabilityConstuctor():
         random.shuffle(list_rand)
         return list_rand
 
-    def block_list_builder(self, block, gambl_left):
+    def block_list_builder(self, block, gamble_left):
         """create a dictionary for each trial in given block with both save and gamble reward based on given probability in settings
 
         Args:
-            block ([type]): [description]
-            gambl_left ([type]): [description]
+            block (list): list of elements in block
+            gamble_left (bool):
 
         Returns:
-            [type]: [description]
+            list: updated block list
         """        
-        gamble_reward_list = self.probability_builder((block["prob_reward_gambl_block"]/100), block["block_trial_num"])
+        gamble_reward_list = self.probability_builder((block["prob_reward_gamble_block"]/100), block["block_trial_num"])
         save_reward_list = self.probability_builder((block["prob_reward_save_block"]/100), block["block_trial_num"])
         block_list = []
         for trial in range(block["block_trial_num"]):
-            trial_dict = {"gambl_left": gambl_left,
-                         "gambl_reward": gamble_reward_list[trial],
+            trial_dict = {"gamble_left": gamble_left,
+                         "gamble_reward": gamble_reward_list[trial],
                          "safe_reward": save_reward_list[trial],
                          }
             block_list.append(trial_dict)

@@ -49,15 +49,20 @@ class UserInput():
         self.settings.time_dict["time_stim_freez"] = float(self.time_stim_freez.var.get())
         self.settings.time_dict["time_reward"] = float(self.time_reward.var.get())
         self.settings.time_dict["time_inter_trial"] = float(self.time_inter_trial.var.get())
+        self.settings.min_inter_trial_time()
 
-        if 'stim_file' in locals():
-            self.stim = str(self.stim_file)
+        # ToDo update stimulus selected file from userintput
+        #if 'stim_file' in locals():
+        #    self.stim = str(self.stim_file)
+        #self.settings.stim = self.btn_stim.
+        
+        
         self.settings.thresholds[0] = int(self.var_wheel_thresh_neg.get())
         self.settings.thresholds[1] = int(self.var_wheel_thresh_pos.get())
         self.settings.stim_end_pos = [int(self.var_stim_end_neg.get()), int(self.var_stim_end_pos.get())]
         self.settings.animal_waight = float(self.var_animal_waight.get())
 
-
+        return self.settings
 
     # tkinter elements
     def get_geometry(self):
@@ -99,10 +104,11 @@ class UserInput():
         self.close()
         return "Close"
     
+    #ToDo
     def file_dialog_button(self):
         """tkinter dialog for opening stimulus file from folder
         """        
-        self.stim_file = filedialog.askopenfilename(initialdir = "../../stimulus/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("png files","*.png")))
+        stim_file = filedialog.askopenfilename(initialdir = "../../stimulus/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("png files","*.png")))
 
     def draw_window(self):
         """tkinter window to get user input, variables and default values are read from settings object
@@ -187,9 +193,10 @@ class UserInput():
         lbl_stim_pos =  tk.Label(frame4_0, text="Stimulus File (jpeg, png):", font=self.fontStyleRegular)
         lbl_stim_pos.grid(row=0, column=0, padx=10, pady=8)
         
+        #ToDo
         stimulus_name = self.settings.stim.split(os.sep)[-1]
-        btn_stim = tk.Button(frame4_0, text=stimulus_name, command=self.file_dialog_button, width = 20)
-        btn_stim.grid(row=0, column=1, pady=8)
+        self.btn_stim = tk.Button(frame4_0, text=stimulus_name, command=self.file_dialog_button, width = 20)
+        self.btn_stim.grid(row=0, column=1, pady=8)
         
         # frame row 1
         frame4_1 = tk.Frame(frame4)
@@ -310,14 +317,14 @@ class UserInput():
         Args:
             block (dict): block dict with keys:
                 trial_range_block (list): range of trial for given block
-                prob_reward_gambl_block (float): probability for big reward
+                prob_reward_gamble_block (float): probability for big reward
                 prob_reward_save_block (float): probability for no reward block 
         """    
         block_list =[]    
         for block in self.blocks:
             block_dict = {}
             block_dict["trial_range_block"] = [int(block.var_range_min.get()), int(block.var_range_max.get())]
-            block_dict["prob_reward_gambl_block"] = float(block.var_prob_gb.get())
+            block_dict["prob_reward_gamble_block"] = float(block.var_prob_gb.get())
             block_dict["prob_reward_save_block"] = float(block.var_prob_save.get())
             block_list.append(block_dict)
         return block_list
@@ -369,7 +376,7 @@ class UserInput():
             lbl_prob_gb = tk.Label(frame2, text="Probability gamble [0-100]:", font=fontStyleRegular, bg="gray86")
             lbl_prob_gb.grid(row=0, column=0, padx=(10,5), sticky='E')
             
-            self.var_prob_gb = tk.StringVar(frame2, value=self.settings.blocks[self.num]["prob_reward_gambl_block"])
+            self.var_prob_gb = tk.StringVar(frame2, value=self.settings.blocks[self.num]["prob_reward_gamble_block"])
             self.etr_prob_gb = tk.Entry(frame2, textvariable=self.var_prob_gb, width=6)
             self.etr_prob_gb.grid(row=0, column=2, padx=(0,2), sticky='W')
             # prob save
