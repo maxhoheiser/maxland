@@ -9,7 +9,7 @@ from pybpodapi.com.arcom import ArCOM, ArduinoTypes
 
 
 # load wave
-waveplayer = WavePlayerModule("COM6")
+waveplayer = WavePlayerModule("COM4")
 
 # configure wave
 sampleRate = 1000  # of samples per second 1kHz
@@ -17,8 +17,8 @@ wave = np.ones(100000) * 5
 
 waveplayer.set_sampling_period(sampleRate)
 waveplayer.set_output_range(0)
-#waveplayer.set_loop_mode([False, False, False, False, False, False, False, False])
-waveplayer.set_loop_mode([False, False, False, False])
+waveplayer.set_loop_mode([False, False, False, False, False, False, False, False])
+#waveplayer.set_loop_mode([False, False, False, False])
 waveplayer.debug()
 
 print(waveplayer.load_waveform(1, wave))
@@ -30,12 +30,10 @@ waveplayer.disconnect()
 bpod = Bpod('COM5')
 bpod.modules[0].name
 bpod.modules[1].name
-bpod.modules[1].
-
 
 wave_player = [x for x in bpod.modules if x.name == "WavePlayer1"][0]
-bpod.load_serial_message(wave_player, 1, [ord('P'), 15, 1])
-wave_player.load_message([ord('P'), 15, 1],1)
+bpod.load_serial_message(wave_player, 1, [ord('P'), 3, 0]) #15=1111
+#wave_player.load_message([ord('P'), 15, 1],1)
 
 
 
@@ -106,5 +104,3 @@ for trial in range(trials):
     print("Current trial info: {0}".format(bpod.session.current_trial))
 
 bpod.close()
-
-"""
