@@ -41,6 +41,7 @@ GENERIC_EDITOR_PLUGINS_LIST = [
     "pybpod_rotaryencoder_module",
     "pybpod_alyx_module",
     "pybpod_gui_plugin_emulator",
+    "pybpodgui_plugin_waveplayer"
 ]
 
 PYBPODGUI_API_AUTO_SAVE_PROJECT_ON_RUN = True
