@@ -1,7 +1,6 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: win-64
-_ipyw_jlab_nb_ext_conf=0.1.0=py38_0
 alabaster=0.7.12=py_0
 anaconda=2020.07=py38_0
 anaconda-client=1.7.2=py38_0
@@ -286,7 +285,6 @@ wcwidth=0.2.5=py_0
 webencodings=0.5.1=py38_1
 werkzeug=1.0.1=py_0
 wheel=0.34.2=py38_0
-widgetsnbextension=3.5.1=py38_0
 win_inet_pton=1.1.0=py38_0
 win_unicode_console=0.5=py38_0
 wincertstore=0.2=py38_0
