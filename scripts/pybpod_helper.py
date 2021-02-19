@@ -30,15 +30,16 @@ class pybpod_helper():
         # tasks
         # gambl task
         exp_gamble = self.create_experiment("gamble_task")
-        #   habituatin
         #   training
         task_name = 'gamble_task_training'
         self.create_task(task_name)
         self.create_setup(exp_gamble, task_name, board, subject)
         #   recording
-
+        task_name = 'gamble_task_recording'
+        self.create_task(task_name)
+        self.create_setup(exp_gamble, task_name, board, subject)
         # choice task
-        self.create_experiment("choice_task")
+        #self.create_experiment("choice_task")
         #   habituation
         #   training
         #   recording
@@ -186,7 +187,7 @@ class pybpod_helper():
         print("Creating default project")
         try:
             self.project.load(self.project_path)
-            print(f"  Skipping creation: IBL project found in: {self.project_path}")
+            print(f"  Skipping creation: maxland project found in: {self.project_path}")
         except:  # noqa
             self.project.name = ("maxland_"+self.hostname)
             self.project.save(self.project_path)
