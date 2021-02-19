@@ -12,7 +12,7 @@ import shutil
 # helper functions =====================================================
 root_path = Path.cwd()
 hostname = os.environ['COMPUTERNAME']
-project_path = root_path.parent / ("maxland_"+hostname)
+project_path = root_path / ("maxland_"+hostname)
 sys.path.append(os.path.join(os.getcwd(),'scripts'))
 
 
@@ -113,7 +113,7 @@ def install_dependencies():
 
 # create default project folder =====================================================
 def configure_env_params():
-    '''create a project folder for this computer in C drive for pybpod'''
+    '''create a project folder for this computer in main maxland folder drive for pybpod'''
     print(f"\n\nINFO: Setting up default project folder in {project_path}")
     print("-" * 79)
     env = get_env()
@@ -130,19 +130,19 @@ def configure_env_params():
         if user_input == "n":
             return
         elif user_input == "y":
-            #subprocess.call(["populate_project.py", project_path, root_path])
              os.system("conda activate maxland && cd scripts && python populate_project.py")  
         elif user_input != "n" and user_input != "y":
             print("\n Please select either y of n")
             return configure_env_params()
     else:
         project_path.mkdir(parents=True, exist_ok=True)
-        #subprocess.call([python, "populate_project.py", project_path, root_path],
-        #                cwd="scripts"
-        #                )
         os.system("conda activate maxland && cd scripts && python populate_project.py")  
 
  
+def create_launcher():
+    """depending on os move bat, or sh file fore lounching maxland to desktop
+    """
+    os.system("cd scripts && copy maxland.bat C:\\Users\\%USERNAME%\\Desktop")
 
 # main loop ========================================================================
 if __name__ == "__main__":
@@ -162,7 +162,8 @@ if __name__ == "__main__":
         install_environment()
         install_dependencies()
         configure_env_params()
-        print("\n\nINFO: iblrig installed, you should be good to go!")
+        create_launcher()
+        print("\n\nINFO: maxland installed, you should be good to go!")
     except IOError as msg:
         print(msg, "\n\nSOMETHING IS WRONG!")
 

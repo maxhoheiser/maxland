@@ -1,1 +1,0 @@
-from pybpod_rotaryencoder_module.models.projects.projects_rotaryencoder import ProjectsRotaryEncoder as Projects
