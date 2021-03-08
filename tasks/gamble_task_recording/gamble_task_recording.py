@@ -186,11 +186,10 @@ if settings_obj.run_session:
         sma.add_state(
             state_name="open_loop",
             state_timer=settings_obj.time_dict["time_open_loop"],
-            state_change_conditions={
-                "Tup": "stop_open_loop_fail",
-                settings_obj.STIMULUS_LEFT: "stop_open_loop_reward_left",
-                settings_obj.STIMULUS_RIGHT: "stop_open_loop_reward_right",
-                },
+            state_change_conditions={"Tup": "stop_open_loop_fail",
+                                    settings_obj.STIMULUS_LEFT: "stop_open_loop_reward_left",
+                                    settings_obj.STIMULUS_RIGHT: "stop_open_loop_reward_right",
+                                    },
             output_actions=[("SoftCode", settings_obj.SC_START_OPEN_LOOP),
                             ('BNC1',0),('BNC2',0)
                             ], # softcode to start open loop
