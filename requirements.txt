@@ -101,7 +101,7 @@ pytz==2020.1
 pyusb==1.0.2
 pywin32==228
 pywinpty==0.5.7
-PyYAML==5.3.1
+PyYAML==5.4
 pyzmq==19.0.2
 QScintilla==2.11.5
 qtconsole==4.7.5
