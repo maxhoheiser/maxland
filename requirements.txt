@@ -86,7 +86,7 @@ pyflakes==2.2.0
 pyforms-generic-editor==1.5.1
 PyForms-GUI==4.901.2
 pygame==1.9.6
-Pygments==2.6.1
+Pygments==2.7.4
 PyJWT==1.7.1
 pynrrd==0.4.2
 PyOpenGL==3.1.5
