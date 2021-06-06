@@ -1,12 +1,11 @@
-from PIL import Image
-import pygame
+from psychopy import visual, core, monitors #import some libraries from PsychoPy
+import time
 import threading
 import os
-import time
 
 
 class Stimulus():
-    def __init__(self, settings, rotary_encoder):
+    def __init__(self, settings, rotary_encoder, correct_stim_side):
         """[summary]
 
         Args:
@@ -14,6 +13,7 @@ class Stimulus():
             rotary_encoder (RotaryEncoder object): object handeling rotary encoder module
         """         
         self.settings = settings    
+        self.trials = settings.trials
         self.run_open_loop = True
         self.display_stim_event = threading.Event()
         self.move_stim_event = threading.Event()
@@ -27,57 +27,44 @@ class Stimulus():
         self.FPS = settings.FPS
         self.SCREEN_WIDTH = settings.SCREEN_WIDTH
         self.SCREEN_HEIGHT = settings.SCREEN_HEIGHT
-        self.stim = settings.stim
-        #self.stim = "C:\\test_projekt\\test_projekt\\tasks\\behavior_1_test\\stimulus.png"
-        self.surf = pygame.image.load(self.stim)
-        self.screen_dim = (self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
-        self.fpsClock=pygame.time.Clock()
+        self.SCREEN_SIZE = settings.SCREEN_SIZE
+        # stimulus    
+
         self.rotary_encoder = rotary_encoder
-        self.stimulus_position = []
-        self.stim_center = self.get_stim_center()
-        self.stim_end_pos_left = settings.stim_end_pos[0]+self.stim_center[0]
-        self.stim_end_pos_right = settings.stim_end_pos[1]+self.stim_center[0]
+
+        self.correct_stim_side = correct_stim_side
+
 
     # flags
+    # flag softcode 1
     def present_stimulus(self):
         """flag bevore stimulus appears on screen, set from softcode in bpood state"""        
         self.display_stim_event.set()
         print("present stimulus")
 
+    # flag softcode 2
     def start_open_loop(self):
         """flag bevore open loop where wheel moves stimulus is started, set from softcode in bpod state"""        
-        self.move_stim_event.set()
+        #self.move_stim_event.set()
+        self.closed_loop = False
         print("start open loop")
 
+    # flag softcode 3
     def stop_open_loop(self):
         """flag bevore open loop - while loop is stopped, time sleep so latent wheel movement which already triggered threshold
         can also move stimulus to final posititon
         """        
-        time.sleep(0.05)
         self.run_open_loop = False
         print("stop open loop")
 
+    # flag softcode 4
     def end_present_stimulus(self):
         """flag, which keeps stimulus frozen on end postition"""        
         self.still_show_event.set()
         print("end present stimulus")
 
-    def end_trial(self):
-        """routine that resets all flags and variables for new trial"""        
-        self.display_stim_event.clear()
-        self.move_stim_event.clear()
-        self.still_show_event.clear()
-        self.run_open_loop = True
-        print("end pygame")
 
-    def get_stim_center(self):
-        """calculate the x,y coordinates for the stimulus so it is based centered on the middle screen"""        
-        stim_dim = (Image.open(self.stim)).size
-        rect = self.surf.get_rect()
-        x = ( self.screen_dim[0]/2 - ( stim_dim[0]/2) )
-        y = ( self.screen_dim[1]/2 - ( stim_dim[0]/2) )
-        return([x, y])
-
+    # helper functions 
     def keep_on_scrren(self, position_x):
         """keep the stimulus postition in user defined boundaries
 
@@ -88,77 +75,140 @@ class Stimulus():
             int: updated stimulus position
         """        
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
+        
+
+    # stimulus functions =============================================================
+    def gen_grating(self, grating_sf, grating_or, pos, win):
+        grating = visual.GratingStim(
+            win=win,
+            tex = 'sin', # texture used
+            pos = pos,
+            units='pix',
+            size=500,
+            sf = grating_sf, 
+            ori = grating_or,
+            phase= (0.0,0.0),
+            contrast = 1, # unchanged contrast (from 1 to -1)
+            #units="deg",
+            #pos = (0.0, 0.0), #in the middle of the screen. It is convertes internally in a numpy array
+            #sf = 5.0 / 200.0, # set the spatial frequency 5 cycles/ 150 pixels. 
+            #mask='raisedCos',
+            mask = 'raisedCos'
+        )
+        return grating
+
+    def gen_stim(self):
+        circle = visual.Circle(
+            win=win,
+            name='cicle',
+            radius=self.settings.stimulus_rad,
+            units='pix',
+            edges=128,
+            #units='pix',
+            fillColor=self.settings.stimulus_col,
+            pos=(0,0),
+            )
+        return circle
+
+    # Main psychpy loop ==============================================================
 
     def run_game(self):
-        """main loop running the pygame controlling the stimulus and enableing interaction via the rotary encoder"""        
-        # pygame config
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "3840,0"#"2195,0"
-        pygame.init()
-        print("init")
-        #===========================
-        # Set up the drawing window
-        pygame.display.init()
-        #screen = pygame.display.set_mode(self.screen_dim,  pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
-        screen = pygame.display.set_mode((6144,1536),  pygame.NOFRAME | pygame.HWSURFACE | pygame.DOUBLEBUF)
-        screen.fill((0, 0, 0))
-        pygame.display.flip()
-        # Create player
-        position = self.get_stim_center()
-        # create inital stimulus
-        screen.blit(self.surf, position)
-        #-----------------------------------------------------------------------------
-        # on soft code of state 1
-        #-----------------------------------------------------------------------------
-        # present initial stimulus
-        self.display_stim_event.wait()
-        pygame.display.flip()
-        # py game loop
-        last_position = 0
-        self.move_stim_event.wait()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
-        self.rotary_encoder.rotary_encoder.enable_stream()
-        self.rotary_encoder.rotary_encoder.current_position()
-        while self.run_open_loop:
-            # Fill the background with white
-            screen.fill((0, 0, 0))
-            screen.blit(self.surf, position)
+        # TODO: nice solution
+        GAIN=1 #TODO: gain from usersettings
+        pos = 0
+        change = 0
+
+        """main psychopy funkction and loops"""        
+        # monitor configuration
+        monitor = monitors.Monitor('testMonitor', width=self.SCREEN_WIDTH, distance=self.SCREEN_HEIGHT)  # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
+        monitor.setSizePix(self.SCREEN_SIZE)
+        # create window
+        #create a window
+        win = visual.Window(
+            size=(self.SCREEN_WIDTH, self.SCREEN_HEIGHT), 
+            fullscr=True, 
+            screen=1, 
+            monitor=monitor,
+            winType='pyglet', allowGUI=False, allowStencil=False,
+            color=[-1,-1,-1], colorSpace='rgb',
+            blendMode='avg', useFBO=True, 
+            units='height')
+        win.winHandle.maximize() # fix black bar bottom
+
+        # get frame rate of monitor
+        expInfo = {}
+        expInfo['frameRate'] = win.getActualFrameRate()
+        if expInfo['frameRate'] != None:
+            frameDur = 1.0 / round(expInfo['frameRate'])
+        else:
+            frameDur = 1.0 / 60.0  # could not measure, so guess
+
+        # run for n times
+        for trial in self.trials:
+            # get right grating
+            if self.correct_stim_side["right"]:
+                right_sf = self.settings.stimulus_correct["grating_sf"]
+                right_or = self.settings.stimulus_correct["grating_ori"]
+                left_sf = self.settings.stimulus_wrong["grating_sf"]
+                left_or = self.settings.stimulus_wrong["grating_ori"]
+            elif self.correct_stim_side["left"]:
+                left_sf = self.settings.stimulus_correct["grating_sf"]
+                left_or = self.settings.stimulus_correct["grating_ori"]
+                right_sf = self.settings.stimulus_wrong["grating_sf"]
+                right_or = self.settings.stimulus_wrong["grating_ori"]
+            # generate gratings and stimuli
+            grating_left = gen_grating(left_sf,left_or,self.settings.stim_end_pos[0] ,win)
+            grating_right = gen_grating(right_sf,right_or,self.settings.stim_end_pos[1] ,win)
+            stim = gen_stim()
+            #-----------------------------------------------------------------------------
+            # on soft code of state 1
+            #-----------------------------------------------------------------------------
+            # present initial stimulus
+            self.display_stim_event.wait()
+            while closed_loop: 
+                # dram moving gratings
+                grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
+                grating_right.setPhase(0.02, '+')
+                grating_left.draw()
+                grating_right.draw()
+                stim.draw
+                win.flip()
             #-------------------------------------------------------------------------
             # on soft code of state 2
             #-------------------------------------------------------------------------
-            # read rotary encoder stream
-            #current_position = self.rotary_encoder.read_position()
-            stream = self.rotary_encoder.rotary_encoder.read_stream()
-            #if current_position == None:
-            #   continue
-            #else:
-            #    change_position = last_position - int(current_position)
-            #    last_position = int(current_position)
-            #    # move to the left
-            #    position[0] += int(change_position*self.gain_right)
+            # reset rotary encoder
+            self.rotary_encoder.rotary_encoder.set_zero_position()
+            self.rotary_encoder.rotary_encoder.enable_stream()
+            # open loop
+            while open_loop:
+                # dram moving gratings
+                grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
+                grating_right.setPhase(0.02, '+')
+                grating_left.draw()
+                grating_right.draw()
+                # get rotary encoder change position
+                stream = self.rotary_encoder.rotary_encoder.read_stream()
+                if len(stream)>0:
+                    change = pos - stream[-1][2]
+                    pos = stream[-1][2]
+                    #move stimulus with mouse
+                    stim.pos+=(change*GAIN,0)    
+                stim.draw()
+                win.flip()
+            #-------------------------------------------------------------------------
+            # on soft code of state 3 freez movement
+            #-------------------------------------------------------------------------
+            still_show_event.wait()
+            win.flip()
+            win.clear()
+            # cleanup
+            open_loop = True
+            closed_loop = True
+            # reset flags
+            self.display_stim_event.clear()
+            self.still_show_event.clear()
+        # terminate psychopy window
+        win.close()
+        core.quite()
 
-            if len(stream)>0:
-                change_position = last_position - stream[-1][2]
-                #print(stream)
-                last_position = stream[-1][2]
-                # move to the left
-                # if change_position > 20:
-                #     change_postition = 20
-                position[0] += int(change_position*self.gain_right)
-                position[0] = self.keep_on_scrren(position[0])
-                #print(position[0])
 
-            pygame.display.update()
-            self.stimulus_position.append( (time.time(),position) )
-        
-        self.rotary_encoder.rotary_encoder.disable_stream()
-        #show stimulus after closed loop period is over until reward gieven
-        self.still_show_event.wait()
-        self.end_trial()
-        print("quite")
-        screen.fill((0, 0, 0))
-        pygame.display.flip()
-        print("reset")
-        print(self.settings.time_dict["time_inter_trial"])
-        pygame.display.quit()
-        pygame.quit()
-        

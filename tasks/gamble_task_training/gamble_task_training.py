@@ -28,7 +28,7 @@ from pybpodgui_api.models.session import Session
 
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
+maxland_root = os.path.dirname(os.path.dirname(currentdir))
 modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
@@ -59,7 +59,7 @@ window.update_settings()
 
 # run session
 if settings_obj.run_session:
-    settings_obj.update_userinput_file()
+    settings_obj.update_userinput_file_gambl()
     # rotary encoder config
     # enable thresholds
     rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)

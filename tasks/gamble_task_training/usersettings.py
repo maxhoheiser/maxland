@@ -1,3 +1,5 @@
+task = "gamble"
+
 """specify custom settings for session in this file:
 
 How to:
@@ -11,7 +13,8 @@ GAMBLE_SIDE = 'Right'
 # Blocks ========================================================
 """Construct a Block like this:
 
-{
+
+{
 	TRIAL_NUM_BLOCK: [int, int], #(50 - 80) #will chose a random length in between
 	PROB_REWARD_GAMBL_BLOCK: int,  #(0-100)
 	prob_reward_save_block: int  #(0-100)
