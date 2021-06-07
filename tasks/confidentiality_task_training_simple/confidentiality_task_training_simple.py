@@ -11,12 +11,13 @@ In addition it uses three custom classes:
 
 """
 
-"""
+
 
 import threading
 import os,sys,inspect
 import json
 import random
+from multiprocessing import Process
 
 # import pybpod modules
 from pybpodapi.bpod import Bpod
@@ -70,12 +71,16 @@ if settings_obj.run_session:
     def softcode_handler(data):
         if data == settings_obj.SC_PRESENT_STIM:
             stimulus_game.present_stimulus()
+            print("closed loop")
         elif data == settings_obj.SC_START_OPEN_LOOP:
             stimulus_game.start_open_loop()
+            print("open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
+            print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
             stimulus_game.end_present_stimulus()
+            print("end present stim")
         elif data == settings_obj.SC_START_LOGGING:
             rotary_encoder_module.rotary_encoder.enable_logging()
             print("enable logging")
@@ -101,7 +106,7 @@ if settings_obj.run_session:
 
 
     # create pygame daemon
-    threading.Thread(target=stimulus_game.run_game, daemon=True).start()
+    #threading.Thread(target=stimulus_game.run_game, daemon=True).start()
 
     # create main state machine aka trial loop ====================================================================
     # state machine configs
@@ -222,10 +227,16 @@ if settings_obj.run_session:
 
         # send & run state machine
         bpod.send_state_machine(sma)
+        #threading.Thread(target=bpod.run_state_machine(sma), daemon=True).start()
+        #threading.Thread(target=stimulus_game.run_game, daemon=True).start()
+        pa = Process(target=stimulus_game.run_game())
+        #pa.start()
 
         # wiat until state machine finished
         if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
             break
+        pa.join()
+        print(trial)
 
 
 rotary_encoder_module.close()
@@ -314,3 +325,5 @@ time.sleep(2)
 #stimulus_game.core.quite()
 rotary_encoder_module.close()
 bpod.close()
+
+"""
