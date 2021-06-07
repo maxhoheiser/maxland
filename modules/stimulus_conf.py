@@ -13,7 +13,7 @@ class Stimulus():
             rotary_encoder (RotaryEncoder object): object handeling rotary encoder module
         """         
         self.settings = settings    
-        self.trials = settings.trials
+        self.trials = settings.trial_number
         self.run_open_loop = True
         self.display_stim_event = threading.Event()
         self.move_stim_event = threading.Event()
@@ -27,12 +27,13 @@ class Stimulus():
         self.FPS = settings.FPS
         self.SCREEN_WIDTH = settings.SCREEN_WIDTH
         self.SCREEN_HEIGHT = settings.SCREEN_HEIGHT
-        self.SCREEN_SIZE = settings.SCREEN_SIZE
+        self.SCREEN_SIZE = (settings.SCREEN_WIDTH,settings.SCREEN_HEIGHT)
         # stimulus    
-
         self.rotary_encoder = rotary_encoder
-
         self.correct_stim_side = correct_stim_side
+        # variables
+        self.closed_loop=True
+        self.open_loop=True
 
 
     # flags
@@ -82,7 +83,7 @@ class Stimulus():
         grating = visual.GratingStim(
             win=win,
             tex = 'sin', # texture used
-            pos = pos,
+            pos = (pos,0),
             units='pix',
             size=500,
             sf = grating_sf, 
@@ -97,7 +98,7 @@ class Stimulus():
         )
         return grating
 
-    def gen_stim(self):
+    def gen_stim(self,win):
         circle = visual.Circle(
             win=win,
             name='cicle',
@@ -144,7 +145,7 @@ class Stimulus():
             frameDur = 1.0 / 60.0  # could not measure, so guess
 
         # run for n times
-        for trial in self.trials:
+        for trial in range(self.trials):
             # get right grating
             if self.correct_stim_side["right"]:
                 right_sf = self.settings.stimulus_correct["grating_sf"]
@@ -157,15 +158,15 @@ class Stimulus():
                 right_sf = self.settings.stimulus_wrong["grating_sf"]
                 right_or = self.settings.stimulus_wrong["grating_ori"]
             # generate gratings and stimuli
-            grating_left = gen_grating(left_sf,left_or,self.settings.stim_end_pos[0] ,win)
-            grating_right = gen_grating(right_sf,right_or,self.settings.stim_end_pos[1] ,win)
-            stim = gen_stim()
+            grating_left = self.gen_grating(left_sf,left_or,-500, win)#left_sf,left_or,self.settings.stim_end_pos[0] ,win)
+            grating_right = self.gen_grating(right_sf,right_or,500, win) #right_sf,right_or,self.settings.stim_end_pos[1] ,win)
+            stim = self.gen_stim(win)
             #-----------------------------------------------------------------------------
             # on soft code of state 1
             #-----------------------------------------------------------------------------
             # present initial stimulus
-            self.display_stim_event.wait()
-            while closed_loop: 
+            #self.display_stim_event.wait()
+            while self.closed_loop: 
                 # dram moving gratings
                 grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
                 grating_right.setPhase(0.02, '+')
@@ -180,7 +181,7 @@ class Stimulus():
             self.rotary_encoder.rotary_encoder.set_zero_position()
             self.rotary_encoder.rotary_encoder.enable_stream()
             # open loop
-            while open_loop:
+            while self.open_loop:
                 # dram moving gratings
                 grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
                 grating_right.setPhase(0.02, '+')
@@ -198,12 +199,12 @@ class Stimulus():
             #-------------------------------------------------------------------------
             # on soft code of state 3 freez movement
             #-------------------------------------------------------------------------
-            still_show_event.wait()
+            self.still_show_event.wait()
             win.flip()
             win.clear()
             # cleanup
-            open_loop = True
-            closed_loop = True
+            self.open_loop = True
+            self.closed_loop = True
             # reset flags
             self.display_stim_event.clear()
             self.still_show_event.clear()

@@ -11,9 +11,9 @@ How to:
 #grating_SF = 0.25  # 4 cycles per degree visual angle
 #grating_ori = 0   # in degree
 
-STIMULUS_CORRECT = {"grating_sf": 21, "grating_ori": 1}
+STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0}
 
-STIMULUS_WRONG = {"grating_sf": 25, "grating_ori": 90}
+STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90}
 
 # trials
 TRIAL_NUMBER = 10
@@ -70,8 +70,8 @@ ALL_THRESHOLDS = [
 ]
 # speed of movement
 STIM_END_POS = [
-    -1921,
-    1921
+    -2000,
+    2000
 ] # pixel
 """
 end of 1st screen from center = 960 px

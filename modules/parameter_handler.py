@@ -93,12 +93,12 @@ class TrialParameterHandler():
 
         # stimulus
         self.FPS=60
-        self.SCREEN_WIDTH = 6144
-        self.SCREEN_HEIGHT = 1536
+        self.SCREEN_WIDTH = 2560 #6144
+        self.SCREEN_HEIGHT = 1440 #1536
 
-        MON_DISTANCE = 16  # Distance between subject's eyes and monitor
-        MON_WIDTH = 20  # Width of your monitor in cm
-        MON_SIZE = (2048,1536)  #[1024, 1280]  # Pixel-dimensions of your monitor
+        self.SCREEN_DISTANCE = 16  # Distance between subject's eyes and monitor
+        self.SCREEN_WIDTH = 20  # Width of your monitor in cm
+        #self.SCREEN_SIZE = (2048,1536)  #[1024, 1280]  # Pixel-dimensions of your monitor
 
         # wheel postition
         self.wheel_position = []
