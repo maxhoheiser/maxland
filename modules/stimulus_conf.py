@@ -1,4 +1,5 @@
 from psychopy import visual, core, monitors #import some libraries from PsychoPy
+import multiprocessing
 import time
 import threading
 import os
@@ -14,10 +15,7 @@ class Stimulus():
         """         
         self.settings = settings    
         self.trials = settings.trial_number
-        self.run_open_loop = True
-        self.display_stim_event = threading.Event()
-        self.move_stim_event = threading.Event()
-        self.still_show_event = threading.Event()
+
         # set gain
         self.gain =  [abs(y/x) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
         # gain to the left first - position
@@ -31,16 +29,9 @@ class Stimulus():
         # stimulus    
         self.rotary_encoder = rotary_encoder
         self.correct_stim_side = correct_stim_side
-        # variables
-        self.closed_loop=True
-        self.open_loop=True
-
         # TODO: nice solution
-        GAIN=1 #TODO: gain from usersettings
-        pos = 0
-        change = 0
+        self.GAIN=1 #TODO: gain from usersettings
 
-        """main psychopy funkction and loops"""        
         # monitor configuration
         self.monitor = monitors.Monitor('testMonitor', width=self.SCREEN_WIDTH, distance=self.SCREEN_HEIGHT)  # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
         self.monitor.setSizePix(self.SCREEN_SIZE)
@@ -65,39 +56,10 @@ class Stimulus():
         else:
             frameDur = 1.0 / 60.0  # could not measure, so guess
         
-        # flags
-        self.display_stim_event = False
 
 
-    # flags =========================================================================
-    # flag softcode 1
-    def present_stimulus(self):
-        """flag bevore stimulus appears on screen, set from softcode in bpood state"""        
-        #self.display_stim_event.set()
-        self.display_stim_event = True
-        print("present stimulus")
 
-    # flag softcode 2
-    def start_open_loop(self):
-        """flag bevore open loop where wheel moves stimulus is started, set from softcode in bpod state"""        
-        #self.move_stim_event.set()
-        self.closed_loop = False
-        print("start open loop")
-
-    # flag softcode 3
-    def stop_open_loop(self):
-        """flag bevore open loop - while loop is stopped, time sleep so latent wheel movement which already triggered threshold
-        can also move stimulus to final posititon
-        """        
-        self.run_open_loop = False
-        print("stop open loop")
-
-    # flag softcode 4
-    def end_present_stimulus(self):
-        """flag, which keeps stimulus frozen on end postition"""        
-        self.still_show_event.set()
-        print("end present stimulus")
-
+  
 
     # helper functions ===============================================================
     def keep_on_scrren(self, position_x):
@@ -146,7 +108,12 @@ class Stimulus():
         return circle
 
     # Main psychpy loop ==============================================================
-    def run_game(self):
+    def run_game(self,run_closed_loop,run_open_loop, display_stim_event, still_show_event):
+        # initialize variables
+        display_stim_event.clear()
+        still_show_event.clear()
+        run_open_loop.value = True
+        run_closed_loop.value = True
         # get right grating
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
@@ -166,17 +133,14 @@ class Stimulus():
         # on soft code of state 1
         #-----------------------------------------------------------------------------
         # present initial stimulus
-        #while self.display_stim_event:
-        #    pass
-        print("closed loop")
-        sys.stdout.flush()
-        while self.closed_loop: 
+        display_stim_event.wait()
+        while run_closed_loop.value:#self.run_closed_loop: 
             # dram moving gratings
             grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
             grating_right.setPhase(0.02, '+')
             grating_left.draw()
             grating_right.draw()
-            stim.draw()
+            #stim.draw()
             self.win.flip()
         #-------------------------------------------------------------------------
         # on soft code of state 2
@@ -187,7 +151,8 @@ class Stimulus():
         # open loop
         print("open loop")
         sys.stdout.flush()
-        while True: #self.open_loop:
+        pos=0
+        while run_open_loop.value:
             # dram moving gratings
             grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
             grating_right.setPhase(0.02, '+')
@@ -199,22 +164,17 @@ class Stimulus():
                 change = pos - stream[-1][2]
                 pos = stream[-1][2]
                 #move stimulus with mouse
-                stim.pos+=(change*GAIN,0)    
+                stim.pos+=(change*self.GAIN,0)    
             stim.draw()
             self.win.flip()
             sys.stdout.flush()
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
-        self.still_show_event.wait()
+        still_show_event.wait()
+        print("end")
         self.win.flip()
-        self.win.clear()
-        # cleanup
-        self.open_loop = True
-        self.closed_loop = True
-        # reset flags
-        self.display_stim_event.clear()
-        self.still_show_event.clear()
+
 
 
 

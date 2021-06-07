@@ -17,12 +17,17 @@ import threading
 import os,sys,inspect
 import json
 import random
+import multiprocessing
 from multiprocessing import Process
+import time
 
 # import pybpod modules
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
+
+# span subprocess
+multiprocessing.set_start_method('fork')
 
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -45,17 +50,33 @@ session_folder = os.getcwd()
 # TODO: correct for final foderl
 #settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","confidentiality_task_training_simple")
 settings_folder = session_folder
+global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
 
 # create bpod object
 bpod=Bpod('/dev/cu.usbmodem62917601')
 
 # create tkinter userinput dialoge window
+# TODO: fix for windows
 #window = UserInput(settings_obj)
 #window.draw_window_bevore_conf()
 #window.show_window()
 
 settings_obj.run_session = True
+
+# create multiprocessing variabls
+manager = multiprocessing.Manager()
+#global run_closed_loop
+run_closed_loop = manager.Value('b',True)
+#global run_open_loop
+run_open_loop = manager.Value('b',True)
+# flags
+display_stim_event = multiprocessing.Event()
+still_show_event = multiprocessing.Event()
+display_stim_event.clear()
+still_show_event.clear()
+# set functions
+
 
 # run session
 if settings_obj.run_session:
@@ -69,21 +90,22 @@ if settings_obj.run_session:
 
     # softcode handler
     def softcode_handler(data):
+        global run_closed_loop
+        global run_open_loop
         if data == settings_obj.SC_PRESENT_STIM:
-            stimulus_game.present_stimulus()
-            print("closed loop")
+            display_stim_event.set()
+            print("PRESENT STIMULUS")
         elif data == settings_obj.SC_START_OPEN_LOOP:
-            stimulus_game.start_open_loop()
-            print("open loop")
+            run_closed_loop.value = False
+            print("START OPEN LOOP")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
-            stimulus_game.stop_open_loop()
+            run_open_loop.value = False
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
-            stimulus_game.end_present_stimulus()
+            still_show_event.set()
             print("end present stim")
         elif data == settings_obj.SC_START_LOGGING:
             rotary_encoder_module.rotary_encoder.enable_logging()
-            print("enable logging")
         elif data == settings_obj.SC_END_LOGGING:
             rotary_encoder_module.rotary_encoder.disable_logging()
             print("disable logging")
@@ -101,21 +123,18 @@ if settings_obj.run_session:
         stim_dict["left"]= not(random_side)
     # TODO: remove
     stim_side_list = [correct_stim_side]
+
     #stimulus
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, correct_stim_side)
 
-
-    # create pygame daemon
-    #threading.Thread(target=stimulus_game.run_game, daemon=True).start()
-
     # create main state machine aka trial loop ====================================================================
     # state machine configs
-    for trial in range(settings_obj.trial_number):
-        # create random side
+    for trial in range(3):#range(settings_obj.trial_number):
+        # create random stimulus side
         get_random_side(correct_stim_side)
         print(correct_stim_side)
+        # construct states
         sma = StateMachine(bpod)
-        # define states
         # start state to define block of trial
         sma.add_state(
             state_name="start",
@@ -133,7 +152,7 @@ if settings_obj.run_session:
         #wheel not stoping check
         sma.add_state(
             state_name="wheel_stopping_check",
-            state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
+            state_timer=5,#settings_obj.time_dict["time_wheel_stopping_check"],
             state_change_conditions={
                     "Tup":"present_stim",
                     settings_obj.THRESH_LEFT:"wheel_stopping_check_failed_punish",
@@ -151,7 +170,7 @@ if settings_obj.run_session:
         # continue if wheel stopped for time x
         sma.add_state(
             state_name="present_stim",
-            state_timer=settings_obj.time_dict["time_stim_pres"],
+            state_timer=5,#settings_obj.time_dict["time_stim_pres"],
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
             output_actions=[("SoftCode", settings_obj.SC_PRESENT_STIM)],#after wait -> present initial stimulus
         )
@@ -165,7 +184,7 @@ if settings_obj.run_session:
         # open loop detection
         sma.add_state(
             state_name="open_loop",
-            state_timer=settings_obj.time_dict["time_open_loop"],
+            state_timer=5,#settings_obj.time_dict["time_open_loop"],
             state_change_conditions={
                 "Tup": "stop_open_loop_fail",
                 settings_obj.STIMULUS_LEFT: "stop_open_loop_reward_left",
@@ -213,7 +232,7 @@ if settings_obj.run_session:
             state_name="inter_trial",
             state_timer=settings_obj.time_dict["time_inter_trial"],
             state_change_conditions={"Tup": "end_state"},
-            output_actions=[],
+            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)],
         )
 
         # end state
@@ -227,103 +246,20 @@ if settings_obj.run_session:
 
         # send & run state machine
         bpod.send_state_machine(sma)
-        #threading.Thread(target=bpod.run_state_machine(sma), daemon=True).start()
-        #threading.Thread(target=stimulus_game.run_game, daemon=True).start()
-        pa = Process(target=stimulus_game.run_game())
-        #pa.start()
+        pa = Process(target=bpod.run_state_machine, args=(sma,))
+        pa.start()
+
+        # run stimulus game
+        stimulus_game.run_game(run_closed_loop,run_open_loop, display_stim_event, still_show_event)
 
         # wiat until state machine finished
-        if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
-            break
-        pa.join()
+        #if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
+        #    break
+        pa.join() 
+        
         print(trial)
 
-
 rotary_encoder_module.close()
 bpod.close()
 
 
-"""
-
-
-
-#import threading
-#import subprocess
-#import multiprocessing
-import multiprocess as multiprocessing
-from multiprocess import Process
-import os,sys,inspect,platform
-import json
-import random
-import time
-
-
-
-# import pybpod modules
-from pybpodapi.bpod import Bpod
-from pybpodapi.state_machine import StateMachine
-from pybpodgui_api.models.session import Session
-
-# add module path to sys path
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-maxland_root = os.path.dirname(os.path.dirname(currentdir))
-modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(0,modules_dir) 
-
-from stimulus_conf import Stimulus
-from parameter_handler import TrialParameterHandler
-from rotaryencoder import BpodRotaryEncoder
-
-#from userinput import UserInput
-
-# import usersettings
-import usersettings
-session_folder = os.getcwd()
-# TODO: correct for final foderl
-#settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","confidentiality_task_training_simple")
-settings_folder = session_folder
-settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
-
-settings_obj.run_session = True
-bpod=Bpod('/dev/cu.usbmodem62917601')
-
-rotary_encoder_module = BpodRotaryEncoder('/dev/cu.usbmodem65305701', settings_obj, bpod)
-
-#probability constructor
-correct_stim_side = {
-    "right" : True, # True = correct
-    "left" : False  # False = wrong
-}
-def get_random_side(stim_dict):
-    random_side = bool(random.getrandbits(1))
-    stim_dict["right"]=random_side
-    stim_dict["left"]= not(random_side)
-# TODO: remove
-stim_side_list = [correct_stim_side]
-
-stimulus_game = Stimulus(settings_obj, rotary_encoder_module, correct_stim_side)
-
-#stimulus_game.run_game()
-
-#threading.Thread(target=stimulus_game.run_game, daemon=True).start()
-if platform.system() == "Darwin":
-        multiprocessing.set_start_method('spawn')
-
-Process(target=stimulus_game.run_game).start()
-
-time.sleep(2)
-stimulus_game.present_stimulus()
-time.sleep(2)
-stimulus_game.start_open_loop()
-time.sleep(10)
-stimulus_game.stop_open_loop()
-time.sleep(2)
-stimulus_game.end_present_stimulus()
-time.sleep(2)
-
-
-#stimulus_game.core.quite()
-rotary_encoder_module.close()
-bpod.close()
-
-"""
