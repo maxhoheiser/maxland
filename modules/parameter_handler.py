@@ -94,8 +94,8 @@ class TrialParameterHandler():
 
         # stimulus
         self.FPS=60
-        self.SCREEN_WIDTH = 2560 #6144
-        self.SCREEN_HEIGHT = 1440 #1536
+        self.SCREEN_WIDTH = 6144
+        self.SCREEN_HEIGHT = 1536
 
         self.SCREEN_DISTANCE = 16  # Distance between subject's eyes and monitor
         self.SCREEN_WIDTH = 20  # Width of your monitor in cm
@@ -232,6 +232,7 @@ class TrialParameterHandler():
             "time_open_loop_fail_punish": self.usersettings.TIME_OPEN_LOOP_FAIL_PUNISH,
             "time_stim_freez": self.usersettings.TIME_STIM_FREEZ,
             "time_reward": self.usersettings.REWARD_TIME,
+            "time_noreward": self.usersettings.NOREWARD_TIME,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
             "time_big_reward_waiting": (self.usersettings.REWARD_TIME - self.big_reward_open_time),
             "time_small_reward_waiting": (self.usersettings.REWARD_TIME - self.small_reward_open_time),
@@ -287,6 +288,8 @@ class TrialParameterHandler():
                 "TIME_STIM_FREEZ = "+repr(self.time_dict["time_stim_freez"])+"\n"
                 "# time the animal has for the reard = valve open + time after\n"
                 "REWARD_TIME ="+repr(self.time_dict["time_reward"])+"\n"
+                "# no reward time\n"
+                "NOREWARD_TIME = "+repr(self.time_dict["time_noreward"])+"\n"
                 "# time at end of each trial_num\n"
                 "INTER_TRIAL_TIME = "+repr(self.time_dict["time_inter_trial"])+"\n\n"
                 "# stimulus ====================================================\nSTIMULUS = "+json.dumps(self.stim)+"\n\n"
@@ -324,8 +327,10 @@ class TrialParameterHandler():
             "time_range_open_loop_fail_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_FAIL_PUNISH,
             "time_stim_freez": self.usersettings.TIME_STIM_FREEZ,
             "time_reward": self.usersettings.REWARD_TIME,
+            "time_noreward": self.usersettings.NOREWARD_TIME,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
             "open_time_reward": self.reward_open_time,
+            "time_reward_waiting": self.usersettings.REWARD_TIME-self.reward_open_time
             }
         return time_dict
 
@@ -371,6 +376,8 @@ class TrialParameterHandler():
                     "TIME_STIM_FREEZ = "+repr(self.time_dict["time_stim_freez"])+"\n"
                     "# time the animal has for the reard = valve open + time after\n"
                     "REWARD_TIME ="+repr(self.time_dict["time_reward"])+"\n"
+                    "# no reward time\n"
+                    "NOREWARD_TIME = "+repr(self.time_dict["time_noreward"])+"\n"
                     "# time at end of each trial_num\n"
                     "INTER_TRIAL_TIME = "+repr(self.time_dict["time_inter_trial"])+"\n\n"
                     "# Insist Mode =================================================\n"

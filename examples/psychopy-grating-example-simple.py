@@ -37,7 +37,7 @@ my_monitor.setSizePix(MON_SIZE)
 
 win = visual.Window(
     monitor= my_monitor,
-    screen=1,
+    screen=2,
     size= MON_SIZE, # Put the value from the display. size of the window in pixels
     color=[0.169,0.169, 0.169], #Color of background as [r,g,b].Each take values between -1.0 and 1.0.
     units="deg",

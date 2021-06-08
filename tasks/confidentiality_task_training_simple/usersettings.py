@@ -11,9 +11,9 @@ How to:
 #grating_SF = 0.25  # 4 cycles per degree visual angle
 #grating_ori = 0   # in degree
 
-STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0, "phase_speed": 0.02}
+STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0.0}
 
-STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90, "phase_speed": 0.02}
+STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90.0}
 
 # trials
 TRIAL_NUMBER = 10
@@ -45,6 +45,8 @@ TIME_RANGE_OPEN_LOOP_FAIL_PUNISH = (1.0, 5.0)
 TIME_STIM_FREEZ = 2.0
 # time the animal has for the reard = valve open + time after
 REWARD_TIME =10.0
+# no reward time
+NOREWARD_TIME = 5.0
 # time at end of each trial_num
 INTER_TRIAL_TIME = 5.0
 

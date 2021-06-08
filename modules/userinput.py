@@ -80,12 +80,12 @@ class UserInput():
             self.settings.stimulus_rad = int(self.var_stim_rad.get())
             self.settings.stimulus_col = list(map(int, self.var_stim_col.get().split(',')))
             self.settings.stimulus_correct = {
-                "grating_sf" : int(self.var_stim_correct_sf.get()),
-                "grating_ori" : int(self.var_stim_correct_or.get()),
+                "grating_sf" : float(self.var_stim_correct_sf.get()),
+                "grating_ori" : float(self.var_stim_correct_or.get()),
                 }
             self.settings.stimulus_wrong = {
-                "grating_sf" : int(self.var_stim_wrong_sf.get()),
-                "grating_ori" : int(self.var_stim_wrong_or.get()),
+                "grating_sf" : float(self.var_stim_wrong_sf.get()),
+                "grating_ori" : float(self.var_stim_wrong_or.get()),
                 }
             # times
             self.settings.reward_open_time = float(self.var_reward.get())
@@ -116,7 +116,7 @@ class UserInput():
         if self.task is "gamble":
             self.WINDOW_SIZE = [835, 920]
         if self.task is "conf":
-            self.WINDOW_SIZE = [835, 920]
+            self.WINDOW_SIZE = [880, 920]
 
         screen_size = [self.root.winfo_screenwidth(), self.root.winfo_screenheight()]
         window_offset = [ int((screen_size[0]-self.WINDOW_SIZE[0])/2),
@@ -497,8 +497,8 @@ class UserInput():
         lbl_rials_num.grid(row=0, column=0, padx=5, pady=8)
 
         self.var_trial_num = tk.StringVar(frame2, value=self.settings.trial_number)
-        self.var_trial_num = tk.Entry(frame2, textvariable=self.var_trial_num, width=10)
-        self.var_trial_num.grid(row=0, column=1, pady=8)
+        self.etr_trial_num = tk.Entry(frame2, textvariable=self.var_trial_num, width=10)
+        self.etr_trial_num.grid(row=0, column=1, pady=8)
 
         lbl_reward = tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg='gray66').pack(anchor=tk.W, padx=self.padx-2, pady=(10,2))
         frame3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)

@@ -74,6 +74,8 @@ TIME_OPEN_LOOP_FAIL_PUNISH = 5.0
 TIME_STIM_FREEZ = 2.0
 # time the animal has for the reard = valve open + time after
 REWARD_TIME =10.0
+# no reward time
+NOREWARD_TIME = 5.0
 # time at end of each trial_num
 INTER_TRIAL_TIME = 5.0
 

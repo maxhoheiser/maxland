@@ -35,7 +35,7 @@ class Stimulus():
         self.win = visual.Window(
             size=(self.SCREEN_WIDTH, self.SCREEN_HEIGHT), 
             fullscr=True, 
-            screen=1, 
+            screen=2, 
             monitor=self.monitor,
             winType='pyglet', allowGUI=False, allowStencil=False,
             color=self.settings.bg_color, colorSpace='rgb',
