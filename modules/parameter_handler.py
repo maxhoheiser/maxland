@@ -337,6 +337,9 @@ class TrialParameterHandler():
     def update_userinput_file_conf(self):
         """updates usersettings file with new variable values
         """        
+        #TODO: fix user input
+        self.stimulus_correct["phase_speed"]=0.02
+        self.stimulus_wrong["phase_speed"]=0.02
         with open(os.path.join(self.settings_folder,'usersettings.py'), 'w') as f:
             f.write(
                     "task = 'conf'\n\n"
