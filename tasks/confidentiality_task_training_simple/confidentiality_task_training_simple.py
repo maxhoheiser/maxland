@@ -63,10 +63,10 @@ window.show_window()
 
 # create multiprocessing variabls
 #global run_closed_loop
-global
+global run_closed_loop
 run_closed_loop = True
 #global run_open_loop
-global
+global run_open_loop
 run_open_loop = True
 # flags
 display_stim_event = threading.Event()

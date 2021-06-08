@@ -115,8 +115,8 @@ class Stimulus():
         # initialize variables
         display_stim_event.clear()
         still_show_event.clear()
-        run_open_loop.value = True
-        run_closed_loop.value = True
+        run_open_loop = True
+        run_closed_loop = True
         # get right grating
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
