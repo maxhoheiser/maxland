@@ -17,11 +17,6 @@ class Stimulus():
         self.trials = settings.trial_number
 
         # set gain
-        self.gain =  [abs(y/x) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
-        # gain to the left first - position
-        self.gain_left = self.gain[0]
-        # gain to the right second + position
-        self.gain_right = self.gain[1]
         self.FPS = settings.FPS
         self.SCREEN_WIDTH = settings.SCREEN_WIDTH
         self.SCREEN_HEIGHT = settings.SCREEN_HEIGHT
@@ -29,9 +24,9 @@ class Stimulus():
         # stimulus    
         self.rotary_encoder = rotary_encoder
         self.correct_stim_side = correct_stim_side
-        # TODO: nice solution
-        self.GAIN=1 #TODO: gain from usersettings
-
+        #self.gain = self.get_gain()
+        self.gain_left,self.gain_right  =  [round(abs(y/x),2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
+        self.gain = self.gain_left
         # monitor configuration
         self.monitor = monitors.Monitor('testMonitor', width=self.SCREEN_WIDTH, distance=self.SCREEN_HEIGHT)  # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
         self.monitor.setSizePix(self.SCREEN_SIZE)
@@ -43,7 +38,7 @@ class Stimulus():
             screen=1, 
             monitor=self.monitor,
             winType='pyglet', allowGUI=False, allowStencil=False,
-            color=[-1,-1,-1], colorSpace='rgb',
+            color=self.settings.bg_color, colorSpace='rgb',
             blendMode='avg', useFBO=True, 
             units='height')
         self.win.winHandle.maximize() # fix black bar bottom
@@ -58,9 +53,6 @@ class Stimulus():
         
 
 
-
-  
-
     # helper functions ===============================================================
     def keep_on_scrren(self, position_x):
         """keep the stimulus postition in user defined boundaries
@@ -73,6 +65,17 @@ class Stimulus():
         """        
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
         
+
+    def get_gain(self):
+        clicks = 1024/365 * abs(self.settings.thresholds[0]) #each full rotation = 1024 clicks
+        gain = abs(self.settings.stim_end_pos[0]) / clicks
+        return round(gain,2)
+
+    def ceil(self,num):
+        if num > 20:
+            return 20
+        else:
+            return num
 
     # stimulus functions =============================================================
     def gen_grating(self, grating_sf, grating_or, pos):
@@ -98,11 +101,11 @@ class Stimulus():
         circle = visual.Circle(
             win=self.win,
             name='cicle',
-            radius=100, #self.settings.stimulus_rad,
+            radius=self.settings.stimulus_rad,
             units='pix',
             edges=128,
             #units='pix',
-            fillColor= (0,255,0), #self.settings.stimulus_col,
+            fillColor= self.settings.stimulus_col,
             pos=(0,0),
             )
         return circle
@@ -118,16 +121,20 @@ class Stimulus():
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
+            right_ps = self.settings.stimulus_correct["phase_speed"]
             left_sf = self.settings.stimulus_wrong["grating_sf"]
             left_or = self.settings.stimulus_wrong["grating_ori"]
+            left_ps = self.settings.stimulus_correct["phase_speed"]
         elif self.correct_stim_side["left"]:
             left_sf = self.settings.stimulus_correct["grating_sf"]
             left_or = self.settings.stimulus_correct["grating_ori"]
+            left_ps = self.settings.stimulus_correct["phase_speed"]
             right_sf = self.settings.stimulus_wrong["grating_sf"]
             right_or = self.settings.stimulus_wrong["grating_ori"]
+            right_ps = self.settings.stimulus_correct["phase_speed"]
         # generate gratings and stimuli
-        grating_left = self.gen_grating(left_sf,left_or,-900)#left_sf,left_or,self.settings.stim_end_pos[0] ,win)
-        grating_right = self.gen_grating(right_sf,right_or,900) #right_sf,right_or,self.settings.stim_end_pos[1] ,win)
+        grating_left = self.gen_grating(left_sf,left_or,self.settings.stim_end_pos[0])
+        grating_right = self.gen_grating(right_sf,right_or,self.settings.stim_end_pos[1])
         stim = self.gen_stim()
         #-----------------------------------------------------------------------------
         # on soft code of state 1
@@ -136,8 +143,8 @@ class Stimulus():
         display_stim_event.wait()
         while run_closed_loop.value:#self.run_closed_loop: 
             # dram moving gratings
-            grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
-            grating_right.setPhase(0.02, '+')
+            grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
             grating_left.draw()
             grating_right.draw()
             #stim.draw()
@@ -150,24 +157,23 @@ class Stimulus():
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
-        sys.stdout.flush()
         pos=0
         while run_open_loop.value:
             # dram moving gratings
-            grating_left.setPhase(0.02, '+')#advance phase by 0.05 of a cycle
-            grating_right.setPhase(0.02, '+')
+            grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
             grating_left.draw()
             grating_right.draw()
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                change = pos - stream[-1][2]
+                print((pos - stream[-1][2])*self.gain)
+                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
-                stim.pos+=(change*self.GAIN,0)    
+                stim.pos+=(change,0)    
             stim.draw()
             self.win.flip()
-            sys.stdout.flush()
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------

@@ -407,7 +407,7 @@ class UserInput():
 
 
     # Window After ====================================================================
-    def draw_window_after_gambl(self):
+    def draw_window_after(self):
         """tkinter window to get user input after session, variables and default values are read from settings object
         """
         # heading

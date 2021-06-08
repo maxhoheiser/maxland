@@ -49,6 +49,7 @@ class TrialParameterHandler():
             self.stimulus_wrong = usersettings.STIMULUS_WRONG
             self.stimulus_rad = usersettings.STIMULUS_RAD
             self.stimulus_col = usersettings.STIMULUS_COL
+            self.bg_color = usersettings.BACKGROUND_COL
             # times
             self.reward_open_time = self.create_valve_open_time(self.usersettings.REWARD_TIME)
             self.reward = self.usersettings.REWARD
@@ -348,6 +349,7 @@ class TrialParameterHandler():
                     "# stimulus size and color - only for moving stimulus\n"
                     "STIMULUS_RAD = "+json.dumps(self.stimulus_rad)+" # pixel radius of stimulus\n"
                     "STIMULUS_COL = "+json.dumps(self.stimulus_col)+"#color of stimulus\n\n"
+                    "BACKGROUND_COL = "+json.dumps(self.bg_color)+"#-1,-1,-1 for black"
                     "#===============================================================\n"
                     "# reward in ml\n"
                     "REWARD = "+json.dumps(self.reward)+"\n\n"
