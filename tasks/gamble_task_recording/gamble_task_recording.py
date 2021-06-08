@@ -1,9 +1,11 @@
-"""PyBpod Gambl Task - Training Environment
+task = "gamble"
+
+"""PyBpod Gamble Task - Training Environment
 
 main behavior file for pybpod gui
 load this file via the pybpod gui as a protocol
 
-The gambl tasks is designed for headfixed mice with three screens. The mouse can move a stimulus image or gif
+The gamble tasks is designed for headfixed mice with three screens. The mouse can move a stimulus image or gif
 from the center screen to eather the right or left screen via a wheel. Depending on the conditions the mouse
 will get a reward of defined amount if chosen the correct side.
 
