@@ -51,7 +51,8 @@ class Stimulus():
         else:
             frameDur = 1.0 / 60.0  # could not measure, so guess
         
-
+        self.run_closed_loop = True
+        self.run_open_loop = True
 
     # helper functions ===============================================================
     def keep_on_scrren(self, position_x):
@@ -76,6 +77,12 @@ class Stimulus():
             return 20
         else:
             return num
+
+    def stop_closed_loop(self):
+        self.run_closed_loop = False
+    
+    def stop_open_loop(self):
+        self.run_open_loop = False
 
     # stimulus functions =============================================================
     def gen_grating(self, grating_sf, grating_or, pos):
@@ -111,27 +118,22 @@ class Stimulus():
         return circle
 
     # Main psychpy loop ==============================================================
-    def run_game(self,run_closed_loop,run_open_loop, display_stim_event, still_show_event):
-        # initialize variables
-        display_stim_event.clear()
-        still_show_event.clear()
-        run_open_loop = True
-        run_closed_loop = True
+    def run_game(self, display_stim_event, still_show_event):
         # get right grating
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
-            right_ps = self.settings.stimulus_correct["phase_speed"]
+            right_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
             left_sf = self.settings.stimulus_wrong["grating_sf"]
             left_or = self.settings.stimulus_wrong["grating_ori"]
-            left_ps = self.settings.stimulus_correct["phase_speed"]
+            left_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
         elif self.correct_stim_side["left"]:
             left_sf = self.settings.stimulus_correct["grating_sf"]
             left_or = self.settings.stimulus_correct["grating_ori"]
-            left_ps = self.settings.stimulus_correct["phase_speed"]
+            left_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
             right_sf = self.settings.stimulus_wrong["grating_sf"]
             right_or = self.settings.stimulus_wrong["grating_ori"]
-            right_ps = self.settings.stimulus_correct["phase_speed"]
+            right_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
         # generate gratings and stimuli
         grating_left = self.gen_grating(left_sf,left_or,self.settings.stim_end_pos[0])
         grating_right = self.gen_grating(right_sf,right_or,self.settings.stim_end_pos[1])
@@ -141,7 +143,7 @@ class Stimulus():
         #-----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        while run_closed_loop.value:#self.run_closed_loop: 
+        while self.run_closed_loop:#self.run_closed_loop: 
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
@@ -158,7 +160,7 @@ class Stimulus():
         # open loop
         print("open loop")
         pos=0
-        while run_open_loop.value:
+        while self.run_open_loop:
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
@@ -180,6 +182,11 @@ class Stimulus():
         still_show_event.wait()
         print("end")
         self.win.flip()
+        # cleanup for next loop
+        self.run_closed_loop=True
+        self.run_open_loop=True
+        display_stim_event.clear()
+        still_show_event.clear()
 
 
 

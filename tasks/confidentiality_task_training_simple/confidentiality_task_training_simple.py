@@ -62,12 +62,6 @@ window.show_window()
 #settings_obj.run_session = True
 
 # create multiprocessing variabls
-#global run_closed_loop
-global run_closed_loop
-run_closed_loop = True
-#global run_open_loop
-global run_open_loop
-run_open_loop = True
 # flags
 display_stim_event = threading.Event()
 still_show_event = threading.Event()
@@ -94,10 +88,10 @@ if settings_obj.run_session:
             display_stim_event.set()
             print("PRESENT STIMULUS")
         elif data == settings_obj.SC_START_OPEN_LOOP:
-            run_closed_loop.value = False
+            stimulus_game.stop_closed_loop()
             print("START OPEN LOOP")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
-            run_open_loop.value = False
+            stimulus_game.stop_open_loop()
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
             still_show_event.set()
@@ -358,7 +352,7 @@ if settings_obj.run_session:
         pa.start()
 
         # run stimulus game
-        stimulus_game.run_game(run_closed_loop,run_open_loop, display_stim_event, still_show_event)
+        stimulus_game.run_game(display_stim_event, still_show_event)
 
         # wiat until state machine finished
         #if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
@@ -368,9 +362,6 @@ if settings_obj.run_session:
         # post trial cleanup
         print("---------------------------------------------------")
         print(f"trial: {trial}")
-        print(f"side: {var_side}")
-        print(f"reward: {var_reward}")
-        print(f"probability: {probability_dict}")
 
     #=========================================================================================================
     print("finished")

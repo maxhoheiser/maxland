@@ -65,15 +65,15 @@ RANGE_INSIST_DEACTIVATE = 11
 """
 # threhsolds for event signaling between rotary encoder and bpod
 ALL_THRESHOLDS = [
-    -91,
-    91,
+    -90,
+    90,
     -1,
     1
 ]
 # speed of movement
 STIM_END_POS = [
-    -900,
-    900
+    -1902,
+    1902
 ] # pixel
 """
 end of 1st screen from center = 960 px
