@@ -39,7 +39,7 @@ class BpodRotaryEncoder():
         Args:
             bpod (Bpod object): 
         """        
-        rotary_encoder = [x for x in self.bpod.modules if x.name=="RotaryEncoder1"][0]
+        rotary_encoder = [x for x in self.bpod.modules if x.name == "RotaryEncoder1"][0]
         self.bpod.load_serial_message(rotary_encoder, self.reset, [ord('Z'), ord('E')])
 
     def configure(self):
