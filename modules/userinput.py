@@ -82,10 +82,12 @@ class UserInput():
             self.settings.stimulus_correct = {
                 "grating_sf" : float(self.var_stim_correct_sf.get()),
                 "grating_ori" : float(self.var_stim_correct_or.get()),
+                "grating_size" : float(self.var_stim_correct_size.get()),
                 }
             self.settings.stimulus_wrong = {
                 "grating_sf" : float(self.var_stim_wrong_sf.get()),
                 "grating_ori" : float(self.var_stim_wrong_or.get()),
+                "grating_size" : float(self.var_stim_wrong_size.get()),
                 }
             # times
             self.settings.reward_open_time = float(self.var_reward.get())
@@ -116,7 +118,7 @@ class UserInput():
         if self.task is "gamble":
             self.WINDOW_SIZE = [835, 920]
         if self.task is "conf":
-            self.WINDOW_SIZE = [880, 920]
+            self.WINDOW_SIZE = [880, 940]
 
         screen_size = [self.root.winfo_screenwidth(), self.root.winfo_screenheight()]
         window_offset = [ int((screen_size[0]-self.WINDOW_SIZE[0])/2),
@@ -587,14 +589,31 @@ class UserInput():
 
         self.var_stim_correct_sf = tk.StringVar(frame5_0, value=self.settings.stimulus_correct["grating_sf"])
         self.etr_stim_correct_sf = tk.Entry(frame5_0, textvariable=self.var_stim_correct_sf, width=4)
-        self.etr_stim_correct_sf.grid(row=1, column=1, padx=(0,0), pady=0, sticky='E')
+        self.etr_stim_correct_sf.grid(row=1, column=1, padx=(0,0), pady=0, sticky='W')
         # orientation
         lbl_stim_correct_or =  tk.Label(frame5_0, text="Orientation:", font=self.fontStyleRegular)
-        lbl_stim_correct_or.grid(row=1, column=3, padx=(10,2), pady=0, sticky='W')
+        lbl_stim_correct_or.grid(row=1, column=2, padx=(10,2), pady=0, sticky='E')
 
         self.var_stim_correct_or = tk.StringVar(frame5_0, value=self.settings.stimulus_correct["grating_ori"])
         self.etr_stim_correct_or = tk.Entry(frame5_0, textvariable=self.var_stim_correct_or, width=4)
-        self.etr_stim_correct_or.grid(row=1, column=4, padx=(0,10), pady=10, sticky='W')
+        self.etr_stim_correct_or.grid(row=1, column=3, padx=(0,10), pady=10, sticky='W')
+
+        #TODO: fix
+        # size
+        lbl_stim_correct_size =  tk.Label(frame5_0, text="Size:", font=self.fontStyleRegular)
+        lbl_stim_correct_size.grid(row=2, column=0, padx=(10,2), pady=0, sticky='E')
+
+        self.var_stim_correct_size = tk.StringVar(frame5_0, value=self.settings.stimulus_correct["grating_size"])
+        self.etr_stim_correct_size = tk.Entry(frame5_0, textvariable=self.var_stim_correct_size, width=4)
+        self.etr_stim_correct_size.grid(row=2, column=1, padx=(0,10), pady=10, sticky='W')
+
+        # speed change
+        lbl_stim_correct_speed =  tk.Label(frame5_0, text="Phase Speed:", font=self.fontStyleRegular)
+        lbl_stim_correct_speed.grid(row=2, column=2, padx=(10,2), pady=0, sticky='E')
+
+        self.var_stim_correct_speed = tk.StringVar(frame5_0, value=self.settings.stimulus_correct["grating_speed"])
+        self.etr_stim_correct_speed = tk.Entry(frame5_0, textvariable=self.var_stim_correct_or, width=4)
+        self.etr_stim_correct_speed.grid(row=2, column=3, padx=(0,10), pady=10, sticky='W')
 
         # frame5_1 wrong ================
         frame5_1 = tk.Frame(frame5, highlightbackground="black", highlightthickness=1)
@@ -607,14 +626,31 @@ class UserInput():
 
         self.var_stim_wrong_sf = tk.StringVar(frame5_1, value=self.settings.stimulus_wrong["grating_sf"])
         self.etr_stim_wrong_sf = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_sf, width=4)
-        self.etr_stim_wrong_sf.grid(row=1, column=1, padx=(0,0), pady=0, sticky='E')
+        self.etr_stim_wrong_sf.grid(row=1, column=1, padx=(0,0), pady=0, sticky='W')
         # orientation
         lbl_stim_wrong_or =  tk.Label(frame5_1, text="Orientation:", font=self.fontStyleRegular)
-        lbl_stim_wrong_or.grid(row=1, column=3, padx=(10,2), pady=0, sticky='W')
+        lbl_stim_wrong_or.grid(row=1, column=2, padx=(10,2), pady=0, sticky='E')
 
         self.var_stim_wrong_or = tk.StringVar(frame5_1, value=self.settings.stimulus_wrong["grating_ori"])
         self.etr_stim_wrong_or = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_or, width=4)
-        self.etr_stim_wrong_or.grid(row=1, column=4, padx=(0,10), pady=10, sticky='W')
+        self.etr_stim_wrong_or.grid(row=1, column=3, padx=(0,10), pady=10, sticky='W')
+
+        #TODO: fix
+        # size
+        lbl_stim_wrong_size =  tk.Label(frame5_1, text="Size:", font=self.fontStyleRegular)
+        lbl_stim_wrong_size.grid(row=2, column=0, padx=(10,2), pady=0, sticky='E')
+
+        self.var_stim_wrong_size = tk.StringVar(frame5_1, value=self.settings.stimulus_wrong["grating_size"])
+        self.etr_stim_wrong_size = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_size, width=4)
+        self.etr_stim_wrong_size.grid(row=2, column=1, padx=(0,10), pady=10, sticky='W')
+
+        # speed change
+        lbl_stim_wrong_speed =  tk.Label(frame5_1, text="Phase Speed:", font=self.fontStyleRegular)
+        lbl_stim_wrong_speed.grid(row=2, column=2, padx=(10,2), pady=0, sticky='E')
+
+        self.var_stim_wrong_speed = tk.StringVar(frame5_1, value=self.settings.stimulus_wrong["grating_speed"])
+        self.etr_stim_wrong_speed = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_or, width=4)
+        self.etr_stim_wrong_speed.grid(row=2, column=3, padx=(0,10), pady=10, sticky='W')
 
         # frame insist mode ====================================================================
         lbl_insist = tk.Label(self.root, text="INSIST MODE", font=self.fontStyleBox, fg='gray66').pack(anchor=tk.W, padx=self.padx-2, pady=(15,2))

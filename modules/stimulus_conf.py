@@ -85,13 +85,13 @@ class Stimulus():
         self.run_open_loop = False
 
     # stimulus functions =============================================================
-    def gen_grating(self, grating_sf, grating_or, pos):
+    def gen_grating(self, grating_sf, grating_or, grating_size, pos):
         grating = visual.GratingStim(
             win=self.win,
             tex = 'sin', # texture used
             pos = (pos,0),
-            units='pix',
-            size=500,
+            units='deg', # size in degrees for correct stim size
+            size=grating_size,
             sf = grating_sf, 
             ori = grating_or,
             phase= (0.0,0.0),
@@ -123,20 +123,24 @@ class Stimulus():
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
+            right_size = self.settings.stimulus_correct["gratings_size"]
             right_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
             left_sf = self.settings.stimulus_wrong["grating_sf"]
             left_or = self.settings.stimulus_wrong["grating_ori"]
+            left_size = self.settings.stimulus_wrong["gratings_size"]
             left_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
         elif self.correct_stim_side["left"]:
             left_sf = self.settings.stimulus_correct["grating_sf"]
             left_or = self.settings.stimulus_correct["grating_ori"]
+            left_size = self.settings.stimulus_correct["gratings_size"]
             left_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
             right_sf = self.settings.stimulus_wrong["grating_sf"]
             right_or = self.settings.stimulus_wrong["grating_ori"]
+            right_size = self.settings.stimulus_wrong["gratings_size"]
             right_ps = 0.02#self.settings.stimulus_correct["phase_speed"]
         # generate gratings and stimuli
-        grating_left = self.gen_grating(left_sf,left_or,self.settings.stim_end_pos[0])
-        grating_right = self.gen_grating(right_sf,right_or,self.settings.stim_end_pos[1])
+        grating_left = self.gen_grating(left_sf,left_or,left_size,self.settings.stim_end_pos[0])
+        grating_right = self.gen_grating(right_sf,right_or,right_size,self.settings.stim_end_pos[1])
         stim = self.gen_stim()
         #-----------------------------------------------------------------------------
         # on soft code of state 1
