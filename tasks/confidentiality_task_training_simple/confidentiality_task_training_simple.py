@@ -33,7 +33,7 @@ sys.path.insert(0,modules_dir)
 
 # import custom modules
 from stimulus_conf import Stimulus
-#from probability_conf import ProbabilityConstuctor
+from probability_conf import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
 from parameter_handler import TrialParameterHandler
 from userinput import UserInput
@@ -78,12 +78,10 @@ if settings_obj.run_session:
     rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
-    #rotary_encoder_module.enable_stream()
+    rotary_encoder_module.enable_stream()
 
     # softcode handler
     def softcode_handler(data):
-        global run_closed_loop
-        global run_open_loop
         if data == settings_obj.SC_PRESENT_STIM:
             display_stim_event.set()
             print("PRESENT STIMULUS")
@@ -105,19 +103,11 @@ if settings_obj.run_session:
     bpod.softcode_handler_function = softcode_handler
 
     #probability constructor
-    global correct_stim_side
-    correct_stim_side = {
-        "right" : True, # True = correct
-        "left" : False  # False = wrong
-    }
-    def get_random_side():
-        global correct_stim_side
-        random_side = bool(random.getrandbits(1))
-        correct_stim_side["right"]=random_side
-        correct_stim_side["left"]= not(random_side)
+    probability_obj = ProbabilityConstuctor(settings_obj)
+
 
     #stimulus
-    stimulus_game = Stimulus(settings_obj, rotary_encoder_module, correct_stim_side)
+    stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
     sides_li = []
     # times
     times_li = []
@@ -127,11 +117,8 @@ if settings_obj.run_session:
     # state machine configs
     for trial in range(10):#range(settings_obj.trial_number):
         # create random stimulus side
-        random_side = bool(random.getrandbits(1))
-        correct_stim_side["right"]=random_side
-        correct_stim_side["left"]= not(random_side)
-        print(correct_stim_side)
-        sides_li.append(correct_stim_side.copy())
+        probability_obj.get_random_side()
+        sides_li.append(probability_obj.stim_side_dict.copy())
         # get random punish time
         punish_time = round(random.uniform(
             settings_obj.time_dict['time_range_open_loop_fail_punish'][0],
@@ -266,7 +253,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_left_waiting",
-                # TODO: test random time
+                # TODO: radnom time range?
                 state_timer=settings_obj.time_dict["time_noreward"],
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
@@ -321,7 +308,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_right_waiting",
-                # TODO: test random time
+                # TODO: random time range?
                 state_timer=settings_obj.time_dict["time_noreward"],
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
@@ -362,14 +349,16 @@ if settings_obj.run_session:
         # post trial cleanup
         print("---------------------------------------------------")
         print(f"trial: {trial}")
+        # insist mode check
+        probability_obj.insist_mode_check(trial)
 
     #=========================================================================================================
     print("finished")
 
     # user input after session
-    #window = UserInput(settings_obj)
-    #window.draw_window_after()
-    #window.show_window()
+    window = UserInput(settings_obj)
+    window.draw_window_after()
+    window.show_window()
 
     # save session settings
     session_name = bpod.session_name
