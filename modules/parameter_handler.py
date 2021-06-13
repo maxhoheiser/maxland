@@ -17,24 +17,24 @@ class TrialParameterHandler():
         self.session_folder = session_folder
 
         # task name
-        self.task = usersettings.task
+        self.task = self.usersettings.task
 
         # life ploting
-        self.life_plot = usersettings.LIFE_PLOT
+        self.life_plot = self.usersettings.LIFE_PLOT
 
         # specific for gamble task =============================================
         if self.task is "gamble":
-            self.gamble_side = usersettings.GAMBLE_SIDE
+            self.gamble_side = self.usersettings.GAMBLE_SIDE
             # create gamble side bool
             self.gamble_side_left = self.get_gambl_side()
             # blocks for probability
-            self.blocks = usersettings.BLOCKS
+            self.blocks = self.usersettings.BLOCKS
             # reward amount in ml
-            self.big_reward = usersettings.BIG_REWARD
-            self.small_reward = usersettings.SMALL_REWARD
+            self.big_reward = self.usersettings.BIG_REWARD
+            self.small_reward = self.usersettings.SMALL_REWARD
             self.manual_reward = None
             # stimulus
-            self.stim = usersettings.STIMULUS
+            self.stim = self.usersettings.STIMULUS
             # reward valve open times
             self.big_reward_open_time = self.create_valve_open_time(self.usersettings.BIG_REWARD)
             self.small_reward_open_time = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
@@ -43,36 +43,38 @@ class TrialParameterHandler():
 
         # specific for confidentiality task =============================================
         if self.task is "conf":
-            self.trial_number = usersettings.TRIAL_NUMBER
+            self.trial_number = self.usersettings.TRIAL_NUMBER
             # stimulus
-            self.stimulus_correct = usersettings.STIMULUS_CORRECT
-            self.stimulus_wrong = usersettings.STIMULUS_WRONG
-            self.stimulus_rad = usersettings.STIMULUS_RAD
-            self.stimulus_col = usersettings.STIMULUS_COL
-            self.bg_color = usersettings.BACKGROUND_COL
+            self.stimulus_correct = self.usersettings.STIMULUS_CORRECT
+            self.stimulus_wrong = self.usersettings.STIMULUS_WRONG
+            self.stimulus_rad = self.usersettings.STIMULUS_RAD
+            self.stimulus_col = self.usersettings.STIMULUS_COL
+            self.bg_color = self.usersettings.BACKGROUND_COL
+            self.stim_type = self.usersettings.STIMULUS_TYPE 
+            self.drp_list = ('three-stimuli','two-stimuli','one-stimulus')
             # times
             self.reward_open_time = self.create_valve_open_time(self.usersettings.REWARD_TIME)
             self.reward = self.usersettings.REWARD
             self.time_dict = self.create_time_dict_conf()
             # insist mode
-            self.insist_range_trigger = usersettings.RANGE_INSIST_TRIGGER
-            self.insist_correct_deactivate = usersettings.NUMBER_CORRECT_INSIST_DEACTIVATE
-            self.insist_range_deactivate = usersettings.RANGE_INSIST_DEACTIVATE
+            self.insist_range_trigger = self.usersettings.RANGE_INSIST_TRIGGER
+            self.insist_correct_deactivate = self.usersettings.NUMBER_CORRECT_INSIST_DEACTIVATE
+            self.insist_range_deactivate = self.usersettings.RANGE_INSIST_DEACTIVATE
             
             
 
 
         
         # calibration
-        self.last_callibration = usersettings.LAST_CALLIBRATION
+        self.last_callibration = self.usersettings.LAST_CALLIBRATION
         
 
         # configs for rotary encoder
-        self.thresholds = usersettings.ALL_THRESHOLDS
-        self.stim_end_pos = usersettings.STIM_END_POS
+        self.thresholds = self.usersettings.ALL_THRESHOLDS
+        self.stim_end_pos = self.usersettings.STIM_END_POS
 
         # animal variables
-        self.animal_waight = usersettings.ANIMAL_WAIGHT
+        self.animal_waight = self.usersettings.ANIMAL_WAIGHT
         self.animal_waight_after = None
 
         # system settings for each session
@@ -357,8 +359,9 @@ class TrialParameterHandler():
                     "# stimulus size and color - only for moving stimulus\n"
                     "STIMULUS_RAD = "+json.dumps(self.stimulus_rad)+" # pixel radius of stimulus\n"
                     "STIMULUS_COL = "+json.dumps(self.stimulus_col)+"#color of stimulus\n\n"
-                    "BACKGROUND_COL = "+json.dumps(self.bg_color)+"#-1,-1,-1 for black"
-                    "#===============================================================\n"
+                    "BACKGROUND_COL = "+json.dumps(self.bg_color)+"#-1,-1,-1 for black\n"
+                    "STIMULUS_TYPE = "+json.dumps(self.stim_type)+" #three-stimuli #two-stimuli #one-stimulus\n"
+                    "\n#===============================================================\n"
                     "# reward in ml\n"
                     "REWARD = "+json.dumps(self.reward)+"\n\n"
                     "LAST_CALLIBRATION = "+json.dumps(self.last_callibration)+"\n\n"

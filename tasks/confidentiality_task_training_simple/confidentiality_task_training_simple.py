@@ -32,7 +32,7 @@ modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
 # import custom modules
-from stimulus_conf import Stimulus
+#from stimulus_conf import Stimulus
 from probability_conf import ProbabilityConstuctor
 #from rotaryencoder import BpodRotaryEncoder
 from parameter_handler import TrialParameterHandler
@@ -44,8 +44,7 @@ import usersettings
 # create settings object
 session_folder = os.getcwd()
 # TODO: correct for final foderl
-#settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","confidentiality_task_training_simple")
-settings_folder = session_folder
+settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","confidentiality_task_training_simple")
 global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
 
@@ -54,9 +53,9 @@ settings_obj = TrialParameterHandler(usersettings, settings_folder, session_fold
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
-#window = UserInput(settings_obj)
-#window.draw_window_bevore_conf()
-#window.show_window()
+window = UserInput(settings_obj)
+window.draw_window_bevore_conf()
+window.show_window()
 
 
 settings_obj.run_session = True
