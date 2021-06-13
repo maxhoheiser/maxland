@@ -42,7 +42,7 @@ class Stimulus():
             color=self.settings.bg_color, colorSpace='rgb',
             blendMode='avg', useFBO=True, 
             )
-        #self.win.winHandle.maximize() # fix black bar bottom
+        self.win.winHandle.maximize() # fix black bar bottom
         self.win.flip()
         # get frame rate of monitor
         expInfo = {}
@@ -168,8 +168,8 @@ class Stimulus():
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        #self.rotary_encoder.rotary_encoder.set_zero_position()
-        #self.rotary_encoder.rotary_encoder.enable_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
@@ -180,7 +180,6 @@ class Stimulus():
             grating_left.draw()
             grating_right.draw()
             # get rotary encoder change position
-            """
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
                 print((pos - stream[-1][2])*self.gain)
@@ -188,15 +187,6 @@ class Stimulus():
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 stim.pos+=(change,0)    
-            """
-            ### delete
-            keys = kb.getKeys(['right', 'left', 'q'],waitRelease=False)
-
-            if 'right' in keys:
-                stim.pos+=(20,0)
-            if 'left' in keys:
-                stim.pos-=(20,0)
-            ### delete
 
             stim.draw()
             self.win.flip()
@@ -255,8 +245,8 @@ class Stimulus():
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        #self.rotary_encoder.rotary_encoder.set_zero_position()
-        #self.rotary_encoder.rotary_encoder.enable_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
@@ -267,7 +257,6 @@ class Stimulus():
             grating_left.draw()
             grating_right.draw()
             # get rotary encoder change position
-            """
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
                 print((pos - stream[-1][2])*self.gain)
@@ -276,17 +265,6 @@ class Stimulus():
                 #move stimulus with mouse
                 grating_left.pos+=(change,0)  
                 grating_right.pos+=(change,0)    
-            """
-            ### delete
-            keys = kb.getKeys(['right', 'left', 'q'],waitRelease=False)
-
-            if 'right' in keys:
-                grating_left.pos+=(20,0)
-                grating_right.pos+=(20,0)
-            if 'left' in keys:
-                grating_left.pos-=(20,0)
-                grating_right.pos-=(20,0)
-            ### delete
 
             self.win.flip()
         #-------------------------------------------------------------------------
@@ -333,8 +311,8 @@ class Stimulus():
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        #self.rotary_encoder.rotary_encoder.set_zero_position()
-        #self.rotary_encoder.rotary_encoder.enable_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
@@ -343,7 +321,6 @@ class Stimulus():
             grating.setPhase(stim_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
             # get rotary encoder change position
-            """
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
                 print((pos - stream[-1][2])*self.gain)
@@ -351,15 +328,6 @@ class Stimulus():
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 grating.pos+=(change,0)  
-            """
-            ### delete
-            keys = kb.getKeys(['right', 'left', 'q'],waitRelease=False)
-
-            if 'right' in keys:
-                grating.pos+=(20,0)
-            if 'left' in keys:
-                grating.pos-=(20,0)
-            ### delete
 
             self.win.flip()
         #-------------------------------------------------------------------------

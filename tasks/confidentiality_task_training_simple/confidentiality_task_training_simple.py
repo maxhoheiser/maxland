@@ -20,9 +20,9 @@ import random
 import time
 
 # import pybpod modules
-#from pybpodapi.bpod import Bpod
-#from pybpodapi.state_machine import StateMachine
-#from pybpodgui_api.models.session import Session
+from pybpodapi.bpod import Bpod
+from pybpodapi.state_machine import StateMachine
+from pybpodgui_api.models.session import Session
 
 # span subprocess
 # add module path to sys path
@@ -49,13 +49,13 @@ global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
 
 # create bpod object
-#bpod=Bpod('COM6')
+bpod=Bpod('COM6')
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
-window = UserInput(settings_obj)
-window.draw_window_bevore_conf()
-window.show_window()
+#window = UserInput(settings_obj)
+#window.draw_window_bevore_conf()
+#window.show_window()
 
 
 settings_obj.run_session = True
@@ -85,10 +85,10 @@ if settings_obj.run_session:
     settings_obj.update_userinput_file_conf()
     # rotary encoder config
     # enable thresholds
-    rotary_encoder_module = None#BpodRotaryEncoder('COM4', settings_obj, bpod)
-    #rotary_encoder_module.load_message()
-    #rotary_encoder_module.configure()
-    #rotary_encoder_module.enable_stream()
+    rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)
+    rotary_encoder_module.load_message()
+    rotary_encoder_module.configure()
+    rotary_encoder_module.enable_stream()
 
     # softcode handler
     def softcode_handler(data):
@@ -110,7 +110,7 @@ if settings_obj.run_session:
             rotary_encoder_module.rotary_encoder.disable_logging()
             print("disable logging")
 
-    #bpod.softcode_handler_function = softcode_handler
+    bpod.softcode_handler_function = softcode_handler
 
     #probability constructor
     probability_obj = ProbabilityConstuctor(settings_obj)
@@ -136,7 +136,7 @@ if settings_obj.run_session:
             ),2)
         times_li.append(punish_time)
         # construct states
-        """
+        
         sma = StateMachine(bpod)
         # start state to define block of trial
         sma.add_state(
@@ -349,7 +349,6 @@ if settings_obj.run_session:
         pa = threading.Thread(target=bpod.run_state_machine, args=(sma,))
         pa.start()
 
-        """
 
         pa = threading.Thread(target=tester)
         pa.start()
@@ -366,7 +365,8 @@ if settings_obj.run_session:
         print("---------------------------------------------------")
         print(f"trial: {trial}")
         # insist mode check
-        #probability_obj.insist_mode_check(trial)
+        #TODO: quiry trial return object to find side
+        probability_obj.insist_mode_check(trial)
 
     #=========================================================================================================
     print("finished")
