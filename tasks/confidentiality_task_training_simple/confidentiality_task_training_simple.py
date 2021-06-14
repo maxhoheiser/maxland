@@ -11,18 +11,18 @@ In addition it uses three custom classes:
 
 """
 
-
-
 import threading
 import os,sys,inspect
 import json
 import random
 import time
 
+"""
 # import pybpod modules
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
+"""
 
 # span subprocess
 # add module path to sys path
@@ -32,7 +32,7 @@ modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
 # import custom modules
-from stimulus_conf import Stimulus
+#from stimulus_conf import Stimulus
 from probability_conf import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
 from parameter_handler import TrialParameterHandler
@@ -44,13 +44,12 @@ import usersettings
 # create settings object
 session_folder = os.getcwd()
 # TODO: correct for final foderl
-#settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","confidentiality_task_training_simple")
-settings_folder = session_folder
+settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
 global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
 
 # create bpod object
-bpod=Bpod('COM6')
+#bpod=Bpod('COM6')
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
@@ -115,17 +114,18 @@ if settings_obj.run_session:
 
     # create main state machine aka trial loop ====================================================================
     # state machine configs
-    for trial in range(10):#range(settings_obj.trial_number):
+    for trial in range(settings_obj.trial_number):
         # create random stimulus side
         probability_obj.get_random_side()
         sides_li.append(probability_obj.stim_side_dict.copy())
         # get random punish time
         punish_time = round(random.uniform(
-            settings_obj.time_dict['time_range_open_loop_fail_punish'][0],
-            settings_obj.time_dict['time_range_open_loop_fail_punish'][1]
+            settings_obj.time_dict['time_range_noreward_punish'][0],
+            settings_obj.time_dict['time_range_noreward_punish'][1]
             ),2)
         times_li.append(punish_time)
         # construct states
+        
         sma = StateMachine(bpod)
         # start state to define block of trial
         sma.add_state(
@@ -199,7 +199,7 @@ if settings_obj.run_session:
         # open loop fail punish time & exit trial
         sma.add_state(
             state_name="open_loop_fail_punish",
-            state_timer=punish_time,
+            state_timer=settings_obj.time_dict["time_open_loop_fail_punish"],
             state_change_conditions={"Tup": "inter_trial"},
             output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
         )
@@ -214,7 +214,7 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        if correct_stim_side["left"]:
+        if probability_obj.stim_side_dict["left"]:
             print("reward_left")
             sma.add_state(
                 state_name="check_reward_left",
@@ -254,7 +254,7 @@ if settings_obj.run_session:
             sma.add_state(
                 state_name="reward_left_waiting",
                 # TODO: radnom time range?
-                state_timer=settings_obj.time_dict["time_noreward"],
+                state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
             )
@@ -269,7 +269,7 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        if correct_stim_side["right"]:
+        if probability_obj.stim_side_dict["right"]:
             print("reward_right")
             sma.add_state(
                 state_name="check_reward_right",
@@ -309,7 +309,7 @@ if settings_obj.run_session:
             sma.add_state(
                 state_name="reward_right_waiting",
                 # TODO: random time range?
-                state_timer=settings_obj.time_dict["time_noreward"],
+                state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
             )
@@ -338,19 +338,35 @@ if settings_obj.run_session:
         pa = threading.Thread(target=bpod.run_state_machine, args=(sma,))
         pa.start()
 
+        if not pa.is_alive():
+            stimulus_game.win.close()
+
         # run stimulus game
-        stimulus_game.run_game(display_stim_event, still_show_event)
+        #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
+        if settings_obj.stim_type == "three-stimuli":
+            print("three")
+            stimulus_game.run_game_3(display_stim_event, still_show_event)
+        elif settings_obj.stim_type == "two-stimuli":
+            print("tow")
+            stimulus_game.run_game_2(display_stim_event, still_show_event)
+        elif settings_obj.stim_type == "one-stimulus":
+            print("one")
+            stimulus_game.run_game_1(display_stim_event, still_show_event)
+        else:
+            print("\nNo correct stim type selected\n")
 
         # wiat until state machine finished
         #if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         #    break
         pa.join() 
-        
+
+     
         # post trial cleanup
         print("---------------------------------------------------")
-        print(f"trial: {trial}")
+        print(f"trial: {bpod.session.current_trial}")
         # insist mode check
-        probability_obj.insist_mode_check(trial)
+        #TODO: quiry trial return object to find side
+        #probability_obj.insist_mode_check(bpod.session.current_trial)
 
     #=========================================================================================================
     print("finished")
@@ -388,6 +404,7 @@ if settings_obj.run_session:
 else:
     #todo donst save current session
     None
+
 
 rotary_encoder_module.close()
 bpod.close()

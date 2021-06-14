@@ -11,9 +11,9 @@ How to:
 #grating_SF = 0.25  # 4 cycles per degree visual angle
 #grating_ori = 0   # in degree
 
-STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0.0, "grating_size":45, "grating_speed": 0.02}
+STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0.0, "grating_size": 45.0, "grating_speed": 0.03}
 
-STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90.0, "grating_size":45, "grating_speed": 0.02}
+STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90.0, "grating_size": 45.0, "grating_speed": 0.04}
 
 # trials
 TRIAL_NUMBER = 10
@@ -22,7 +22,10 @@ TRIAL_NUMBER = 10
 STIMULUS_RAD = 100 # pixel radius of stimulus
 STIMULUS_COL = [0, 255, 0]#color of stimulus
 
-BACKGROUND_COL = [-1, -1, -1]#-1,-1,-1 for black#===============================================================
+BACKGROUND_COL = [0, 0, 0]#-1,-1,-1 for black
+STIMULUS_TYPE = "two-stimuli" #three-stimuli #two-stimuli #one-stimulus
+
+#===============================================================
 # reward in ml
 REWARD = 11.0
 
@@ -40,13 +43,13 @@ TIME_PRESENT_STIM = 1.0
 # time of open loop where wheel moves the stimulus
 TIME_OPEN_LOOP = 10.0
 # time wait if stimulus not moved far enough to position
-TIME_RANGE_OPEN_LOOP_FAIL_PUNISH = (1.0, 5.0)
+TIME_OPEN_LOOP_FAIL_PUNISH = 2.0
 # time stimulus is presented at reached position but not movable anymore
 TIME_STIM_FREEZ = 2.0
 # time the animal has for the reard = valve open + time after
 REWARD_TIME =10.0
 # no reward time
-NOREWARD_TIME = 5.0
+TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = ['2.0', '3.0']
 # time at end of each trial_num
 INTER_TRIAL_TIME = 5.0
 

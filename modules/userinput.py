@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 from tkinter import simpledialog
 from tkinter import filedialog
@@ -76,24 +77,32 @@ class UserInput():
             self.settings.trial_number = int(self.var_trial_num.get())
             self.settings.reward = float(self.var_reward.get())
             # add correct stimulus
-            # TODO: check all variables are updated
-            self.settings.stimulus_rad = int(self.var_stim_rad.get())
-            self.settings.stimulus_col = list(map(int, self.var_stim_col.get().split(',')))
+            self.settings.bg_color = list(map(int, self.var_bg_col.get().split(',')))
             self.settings.stimulus_correct = {
                 "grating_sf" : float(self.var_stim_correct_sf.get()),
                 "grating_ori" : float(self.var_stim_correct_or.get()),
                 "grating_size" : float(self.var_stim_correct_size.get()),
+                "grating_speed" : float(self.var_stim_correct_speed.get()),
                 }
             self.settings.stimulus_wrong = {
                 "grating_sf" : float(self.var_stim_wrong_sf.get()),
                 "grating_ori" : float(self.var_stim_wrong_or.get()),
                 "grating_size" : float(self.var_stim_wrong_size.get()),
+                "grating_speed" : float(self.var_stim_wrong_speed.get()),
                 }
+            # stimuli
+            self.settings.stim_type = self.var_drp_stim.get()
+            self.settings.stimulus_rad = int(self.var_stim_rad.get())
+            self.settings.stimulus_col = list(map(int, self.var_stim_col.get().split(',')))
             # times
             self.settings.reward_open_time = float(self.var_reward.get())
             self.settings.insist_range_trigger = int(self.var_insist_range_trigger.get())
             self.settings.insist_range_deactivate = int(self.var_insist_range_deact.get())
             self.settings.insist_correct_deactivate = int(self.var_insist_cor.get())
+            self.settings.time_dict["time_range_noreward_punish"] = [self.time_noreward_punish.var_1.get(),
+                                                                     self.time_noreward_punish.var_2.get()
+                                                                    ]
+
 
 
 
@@ -118,11 +127,11 @@ class UserInput():
         if self.task is "gamble":
             self.WINDOW_SIZE = [835, 920]
         if self.task is "conf":
-            self.WINDOW_SIZE = [880, 940]
+            self.WINDOW_SIZE = [880, 1000]
 
         screen_size = [self.root.winfo_screenwidth(), self.root.winfo_screenheight()]
         window_offset = [ int((screen_size[0]-self.WINDOW_SIZE[0])/2),
-                          60
+                          10
                         ]
         if self.WINDOW_SIZE[0] > screen_size[0]:
             self.WINDOW_SIZE[0] = screen_size[0]
@@ -191,7 +200,6 @@ class UserInput():
             return True
         except ValueError:
             return False
-
 
 
     # Gamble Task Specific Settings ======================================================================================================
@@ -527,52 +535,43 @@ class UserInput():
         frame4_1 = tk.Frame(frame4)
         frame4_1.grid(row=1, column=0)
 
-        # stimulus radius
-        lbl_stim_rad =  tk.Label(frame4_1, text="Stim radius [px]:", font=self.fontStyleRegular)
-        lbl_stim_rad.grid(row=1, column=0, padx=(10,2), pady=8)
+        # background color
+        lbl_bg_col =  tk.Label(frame4_1, text="Window Background:", font=self.fontStyleRegular)
+        lbl_bg_col.grid(row=0, column=0, padx=(10,5), pady=8)
 
-        self.var_stim_rad = tk.StringVar(frame4_1, value=self.settings.stimulus_rad)
-        self.etr_stim_rad = tk.Entry(frame4_1, textvariable=self.var_stim_rad, width=4)
-        self.etr_stim_rad.grid(row=1, column=1, padx=(0,2), pady=8, sticky='W')
-
-        # stimulus color
-        lbl_stim_col =  tk.Label(frame4_1, text="Stim color [RGB]:", font=self.fontStyleRegular)
-        lbl_stim_col.grid(row=1, column=2, padx=(10,2), pady=8)
-
-        # TODO: - add reverse string to list for reading rgb variable
-        self.var_stim_col = tk.StringVar(frame4_1, value=(','.join(map(str,self.settings.stimulus_col))))
-        self.etr_stim_col = tk.Entry(frame4_1, textvariable=self.var_stim_col, width=9)
-        self.etr_stim_col.grid(row=1, column=3, padx=(0,2), pady=8, sticky='W')
+        self.var_bg_col= tk.StringVar(frame4_1, value=(','.join(map(str,self.settings.bg_color))))
+        self.etr_bg_col = tk.Entry(frame4_1, textvariable=self.var_bg_col, width=9)
+        self.etr_bg_col.grid(row=0, column=1, padx=(0,2), pady=8, sticky='W')
 
         # stimulus end position
         lbl_stim_pos =  tk.Label(frame4_1, text="Stim end pos [px]:", font=self.fontStyleRegular)
-        lbl_stim_pos.grid(row=1, column=4, padx=(10,2), pady=8)
+        lbl_stim_pos.grid(row=0, column=2, padx=(10,2), pady=8)
 
         self.var_stim_end_neg = tk.StringVar(frame4_1, value=self.settings.stim_end_pos[0])
         self.etr_stim_end_neg = tk.Entry(frame4_1, textvariable=self.var_stim_end_neg, width=4)
-        self.etr_stim_end_neg.grid(row=1, column=5, padx=(0,2), pady=8, sticky='W')
+        self.etr_stim_end_neg.grid(row=0, column=3, padx=(0,2), pady=8, sticky='W')
 
         lbl_stim_til = tk.Label(frame4_1, text="to", font=self.fontStyleRegular)
-        lbl_stim_til.grid(row=1, column=6, pady=8, sticky='W')
+        lbl_stim_til.grid(row=0, column=4, pady=8, sticky='W')
 
         self.var_stim_end_pos = tk.StringVar(frame4_1, value=self.settings.stim_end_pos[1])
         self.etr_stim_end_pos = tk.Entry(frame4_1, textvariable=self.var_stim_end_pos, width=4)
-        self.etr_stim_end_pos.grid(row=1, column=7, padx=(2,10), pady=8, sticky='W')
+        self.etr_stim_end_pos.grid(row=0, column=5, padx=(2,10), pady=8, sticky='W')
 
         # # wheel rotation 
         lbl_stim_pos =  tk.Label(frame4_1, text="Wheel threhsold [deg]:", font=self.fontStyleRegular)
-        lbl_stim_pos.grid(row=1, column=8, padx=(10,5), pady=8)
+        lbl_stim_pos.grid(row=0, column=6, padx=(10,5), pady=8)
 
         self.var_wheel_thresh_neg = tk.StringVar(frame4_1, value=self.settings.thresholds[0])
         self.etr_wheel_thresh_neg = tk.Entry(frame4_1, textvariable=self.var_wheel_thresh_neg, width=4)
-        self.etr_wheel_thresh_neg.grid(row=1, column=9, padx=(0,2), pady=8, sticky='W')
+        self.etr_wheel_thresh_neg.grid(row=0, column=7, padx=(0,2), pady=8, sticky='W')
 
         lbl_wheel_til = tk.Label(frame4_1, text="to", font=self.fontStyleRegular)
-        lbl_wheel_til.grid(row=1, column=10, pady=8, sticky='W')
+        lbl_wheel_til.grid(row=0, column=8, pady=8, sticky='W')
 
         self.var_wheel_thresh_pos = tk.StringVar(frame4_1, value=self.settings.thresholds[1])
         self.etr_wheel_thresh_pos = tk.Entry(frame4_1, textvariable=self.var_wheel_thresh_pos, width=4)
-        self.etr_wheel_thresh_pos.grid(row=1, column=11, padx=(2,10), pady=8, sticky='W')
+        self.etr_wheel_thresh_pos.grid(row=0, column=9, padx=(2,10), pady=8, sticky='W')
 
         # frame stimulus detail =====================================================================
         frame5 = tk.Frame(self.root)
@@ -598,9 +597,8 @@ class UserInput():
         self.etr_stim_correct_or = tk.Entry(frame5_0, textvariable=self.var_stim_correct_or, width=4)
         self.etr_stim_correct_or.grid(row=1, column=3, padx=(0,10), pady=10, sticky='W')
 
-        #TODO: fix
         # size
-        lbl_stim_correct_size =  tk.Label(frame5_0, text="Size:", font=self.fontStyleRegular)
+        lbl_stim_correct_size =  tk.Label(frame5_0, text="Size [deg]:", font=self.fontStyleRegular)
         lbl_stim_correct_size.grid(row=2, column=0, padx=(10,2), pady=0, sticky='E')
 
         self.var_stim_correct_size = tk.StringVar(frame5_0, value=self.settings.stimulus_correct["grating_size"])
@@ -612,7 +610,7 @@ class UserInput():
         lbl_stim_correct_speed.grid(row=2, column=2, padx=(10,2), pady=0, sticky='E')
 
         self.var_stim_correct_speed = tk.StringVar(frame5_0, value=self.settings.stimulus_correct["grating_speed"])
-        self.etr_stim_correct_speed = tk.Entry(frame5_0, textvariable=self.var_stim_correct_or, width=4)
+        self.etr_stim_correct_speed = tk.Entry(frame5_0, textvariable=self.var_stim_correct_speed, width=4)
         self.etr_stim_correct_speed.grid(row=2, column=3, padx=(0,10), pady=10, sticky='W')
 
         # frame5_1 wrong ================
@@ -635,9 +633,8 @@ class UserInput():
         self.etr_stim_wrong_or = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_or, width=4)
         self.etr_stim_wrong_or.grid(row=1, column=3, padx=(0,10), pady=10, sticky='W')
 
-        #TODO: fix
         # size
-        lbl_stim_wrong_size =  tk.Label(frame5_1, text="Size:", font=self.fontStyleRegular)
+        lbl_stim_wrong_size =  tk.Label(frame5_1, text="Size [deg]:", font=self.fontStyleRegular)
         lbl_stim_wrong_size.grid(row=2, column=0, padx=(10,2), pady=0, sticky='E')
 
         self.var_stim_wrong_size = tk.StringVar(frame5_1, value=self.settings.stimulus_wrong["grating_size"])
@@ -649,37 +646,72 @@ class UserInput():
         lbl_stim_wrong_speed.grid(row=2, column=2, padx=(10,2), pady=0, sticky='E')
 
         self.var_stim_wrong_speed = tk.StringVar(frame5_1, value=self.settings.stimulus_wrong["grating_speed"])
-        self.etr_stim_wrong_speed = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_or, width=4)
+        self.etr_stim_wrong_speed = tk.Entry(frame5_1, textvariable=self.var_stim_wrong_speed, width=4)
         self.etr_stim_wrong_speed.grid(row=2, column=3, padx=(0,10), pady=10, sticky='W')
+
+        # variable stimulus variables
+        frame6 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        frame6.pack(fill=tk.BOTH, padx=self.padx, pady=2)
+
+        # select stim type dropdown 
+        self.var_drp_stim = tk.StringVar()
+        self.drp_stim = ttk.Combobox(frame6, width = 12, textvariable = self.var_drp_stim)
+        
+        # Adding combobox drop down list
+        lbl_drp_stim =  tk.Label(frame6, text="Stimulus Type:", font=self.fontStyleRegular)
+        lbl_drp_stim.grid(row=0, column=0, padx=(10,2), pady=8)
+
+        #TODO: fix variable update
+        self.drp_stim['values'] = self.settings.drp_list #('three-stimuli','two-stimuli','one-stimulus')
+        self.drp_stim.grid(column = 1, row = 0)
+        idx = self.settings.drp_list.index(self.settings.stim_type)
+        self.drp_stim.current(idx) # set current value
+
+        # stimulus radius
+        lbl_stim_rad =  tk.Label(frame6, text="Stim size [deg]:", font=self.fontStyleRegular)
+        lbl_stim_rad.grid(row=0, column=3, padx=(10,2), pady=8)
+
+        self.var_stim_rad = tk.StringVar(frame6, value=self.settings.stimulus_rad)
+        self.etr_stim_rad = tk.Entry(frame6, textvariable=self.var_stim_rad, width=4)
+        self.etr_stim_rad.grid(row=0, column=4, padx=(0,2), pady=8, sticky='W')
+
+        # stimulus color
+        lbl_stim_col =  tk.Label(frame6, text="Stim color [RGB]:", font=self.fontStyleRegular)
+        lbl_stim_col.grid(row=0, column=5, padx=(10,2), pady=8)
+
+        self.var_stim_col = tk.StringVar(frame6, value=(','.join(map(str,self.settings.stimulus_col))))
+        self.etr_stim_col = tk.Entry(frame6, textvariable=self.var_stim_col, width=9)
+        self.etr_stim_col.grid(row=0, column=6, padx=(0,2), pady=8, sticky='W')
+
 
         # frame insist mode ====================================================================
         lbl_insist = tk.Label(self.root, text="INSIST MODE", font=self.fontStyleBox, fg='gray66').pack(anchor=tk.W, padx=self.padx-2, pady=(15,2))
-        frame6 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
-        frame6.pack(fill=tk.BOTH, padx=self.padx, pady=2)
+        frame7 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        frame7.pack(fill=tk.BOTH, padx=self.padx, pady=2)
         # inist trigger range
-        lbl_insist_range_trigger =  tk.Label(frame6, text="Insist Mode Trigger Range:", font=self.fontStyleRegular)
+        lbl_insist_range_trigger =  tk.Label(frame7, text="Insist Mode Trigger Range:", font=self.fontStyleRegular)
         lbl_insist_range_trigger.grid(row=0, column=0, padx=(10,2), pady=8, sticky='E')
 
-        self.var_insist_range_trigger = tk.StringVar(frame6, value=self.settings.insist_range_trigger)
-        self.etr_insist_range_trigger = tk.Entry(frame6, textvariable=self.var_insist_range_trigger, width=4)
+        self.var_insist_range_trigger = tk.StringVar(frame7, value=self.settings.insist_range_trigger)
+        self.etr_insist_range_trigger = tk.Entry(frame7, textvariable=self.var_insist_range_trigger, width=4)
         self.etr_insist_range_trigger.grid(row=0, column=1, padx=(0,30), pady=8, sticky='E')
         # insist mode correct necessary
-        lbl_insist_cor =  tk.Label(frame6, text="Correct Number Insist Mode Deactivate:", font=self.fontStyleRegular)
+        lbl_insist_cor =  tk.Label(frame7, text="Correct Number Insist Mode Deactivate:", font=self.fontStyleRegular)
         lbl_insist_cor.grid(row=0, column=3, padx=(10,2), pady=8, sticky='E')
 
-        self.var_insist_cor = tk.StringVar(frame6, value=self.settings.insist_correct_deactivate)
-        self.etr_insist_cor = tk.Entry(frame6, textvariable=self.var_insist_cor, width=4)
+        self.var_insist_cor = tk.StringVar(frame7, value=self.settings.insist_correct_deactivate)
+        self.etr_insist_cor = tk.Entry(frame7, textvariable=self.var_insist_cor, width=4)
         self.etr_insist_cor.grid(row=0, column=4, padx=(0,10), pady=8, sticky='E')
         # insist deactivate range
-        lbl_insist_range_deact =  tk.Label(frame6, text="Insist Mode Deactivate Range:", font=self.fontStyleRegular)
+        lbl_insist_range_deact =  tk.Label(frame7, text="Insist Mode Deactivate Range:", font=self.fontStyleRegular)
         lbl_insist_range_deact.grid(row=0, column=5, padx=(10,2), pady=8, sticky='E')
 
-        self.var_insist_range_deact = tk.StringVar(frame6, value=self.settings.insist_range_deactivate)
-        self.etr_insist_range_deact = tk.Entry(frame6, textvariable=self.var_insist_range_deact, width=4)
+        self.var_insist_range_deact = tk.StringVar(frame7, value=self.settings.insist_range_deactivate)
+        self.etr_insist_range_deact = tk.Entry(frame7, textvariable=self.var_insist_range_deact, width=4)
         self.etr_insist_range_deact.grid(row=0, column=6, padx=(0,0), pady=8, sticky='E')
 
         # frame time ====================================================================
-        lbl_time = tk.Label(self.root, text="TIME", font=self.fontStyleBox, fg='gray66').pack(anchor=tk.W, padx=self.padx-2, pady=(15,2))
+        lbl_time = tk.Label(self.root, text="TIME [seconds]", font=self.fontStyleBox, fg='gray66').pack(anchor=tk.W, padx=self.padx-2, pady=(15,2))
         frame7 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame7.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -703,7 +735,6 @@ class UserInput():
                                                self.settings.time_dict["time_wheel_stopping_punish"],
                                                "time wait if the wheel is not stopped bevore new trial starts"
                                                )
-        
         # row 3
         self.time_stim_pres = self.Time(frame7_0, 3, self.fontStyleRegular, "Stim Presentation",
                                    self.settings.time_dict["time_stim_pres"],
@@ -716,12 +747,10 @@ class UserInput():
                                    )
         # row 5
         # open loop punish range
-        self.time_open_loop_fail_punish = self.TimeRange(frame7_0, 5, self.fontStyleRegular, "Open Loop Fail",
-                                   self.settings.time_dict["time_range_open_loop_fail_punish"],
+        self.time_open_loop_fail_punish = self.Time(frame7_0, 5, self.fontStyleRegular, "Open Loop Fail",
+                                   self.settings.time_dict["time_open_loop_fail_punish"],
                                    "time wait if stimulus not moved far enough to position"
                                    )
-
-
         # row 6
         self.time_stim_freez = self.Time(frame7_0, 6, self.fontStyleRegular, "Stim Freez",
                                    self.settings.time_dict["time_stim_freez"],
@@ -732,7 +761,13 @@ class UserInput():
                                    self.settings.time_dict["time_reward"],
                                    "time the animal has for the reard = valve open + time after"
                                    )
-        self.time_inter_trial = self.Time(frame7_0, 8, self.fontStyleRegular, "Trial End",
+        # row 8
+        self.time_noreward_punish = self.TimeRange(frame7_0, 8, self.fontStyleRegular, "No Reward Punish Time",
+                                   self.settings.time_dict["time_range_noreward_punish"],
+                                   "time the animal has for the reard = valve open + time after"
+                                    )
+        # row 9
+        self.time_inter_trial = self.Time(frame7_0, 9, self.fontStyleRegular, "Trial End",
                                    self.settings.time_dict["time_inter_trial"],
                                    "time at end of each Trial"
                                    )
@@ -850,18 +885,18 @@ class UserInput():
             lbl_name.grid(row=row_idx, column=0, padx=(10,10), pady=5, sticky='E')
 
             #input 1
-            var_1 = tk.StringVar(frame, value=dict_value[0])
-            etr_1 = tk.Entry(frame, textvariable=var_1, width=4)
-            etr_1.grid(row=row_idx, column=1, sticky='W')
+            self.var_1 = tk.StringVar(frame, value=dict_value[0])
+            self.etr_1 = tk.Entry(frame, textvariable=self.var_1, width=4)
+            self.etr_1.grid(row=row_idx, column=1, sticky='W')
             # new frame with 4 columns 
 
             # min label
             min = tk.Label(frame, text="min", font=fontStyleRegular)
             min.grid(row=row_idx, column=2, padx=(0,10), pady=5, sticky='W')
             # input 2
-            var_2 = tk.StringVar(frame, value=dict_value[1])
-            etr_2 = tk.Entry(frame, textvariable=var_2, width=4)
-            etr_2.grid(row=row_idx, column=4, sticky='W')
+            self.var_2 = tk.StringVar(frame, value=dict_value[1])
+            self.etr_2 = tk.Entry(frame, textvariable=self.var_2, width=4)
+            self.etr_2.grid(row=row_idx, column=4, sticky='W')
             # min label
             max = tk.Label(frame, text="max", font=fontStyleRegular)
             max.grid(row=row_idx, column=5, padx=(0,0), pady=5, sticky='W')
