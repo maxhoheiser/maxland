@@ -32,8 +32,8 @@ class ProbabilityConstuctor():
         else:
             random_right = bool(random.getrandbits(1))
         # asign sides to dict
-        self.stim_side_dict["right"]=random_right
-        self.stim_side_dict["left"]= not(random_right)
+        self.stim_side_dict["right"] = random_right
+        self.stim_side_dict["left"] = not(random_right)
 
 
     def insist_mode_check(self,trial):

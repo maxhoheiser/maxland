@@ -17,10 +17,12 @@ import json
 import random
 import time
 
+"""
 # import pybpod modules
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
+"""
 
 # span subprocess
 # add module path to sys path
@@ -30,7 +32,7 @@ modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
 # import custom modules
-from stimulus_conf import Stimulus
+#from stimulus_conf import Stimulus
 from probability_conf import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
 from parameter_handler import TrialParameterHandler
@@ -42,12 +44,12 @@ import usersettings
 # create settings object
 session_folder = os.getcwd()
 # TODO: correct for final foderl
-settings_folder = session_folder #os.path.join(session_folder.split('experiments')[0],"tasks","confidentiality_task_training_simple")
+settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
 global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
 
 # create bpod object
-bpod=Bpod('COM6')
+#bpod=Bpod('COM6')
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
@@ -118,8 +120,8 @@ if settings_obj.run_session:
         sides_li.append(probability_obj.stim_side_dict.copy())
         # get random punish time
         punish_time = round(random.uniform(
-            settings_obj.time_dict['time_range_open_loop_fail_punish'][0],
-            settings_obj.time_dict['time_range_open_loop_fail_punish'][1]
+            settings_obj.time_dict['time_range_noreward_punish'][0],
+            settings_obj.time_dict['time_range_noreward_punish'][1]
             ),2)
         times_li.append(punish_time)
         # construct states
@@ -197,7 +199,7 @@ if settings_obj.run_session:
         # open loop fail punish time & exit trial
         sma.add_state(
             state_name="open_loop_fail_punish",
-            state_timer=punish_time,
+            state_timer=settings_obj.time_dict["time_open_loop_fail_punish"],
             state_change_conditions={"Tup": "inter_trial"},
             output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
         )
@@ -252,7 +254,7 @@ if settings_obj.run_session:
             sma.add_state(
                 state_name="reward_left_waiting",
                 # TODO: radnom time range?
-                state_timer=settings_obj.time_dict["time_noreward"],
+                state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
             )
@@ -307,7 +309,7 @@ if settings_obj.run_session:
             sma.add_state(
                 state_name="reward_right_waiting",
                 # TODO: random time range?
-                state_timer=settings_obj.time_dict["time_noreward"],
+                state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
             )
@@ -336,6 +338,9 @@ if settings_obj.run_session:
         pa = threading.Thread(target=bpod.run_state_machine, args=(sma,))
         pa.start()
 
+        if not pa.is_alive():
+            stimulus_game.win.close()
+
         # run stimulus game
         #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
         if settings_obj.stim_type == "three-stimuli":
@@ -355,16 +360,14 @@ if settings_obj.run_session:
         #    break
         pa.join() 
 
-        if not pa.is_alive():
-            break        
+     
         # post trial cleanup
         print("---------------------------------------------------")
         print(f"trial: {bpod.session.current_trial}")
         # insist mode check
         #TODO: quiry trial return object to find side
         #probability_obj.insist_mode_check(bpod.session.current_trial)
-        while True:
-            time.sleep(1)
+
     #=========================================================================================================
     print("finished")
 

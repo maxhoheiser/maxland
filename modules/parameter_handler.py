@@ -319,17 +319,22 @@ class TrialParameterHandler():
 
         Returns:
             time_dict (dict): dictionary with all the state times
-        """        
+        """     
+        # test correct times
+        if self.usersettings.REWARD_TIME >= self.reward_open_time:
+            time_reward = self.usersettings.REWARD_TIME
+        else:
+            time_reward = self.reward_open_time
         time_dict = {
             "time_start": self.usersettings.TIME_START,
             "time_wheel_stopping_check": self.usersettings.TIME_WHEEL_STOPPING_CHECK,
             "time_wheel_stopping_punish": self.usersettings.TIME_WHEEL_STOPPING_PUNISH,
             "time_stim_pres": self.usersettings.TIME_PRESENT_STIM,
             "time_open_loop": self.usersettings.TIME_OPEN_LOOP,
-            "time_range_open_loop_fail_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_FAIL_PUNISH,
+            "time_open_loop_fail_punish": self.usersettings.TIME_OPEN_LOOP_FAIL_PUNISH,
             "time_stim_freez": self.usersettings.TIME_STIM_FREEZ,
-            "time_reward": self.usersettings.REWARD_TIME,
-            "time_noreward": self.usersettings.NOREWARD_TIME,
+            "time_reward": time_reward,
+            "time_range_noreward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
             "open_time_reward": self.reward_open_time,
             "time_reward_waiting": self.usersettings.REWARD_TIME-self.reward_open_time
@@ -340,8 +345,8 @@ class TrialParameterHandler():
         """updates usersettings file with new variable values
         """        
         #TODO: fix user input
-        self.stimulus_correct["grating_speed"]=0.02
-        self.stimulus_wrong["grating_speed"]=0.02
+        #self.stimulus_correct["grating_speed"]=0.02
+        #self.stimulus_wrong["grating_speed"]=0.02
         with open(os.path.join(self.settings_folder,'usersettings.py'), 'w') as f:
             f.write(
                     "task = 'conf'\n\n"
@@ -377,13 +382,13 @@ class TrialParameterHandler():
                     "# time of open loop where wheel moves the stimulus\n"
                     "TIME_OPEN_LOOP = "+repr(self.time_dict["time_open_loop"])+"\n"
                     "# time wait if stimulus not moved far enough to position\n"
-                    "TIME_RANGE_OPEN_LOOP_FAIL_PUNISH = "+repr(self.time_dict["time_range_open_loop_fail_punish"])+"\n"
+                    "TIME_OPEN_LOOP_FAIL_PUNISH = "+repr(self.time_dict["time_open_loop_fail_punish"])+"\n"
                     "# time stimulus is presented at reached position but not movable anymore\n"
                     "TIME_STIM_FREEZ = "+repr(self.time_dict["time_stim_freez"])+"\n"
                     "# time the animal has for the reard = valve open + time after\n"
                     "REWARD_TIME ="+repr(self.time_dict["time_reward"])+"\n"
                     "# no reward time\n"
-                    "NOREWARD_TIME = "+repr(self.time_dict["time_noreward"])+"\n"
+                    "TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = "+repr(self.time_dict["time_range_noreward_punish"])+"\n"
                     "# time at end of each trial_num\n"
                     "INTER_TRIAL_TIME = "+repr(self.time_dict["time_inter_trial"])+"\n\n"
                     "# Insist Mode =================================================\n"

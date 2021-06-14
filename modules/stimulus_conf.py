@@ -113,7 +113,7 @@ class Stimulus():
             win=self.win,
             name='cicle',
             radius=self.settings.stimulus_rad,
-            units='pix',
+            units='deg',
             edges=128,
             fillColor= self.settings.stimulus_col,
             pos=(0,0),
@@ -272,12 +272,11 @@ class Stimulus():
 
     # Stimulus Type 1 = single moving grating ===============================================
     def run_game_1(self, display_stim_event, still_show_event):
-        # get random stimulus
-        stim_bool = bool(random.getrandbits(1))
-        if stim_bool:
+        # get random stimulus always set the right stimulus as correct
+        if self.correct_stim_side["right"]:
             stimulus = self.settings.stimulus_correct
             print("correct")
-        if not stim_bool:
+        elif  self.correct_stim_side["left"]:
             stimulus = self.settings.stimulus_wrong
             print("wrong")
         stim_sf = stimulus["grating_sf"]
