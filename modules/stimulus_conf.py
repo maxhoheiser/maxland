@@ -2,8 +2,6 @@ from psychopy import visual, core, monitors #import some libraries from PsychoPy
 from math import tan as tan
 import random
 
-from psychopy.hardware import keyboard
-
 
 class Stimulus():
     def __init__(self, settings, rotary_encoder, correct_stim_side):
@@ -18,9 +16,9 @@ class Stimulus():
 
         # set gain
         self.FPS = settings.FPS
-        self.mon_width = 30#settings.MON_WIDTH
-        self.mon_dist = 16#settings.MON_DIST
-        self.screen_size = (1024,1280)#(settings.SCREEN_WIDTH,settings.SCREEN_HEIGHT)
+        self.mon_width = settings.MON_WIDTH
+        self.mon_dist = settings.MON_DIST
+        self.screen_size = (settings.SCREEN_WIDTH,settings.SCREEN_HEIGHT) #(1024,1280)#
         # stimulus    
         self.rotary_encoder = rotary_encoder
         self.correct_stim_side = correct_stim_side
@@ -33,9 +31,9 @@ class Stimulus():
         # create window
         #create a window
         self.win = visual.Window(
-            size=(self.screen_size),#self.SCREEN_WIDTH, self.SCREEN_HEIGHT), 
-            fullscr=False,#True, 
-            screen=0,#2, 
+            size=(self.screen_size),
+            fullscr=True, 
+            screen=2, 
             monitor=self.monitor,
             units="pix",
             winType='pyglet', allowGUI=False, allowStencil=False,
@@ -114,42 +112,39 @@ class Stimulus():
         circle = visual.Circle(
             win=self.win,
             name='cicle',
-            radius=20,#self.settings.stimulus_rad,
+            radius=self.settings.stimulus_rad,
             units='pix',
             edges=128,
-            #units='pix',
             fillColor= self.settings.stimulus_col,
             pos=(0,0),
             )
         return circle
 
     # Main psychpy loop ==============================================================
-    # Stimulus Type 1 (main) = fixed gratings + moving circle
-    def run_game(self, display_stim_event, still_show_event):
-        kb = keyboard.Keyboard()
-
+    # Stimulus Type 3 (main) = fixed gratings + moving circle
+    def run_game_3(self, display_stim_event, still_show_event):
         # get right grating
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
             right_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
-            right_ps = self.settings.stimulus_correct["phase_speed"]
+            right_ps = self.settings.stimulus_correct["grating_speed"]
             left_sf = self.settings.stimulus_wrong["grating_sf"]
             left_or = self.settings.stimulus_wrong["grating_ori"]
             left_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
-            left_ps = self.settings.stimulus_correct["phase_speed"]
+            left_ps = self.settings.stimulus_correct["grating_speed"]
         elif self.correct_stim_side["left"]:
             left_sf = self.settings.stimulus_correct["grating_sf"]
             left_or = self.settings.stimulus_correct["grating_ori"]
             left_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
-            left_ps = self.settings.stimulus_correct["phase_speed"]
+            left_ps = self.settings.stimulus_correct["grating_speed"]
             right_sf = self.settings.stimulus_wrong["grating_sf"]
             right_or = self.settings.stimulus_wrong["grating_ori"]
             right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
-            right_ps = self.settings.stimulus_correct["phase_speed"]
+            right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
-        grating_left = self.gen_grating(left_sf,left_or,left_size,-200)#self.settings.stim_end_pos[0])
-        grating_right = self.gen_grating(right_sf,right_or,right_size,200)#self.settings.stim_end_pos[1])
+        grating_left = self.gen_grating(left_sf,left_or,left_size,self.settings.stim_end_pos[0])
+        grating_right = self.gen_grating(right_sf,right_or,right_size,self.settings.stim_end_pos[1])
         stim = self.gen_stim()
         #-----------------------------------------------------------------------------
         # on soft code of state 1
@@ -205,30 +200,28 @@ class Stimulus():
 
     # Stimulus Type 2 = moving gratings ===============================================
     def run_game_2(self, display_stim_event, still_show_event):
-        kb = keyboard.Keyboard()
-
         # get right grating
-        if self.correct_stim_side["right"]:
+        if self.correct_stim_side["left"]: #switch side because stim is moved to center not ball moved to stim
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
             right_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
-            right_ps = self.settings.stimulus_correct["phase_speed"]
+            right_ps = self.settings.stimulus_correct["grating_speed"]
             left_sf = self.settings.stimulus_wrong["grating_sf"]
             left_or = self.settings.stimulus_wrong["grating_ori"]
             left_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
-            left_ps = self.settings.stimulus_correct["phase_speed"]
-        elif self.correct_stim_side["left"]:
+            left_ps = self.settings.stimulus_correct["grating_speed"]
+        elif self.correct_stim_side["right"]: #switch side because stim is moved to center not ball moved to stim
             left_sf = self.settings.stimulus_correct["grating_sf"]
             left_or = self.settings.stimulus_correct["grating_ori"]
             left_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
-            left_ps = self.settings.stimulus_correct["phase_speed"]
+            left_ps = self.settings.stimulus_correct["grating_speed"]
             right_sf = self.settings.stimulus_wrong["grating_sf"]
             right_or = self.settings.stimulus_wrong["grating_ori"]
             right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
-            right_ps = self.settings.stimulus_correct["phase_speed"]
+            right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
-        grating_left = self.gen_grating(left_sf,left_or,left_size,-300)#self.settings.stim_end_pos[0])
-        grating_right = self.gen_grating(right_sf,right_or,right_size,300)#self.settings.stim_end_pos[1])
+        grating_left = self.gen_grating(left_sf,left_or,left_size,self.settings.stim_end_pos[0])
+        grating_right = self.gen_grating(right_sf,right_or,right_size,self.settings.stim_end_pos[1])
         #-----------------------------------------------------------------------------
         # on soft code of state 1
         #-----------------------------------------------------------------------------
@@ -279,10 +272,8 @@ class Stimulus():
         display_stim_event.clear()
         still_show_event.clear()
 
-    # Stimulus Type 3 = single moving grating ===============================================
-    def run_game_3(self, display_stim_event, still_show_event):
-        kb = keyboard.Keyboard()
-
+    # Stimulus Type 1 = single moving grating ===============================================
+    def run_game_1(self, display_stim_event, still_show_event):
         # get random stimulus
         stim_bool = bool(random.getrandbits(1))
         if stim_bool:
@@ -294,7 +285,7 @@ class Stimulus():
         stim_sf = stimulus["grating_sf"]
         stim_or = stimulus["grating_ori"]
         stim_size = self.get_gratings_size(stimulus["grating_size"])
-        stim_ps = stimulus["phase_speed"]
+        stim_ps = stimulus["grating_speed"]
         # generate gratings and stimuli
         grating = self.gen_grating(stim_sf,stim_or,stim_size,0)#self.settings.stim_end_pos[0])
         #-----------------------------------------------------------------------------

@@ -100,7 +100,7 @@ class TrialParameterHandler():
         self.SCREEN_HEIGHT = 1536
 
         self.MON_DIST = 16  # Distance between subject's eyes and monitor
-        self.MON_WIDTH = 20  # Width of your monitor in cm
+        self.MON_WIDTH = 60  # Width of your monitor in cm
         #self.SCREEN_SIZE = (2048,1536)  #[1024, 1280]  # Pixel-dimensions of your monitor
 
         # wheel postition
@@ -340,8 +340,8 @@ class TrialParameterHandler():
         """updates usersettings file with new variable values
         """        
         #TODO: fix user input
-        self.stimulus_correct["phase_speed"]=0.02
-        self.stimulus_wrong["phase_speed"]=0.02
+        self.stimulus_correct["grating_speed"]=0.02
+        self.stimulus_wrong["grating_speed"]=0.02
         with open(os.path.join(self.settings_folder,'usersettings.py'), 'w') as f:
             f.write(
                     "task = 'conf'\n\n"
