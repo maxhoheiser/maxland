@@ -177,7 +177,6 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                print((pos - stream[-1][2])*self.gain)
                 change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
@@ -252,7 +251,6 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                print((pos - stream[-1][2])*self.gain)
                 change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
@@ -314,7 +312,6 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                print((pos - stream[-1][2])*self.gain)
                 change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
