@@ -8,7 +8,6 @@ from the center screen to eather the right or left screen via a wheel. Depending
 will get a reward of defined amount if chosen the correct side.
 
 This behavior config file makes use of three PyBpod classes the main Bpod and the StateMachine aswell as the RotaryEncoder.
-
 In addition it uses three custom classes:
     Stimulus: handeling the pygames configuration and drawing of the stimulus on the screens
     ProbabilityConstructor: generating the necessary probabilites for each trial
@@ -25,14 +24,13 @@ import json
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
-
+# import custom modules
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 maxland_root = os.path.dirname(os.path.dirname(currentdir))
 modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
-# import custom modules
 from stimulus import Stimulus
 from probability import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
@@ -42,9 +40,10 @@ from userinput import UserInput
 # import usersettings
 import usersettings
 
+
 # create settings object
 session_folder = os.getcwd()
-settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
+settings_folder = session_folder #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
@@ -56,16 +55,21 @@ window.draw_window_bevore()
 window.show_window()
 window.update_settings() 
 
+settings_obj.update_userinput_file()
+
+
+
 
 # run session
 if settings_obj.run_session:
-    settings_obj.update_userinput_file_gambl()
+    settings_obj.update_userinput_file()
     # rotary encoder config
     # enable thresholds
     rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     #rotary_encoder_module.enable_stream()
+
 
     # softcode handler
     def softcode_handler(data):
@@ -90,13 +94,16 @@ if settings_obj.run_session:
     bpod.softcode_handler_function = softcode_handler
 
     #stimulus
+    settings_obj.stim = os.path.join(settings_folder,"stimulus.png")
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module)
+
 
     #probability constructor
     probability_obj = ProbabilityConstuctor(settings_obj)
     # update settings object
     #settings_obj.probability_list = probability_obj.probability_list
     #settings_obj.trial_num = probability_obj.trial_num
+
 
 
     # create main state machine aka trial loop ====================================================================
@@ -110,10 +117,16 @@ if settings_obj.run_session:
         # define states
         # start state to define block of trial
         sma.add_state(
+            state_name=("block_"+str(probability_dict["block"])),
+            state_timer=0,
+            state_change_conditions={"Tup": "start"},
+            output_actions=[("SoftCode", settings_obj.SC_START_LOGGING)],
+        )
+        sma.add_state(
             state_name="start",
             state_timer=settings_obj.time_dict["time_start"],
             state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
-            output_actions=[("SoftCode", settings_obj.SC_START_LOGGING)],
+            output_actions=[],
         )
         # reset rotary encoder bevore checking for wheel not stoping
         sma.add_state(
@@ -136,7 +149,7 @@ if settings_obj.run_session:
         sma.add_state(
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings_obj.time_dict["time_wheel_stopping_punish"],
-            state_change_conditions={"Tup":"reset_rotary_encoder_wheel_stopping_check"},
+            state_change_conditions={"Tup":"start"},
             output_actions=[]
         )
 
@@ -386,6 +399,14 @@ if settings_obj.run_session:
             break
 
         # post trial cleanup
+        # append wheel postition
+        #log = rotary_encoder_module.get_logging()
+        #rotary_encoder_module.rotary_encoder.disable_logging()
+        #log = rotary_encoder_module.rotary_encoder.get_logged_data()
+        #print(log)
+        #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
+        # append stimulus postition
+        #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
         print("---------------------------------------------------")
         print(f"trial: {trial}")
         print(f"side: {var_side}")
@@ -393,9 +414,7 @@ if settings_obj.run_session:
         print(f"probability: {probability_dict}")
 
     #==========================================================================================================
-    stimulus_game.stop_open_loop()  
-    stimulus_game.end_present_stimulus()  
-    stimulus_game.end_trial()
+
     print("finished")
 
     # user input after session
@@ -408,13 +427,6 @@ if settings_obj.run_session:
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
     # save wheel movement of session
-    rotary_encoder_module.rotary_encoder.disable_logging()
-    # append wheel postition
-    #log = rotary_encoder_module.get_logging()
-    #print(log)
-    #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
-    # append stimulus postition
-    #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
     #settings_obj.save_wheel_movement(session_name)
     # save stimulus postition of session
     #settings_obj.save_stimulus_postition(session_name)

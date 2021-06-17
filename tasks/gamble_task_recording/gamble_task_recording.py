@@ -10,7 +10,6 @@ from the center screen to eather the right or left screen via a wheel. Depending
 will get a reward of defined amount if chosen the correct side.
 
 This behavior config file makes use of three PyBpod classes the main Bpod and the StateMachine aswell as the RotaryEncoder.
-
 In addition it uses three custom classes:
     Stimulus: handeling the pygames configuration and drawing of the stimulus on the screens
     ProbabilityConstructor: generating the necessary probabilites for each trial
@@ -27,14 +26,13 @@ import json
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
-
+# import custom modules
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
 modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
-# import custom modules
 from stimulus import Stimulus
 from probability import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
@@ -44,13 +42,14 @@ from userinput import UserInput
 # import usersettings
 import usersettings
 
+
 # create settings object
 session_folder = os.getcwd()
-settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_recording")
+settings_folder = session_folder #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_recording")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
-bpod=Bpod()
+bpod=Bpod('COM6')
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
@@ -58,16 +57,23 @@ window.draw_window_bevore()
 window.show_window()
 window.update_settings() 
 
+settings_obj.update_userinput_file()
+
+
+
 
 # run session
 if settings_obj.run_session:
+
     settings_obj.update_userinput_file()
+
     # rotary encoder config
     # enable thresholds
     rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     #rotary_encoder_module.enable_stream()
+
 
     # softcode handler
     def softcode_handler(data):
@@ -92,13 +98,16 @@ if settings_obj.run_session:
     bpod.softcode_handler_function = softcode_handler
 
     #stimulus
+    settings_obj.stim = r"C:\maxland\test\tasks\gamble_task_recording\stimulus.png"
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module)
+
 
     #probability constructor
     probability_obj = ProbabilityConstuctor(settings_obj)
     # update settings object
     #settings_obj.probability_list = probability_obj.probability_list
     #settings_obj.trial_num = probability_obj.trial_num
+
 
 
     # create main state machine aka trial loop ====================================================================
