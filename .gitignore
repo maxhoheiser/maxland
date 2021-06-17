@@ -5,4 +5,5 @@ behavior/behavior 1/wd/
 behavior/.DS_Store
 .DS_Store
 
-*maxland_TRAINING01/*
+*maxland_TRAINING*/*
+*maxland_RECORDING*/*
