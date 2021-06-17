@@ -43,7 +43,7 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-settings_folder = session_folder #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
+settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
@@ -94,7 +94,6 @@ if settings_obj.run_session:
     bpod.softcode_handler_function = softcode_handler
 
     #stimulus
-    settings_obj.stim = os.path.join(settings_folder,"stimulus.png")
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module)
 
 
