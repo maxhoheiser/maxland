@@ -1,7 +1,8 @@
-
 examples/stimulus/__pycache__/
 behavior/behavior 1/wd/
 *.pyc
 *.pyc
 behavior/.DS_Store
 .DS_Store
+
+*maxland_TRAINING01/*
