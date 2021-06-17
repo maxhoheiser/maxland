@@ -1,5 +1,3 @@
-task = "gamble"
-
 """specify custom settings for session in this file:
 
 How to:
@@ -12,7 +10,7 @@ GAMBLE_SIDE = "Right"
 
 # Blocks ========================================================
 """Construct a Block like this:
-{
+{
 	TRIAL_NUM_BLOCK: [int, int], #(50 - 80) #will chose a random length in between
 	PROB_REWARD_GAMBLE_BLOCK: int,  #(0-100)
 	prob_reward_save_block: int  #(0-100)
@@ -71,9 +69,7 @@ TIME_OPEN_LOOP_FAIL_PUNISH = 0.0
 # time stimulus is presented at reached position but not movable anymore
 TIME_STIM_FREEZ = 0.0
 # time the animal has for the reard = valve open + time after
-REWARD_TIME =10.0
-# no reward time
-NOREWARD_TIME = 5.0
+REWARD_TIME =1.0
 # time at end of each trial_num
 INTER_TRIAL_TIME = 1.5
 
