@@ -43,7 +43,7 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
+settings_folder = currentdir #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object

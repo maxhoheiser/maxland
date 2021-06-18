@@ -27,7 +27,11 @@ from pybpodgui_api.models.session import Session
 # import custom modules
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
+dir = (os.path.dirname(os.path.dirname(currentdir)))
+if os.path.isdir(dir):
+    maxland_root = dir
+else:
+    maxland_root = os.path.dirname(path)
 modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
@@ -43,7 +47,7 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
+settings_folder = currentdir #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object

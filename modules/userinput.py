@@ -128,7 +128,7 @@ class UserInput():
         """tkinter dialog for opening stimulus file from folder
         """
         stim_file = filedialog.askopenfilename(initialdir = "../../stimulus/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("png files","*.png")))
-
+        self.settings.stim = stim_file
 
     def show_window(self):
         self.root.mainloop()
