@@ -74,7 +74,7 @@ REWARD_TIME =1.0
 INTER_TRIAL_TIME = 1.5
 
 # stimulus ====================================================
-STIMULUS = "/Users/max/Google Drive/3.1 Code Repository/3 Masterarbeit/maxland/tasks/gamble_task_training/stimulus_green.png"
+STIMULUS = "C:/maxland/tasks/gamble_task_recording/stimulus.png"
 
 # rotary Encoder ==============================================
 """ Construct thresholds like this:

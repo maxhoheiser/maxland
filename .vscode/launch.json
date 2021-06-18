@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "pythonPath": "/opt/anaconda3/envs/maxland/bin/python"
+            //"python": "/opt/anaconda3/envs/maxland/bin/python"
         }
     ]
 }

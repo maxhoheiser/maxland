@@ -31,7 +31,7 @@ dir = (os.path.dirname(os.path.dirname(currentdir)))
 if os.path.isdir(dir):
     maxland_root = dir
 else:
-    maxland_root = os.path.dirname(path)
+    maxland_root = os.path.dirname(dir)
 modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
