@@ -1,11 +1,11 @@
 task = "gamble"
 
-"""PyBpod Gamble Task - Training Environment
+"""PyBpod Gambl Task - Training Environment
 
 main behavior file for pybpod gui
 load this file via the pybpod gui as a protocol
 
-The gamble tasks is designed for headfixed mice with three screens. The mouse can move a stimulus image or gif
+The gambl tasks is designed for headfixed mice with three screens. The mouse can move a stimulus image or gif
 from the center screen to eather the right or left screen via a wheel. Depending on the conditions the mouse
 will get a reward of defined amount if chosen the correct side.
 
@@ -29,9 +29,13 @@ from pybpodgui_api.models.session import Session
 # import custom modules
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
+dir = (os.path.dirname(os.path.dirname(currentdir)))
+if os.path.isdir(os.path.join(dir,"modules")):
+    maxland_root = dir
+else:
+    maxland_root = os.path.dirname(dir)
 modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(0,modules_dir) 
+sys.path.insert(-1,modules_dir) 
 
 from stimulus import Stimulus
 from probability import ProbabilityConstuctor
@@ -45,11 +49,11 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-settings_folder = session_folder #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_recording")
+settings_folder = currentdir #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_training")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
-bpod=Bpod('COM6')
+bpod=Bpod()
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
@@ -98,7 +102,6 @@ if settings_obj.run_session:
     bpod.softcode_handler_function = softcode_handler
 
     #stimulus
-    settings_obj.stim = r"C:\maxland\test\tasks\gamble_task_recording\stimulus.png"
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module)
 
 
@@ -473,7 +476,6 @@ if settings_obj.run_session:
                             ('BNC1',0),('BNC2',0)
                             ],
         )
-
         # create pygame daemon
         threading.Thread(target=stimulus_game.run_game, daemon=True).start()
 
@@ -485,6 +487,14 @@ if settings_obj.run_session:
             break
 
         # post trial cleanup
+        # append wheel postition
+        #log = rotary_encoder_module.get_logging()
+        #rotary_encoder_module.rotary_encoder.disable_logging()
+        #log = rotary_encoder_module.rotary_encoder.get_logged_data()
+        #print(log)
+        #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
+        # append stimulus postition
+        #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
         print("---------------------------------------------------")
         print(f"trial: {trial}")
         print(f"side: {var_side}")
@@ -507,13 +517,6 @@ if settings_obj.run_session:
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
     # save wheel movement of session
-    rotary_encoder_module.rotary_encoder.disable_logging()
-    # append wheel postition
-    #log = rotary_encoder_module.get_logging()
-    #print(log)
-    #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
-    # append stimulus postition
-    #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
     #settings_obj.save_wheel_movement(session_name)
     # save stimulus postition of session
     #settings_obj.save_stimulus_postition(session_name)
@@ -528,5 +531,6 @@ else:
     #todo donst save current session
     None
 
+stimulus_game.quite()
 rotary_encoder_module.close()
 bpod.close()
