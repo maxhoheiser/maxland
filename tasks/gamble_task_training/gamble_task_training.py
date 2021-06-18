@@ -28,7 +28,7 @@ from pybpodgui_api.models.session import Session
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 dir = (os.path.dirname(os.path.dirname(currentdir)))
-if os.path.isdir(dir):
+if os.path.isdir(os.path.join(dir,"modules")):
     maxland_root = dir
 else:
     maxland_root = os.path.dirname(dir)
