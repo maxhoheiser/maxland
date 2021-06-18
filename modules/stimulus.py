@@ -89,6 +89,9 @@ class Stimulus():
         """        
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
 
+    def quite(self):
+        pygame.quite()
+
     def run_game(self):
         """main loop running the pygame controlling the stimulus and enableing interaction via the rotary encoder"""        
         # pygame config

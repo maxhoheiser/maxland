@@ -469,6 +469,6 @@ if settings_obj.run_session:
 else:
     #todo donst save current session
     None
-
+stimulus_game.quite()
 rotary_encoder_module.close()
 bpod.close()
