@@ -33,7 +33,7 @@ if os.path.isdir(os.path.join(dir,"modules")):
 else:
     maxland_root = os.path.dirname(dir)
 modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(0,modules_dir) 
+sys.path.insert(-1,modules_dir) 
 
 from stimulus import Stimulus
 from probability import ProbabilityConstuctor
