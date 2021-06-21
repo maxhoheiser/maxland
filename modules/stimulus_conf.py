@@ -32,8 +32,10 @@ class Stimulus():
         #create a window
         self.win = visual.Window(
             size=(self.screen_size),
+            #TODO:
             fullscr=True, 
-            screen=2, 
+            #TODO:
+            screen=1,#2, 
             monitor=self.monitor,
             units="pix",
             winType='pyglet', allowGUI=False, allowStencil=False,
@@ -143,8 +145,9 @@ class Stimulus():
             right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
-        grating_left = self.gen_grating(left_sf,left_or,left_size,self.settings.stim_end_pos[0])
-        grating_right = self.gen_grating(right_sf,right_or,right_size,self.settings.stim_end_pos[1])
+        #TODO:
+        grating_left = self.gen_grating(left_sf,left_or,left_size,-100)#self.settings.stim_end_pos[0])
+        grating_right = self.gen_grating(right_sf,right_or,right_size,100)#self.settings.stim_end_pos[1])
         stim = self.gen_stim()
         #-----------------------------------------------------------------------------
         # on soft code of state 1
