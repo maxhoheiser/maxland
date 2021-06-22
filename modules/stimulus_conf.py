@@ -82,7 +82,7 @@ class Stimulus():
         if num > 20:
             return 20
         else:
-            return num        
+            return num
 
     def stop_closed_loop(self):
         self.run_closed_loop = False
@@ -164,9 +164,7 @@ class Stimulus():
             #stim.draw()
             self.win.flip()
             if not self.bpod_thread.is_alive():
-                self.run_closed_loop = False
-                self.run_open_loop = False
-                still_show_event.set()
+                self.win.close()
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
@@ -193,8 +191,7 @@ class Stimulus():
             stim.draw()
             self.win.flip()
             if not self.bpod_thread.is_alive():
-                self.run_open_loop = False
-                still_show_event.set()
+                self.win.close()
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------

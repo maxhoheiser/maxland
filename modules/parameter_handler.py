@@ -1,4 +1,4 @@
-#import jsonpickle
+import jsonpickle
 import json
 import os
 import csv
@@ -23,7 +23,7 @@ class TrialParameterHandler():
         self.life_plot = self.usersettings.LIFE_PLOT
 
         # specific for gamble task =============================================
-        if self.task is "gamble":
+        if self.task == "gamble":
             self.gamble_side = self.usersettings.GAMBLE_SIDE
             # create gamble side bool
             self.gamble_side_left = self.get_gambl_side()
@@ -42,7 +42,7 @@ class TrialParameterHandler():
             self.time_dict = self.create_time_dict_gamble()
 
         # specific for confidentiality task =============================================
-        if self.task is "conf":
+        if self.task == "conf":
             self.trial_number = self.usersettings.TRIAL_NUMBER
             # stimulus
             self.stimulus_correct = self.usersettings.STIMULUS_CORRECT
