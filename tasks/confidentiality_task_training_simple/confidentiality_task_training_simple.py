@@ -54,13 +54,13 @@ settings_obj = TrialParameterHandler(usersettings, settings_folder, session_fold
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
 #TODO:
-bpod=Bpod('COM7')
+bpod=Bpod()
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
-#window = UserInput(settings_obj)
-#window.draw_window_bevore_conf()
-#window.show_window()
+window = UserInput(settings_obj)
+window.draw_window_bevore_conf()
+window.show_window()
 
 
 #settings_obj.run_session = True
@@ -82,7 +82,7 @@ if settings_obj.run_session:
     # rotary encoder config
     # enable thresholds
     #TODO:
-    rotary_encoder_module = BpodRotaryEncoder('COM7', settings_obj, bpod)
+    rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     rotary_encoder_module.enable_stream()
@@ -346,40 +346,34 @@ if settings_obj.run_session:
         bpod.send_state_machine(sma)
         pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
        
+        pa.start()
 
-        if not pa.is_alive():
-            stimulus_game.win.close()
 
         # run stimulus game
-        """
         #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
         if settings_obj.stim_type == "three-stimuli":
             print("three")
-            pb = threading.Thread(target=stimulus_game.run_game_3, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_3(display_stim_event, still_show_event,pa)
+            #pb = threading.Thread(target=stimulus_game.run_game_3, args=(display_stim_event, still_show_event), daemon=True)
         elif settings_obj.stim_type == "two-stimuli":
             print("tow")
-            pb = threading.Thread(target=stimulus_game.run_game_2, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_2(display_stim_event, still_show_event)
+            #pb = threading.Thread(target=stimulus_game.run_game_2, args=(display_stim_event, still_show_event), daemon=True)
         elif settings_obj.stim_type == "one-stimulus":
             print("one")
-            pb = threading.Thread(target=stimulus_game.run_game_1, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_1(display_stim_event, still_show_event)
+            #pb = threading.Thread(target=stimulus_game.run_game_1, args=(display_stim_event, still_show_event), daemon=True)
         else:
             print("\nNo correct stim type selected\n")
 
-        pb.start()
-        pa.start()        
-        # wiat until state machine finished
-        if not pa.is_alive:  # Locks until state machine 'exit' is reached
-            pb.terminate()
-        pa.join() 
-        
-        """
-
-        stimulus_game.run_game_3(display_stim_event, still_show_event)
-        pa.start()  
      
         # post trial cleanup
+        pa.join()
         print("---------------------------------------------------")
-        print(f"trial: {bpod.session.current_trial}")
+        try:
+            print(f"trial: {bpod.session.current_trial}")
+        except:
+            continue
         # insist mode check
         #TODO: quiry trial return object to find side
         #probability_obj.insist_mode_check(bpod.session.current_trial)
