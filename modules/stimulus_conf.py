@@ -163,10 +163,13 @@ class Stimulus():
             #stim.draw()
             self.win.flip()
 <<<<<<< HEAD
+<<<<<<< HEAD
             if not self.bpod_thread.is_alive():
                 self.run_closed_loop = False
                 self.run_open_loop = False
                 still_show_event.set()
+=======
+>>>>>>> parent of dd026fd (beat 2.1)
 =======
 >>>>>>> parent of dd026fd (beat 2.1)
         #-------------------------------------------------------------------------
@@ -195,9 +198,12 @@ class Stimulus():
             stim.draw()
             self.win.flip()
 <<<<<<< HEAD
+<<<<<<< HEAD
             if not self.bpod_thread.is_alive():
                 self.run_open_loop = False
                 still_show_event.set()
+=======
+>>>>>>> parent of dd026fd (beat 2.1)
 =======
 >>>>>>> parent of dd026fd (beat 2.1)
         #-------------------------------------------------------------------------
