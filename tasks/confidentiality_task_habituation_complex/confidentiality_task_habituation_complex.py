@@ -59,7 +59,7 @@ bpod=Bpod()
 # create tkinter userinput dialoge window
 # TODO: fix for windows
 window = UserInput(settings_obj)
-window.draw_window_bevore_conf(stage="training")
+window.draw_window_bevore_conf(stage="habituation_complex")
 window.show_window()
 
 
@@ -110,8 +110,7 @@ if settings_obj.run_session:
     bpod.softcode_handler_function = softcode_handler
 
     #probability constructor
-    probability_obj = ProbabilityConstuctor(settings_obj)
-
+    probability_obj = ProbabilityConstuctor(settings_obj)    
 
     #stimulus
     # failsave for stimulus file
@@ -353,16 +352,12 @@ if settings_obj.run_session:
         #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
         if settings_obj.stim_type == "three-stimuli":
             print("three")
-            stimulus_game.run_game_3(display_stim_event, still_show_event,pa)
-            #pb = threading.Thread(target=stimulus_game.run_game_3, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_habituation_3_complex(display_stim_event, still_show_event,pa)
         elif settings_obj.stim_type == "two-stimuli":
             print("tow")
-            stimulus_game.run_game_2(display_stim_event, still_show_event)
-            #pb = threading.Thread(target=stimulus_game.run_game_2, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,pa)
         elif settings_obj.stim_type == "one-stimulus":
             print("one")
-            stimulus_game.run_game_1(display_stim_event, still_show_event)
-            #pb = threading.Thread(target=stimulus_game.run_game_1, args=(display_stim_event, still_show_event), daemon=True)
         else:
             print("\nNo correct stim type selected\n")
 
@@ -380,7 +375,7 @@ if settings_obj.run_session:
 
     #=========================================================================================================
     print("finished")
-
+    stimulus_game.win.close()
     # user input after session
     window = UserInput(settings_obj)
     window.draw_window_after()
