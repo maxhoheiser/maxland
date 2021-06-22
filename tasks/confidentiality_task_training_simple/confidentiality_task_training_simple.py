@@ -346,29 +346,38 @@ if settings_obj.run_session:
         bpod.send_state_machine(sma)
         pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
        
-        pa.start()
 
+        if not pa.is_alive():
+            stimulus_game.win.close()
 
         # run stimulus game
+        """
         #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
         if settings_obj.stim_type == "three-stimuli":
             print("three")
-            stimulus_game.run_game_3(display_stim_event, still_show_event,pa)
-            #pb = threading.Thread(target=stimulus_game.run_game_3, args=(display_stim_event, still_show_event), daemon=True)
+            pb = threading.Thread(target=stimulus_game.run_game_3, args=(display_stim_event, still_show_event), daemon=True)
         elif settings_obj.stim_type == "two-stimuli":
             print("tow")
-            stimulus_game.run_game_2(display_stim_event, still_show_event)
-            #pb = threading.Thread(target=stimulus_game.run_game_2, args=(display_stim_event, still_show_event), daemon=True)
+            pb = threading.Thread(target=stimulus_game.run_game_2, args=(display_stim_event, still_show_event), daemon=True)
         elif settings_obj.stim_type == "one-stimulus":
             print("one")
-            stimulus_game.run_game_1(display_stim_event, still_show_event)
-            #pb = threading.Thread(target=stimulus_game.run_game_1, args=(display_stim_event, still_show_event), daemon=True)
+            pb = threading.Thread(target=stimulus_game.run_game_1, args=(display_stim_event, still_show_event), daemon=True)
         else:
             print("\nNo correct stim type selected\n")
 
+        pb.start()
+        pa.start()        
+        # wiat until state machine finished
+        if not pa.is_alive:  # Locks until state machine 'exit' is reached
+            pb.terminate()
+        pa.join() 
+        
+        """
+
+        stimulus_game.run_game_3(display_stim_event, still_show_event)
+        pa.start()  
      
         # post trial cleanup
-        pa.join()
         print("---------------------------------------------------")
         print(f"trial: {bpod.session.current_trial}")
         # insist mode check

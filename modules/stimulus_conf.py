@@ -124,9 +124,8 @@ class Stimulus():
 
     # Main psychpy loop ==============================================================
     # Stimulus Type 3 (main) = fixed gratings + moving circle
-    def run_game_3(self, display_stim_event, still_show_event, bpod_thread):
+    def run_game_3(self, display_stim_event, still_show_event):
         # get right grating
-        self.bpod_thread = bpod_thread
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
@@ -163,10 +162,13 @@ class Stimulus():
             grating_right.draw()
             #stim.draw()
             self.win.flip()
+<<<<<<< HEAD
             if not self.bpod_thread.is_alive():
                 self.run_closed_loop = False
                 self.run_open_loop = False
                 still_show_event.set()
+=======
+>>>>>>> parent of dd026fd (beat 2.1)
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
@@ -192,9 +194,12 @@ class Stimulus():
 
             stim.draw()
             self.win.flip()
+<<<<<<< HEAD
             if not self.bpod_thread.is_alive():
                 self.run_open_loop = False
                 still_show_event.set()
+=======
+>>>>>>> parent of dd026fd (beat 2.1)
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
