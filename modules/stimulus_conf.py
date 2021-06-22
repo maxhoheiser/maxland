@@ -82,7 +82,7 @@ class Stimulus():
         if num > 20:
             return 20
         else:
-            return num
+            return num        
 
     def stop_closed_loop(self):
         self.run_closed_loop = False
@@ -114,8 +114,8 @@ class Stimulus():
         circle = visual.Circle(
             win=self.win,
             name='cicle',
-            radius=self.settings.stimulus_rad,
-            units='deg',
+            radius=self.get_gratings_size(self.settings.stimulus_rad)/2,
+            units='pix',
             edges=128,
             fillColor= self.settings.stimulus_col,
             pos=(0,0),
@@ -147,8 +147,8 @@ class Stimulus():
             right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
         #TODO:
-        grating_left = self.gen_grating(left_sf,left_or,left_size,-100)#self.settings.stim_end_pos[0])
-        grating_right = self.gen_grating(right_sf,right_or,right_size,100)#self.settings.stim_end_pos[1])
+        grating_left = self.gen_grating(left_sf,left_or,left_size,self.settings.stim_end_pos[0])
+        grating_right = self.gen_grating(right_sf,right_or,right_size,self.settings.stim_end_pos[1])
         stim = self.gen_stim()
         #-----------------------------------------------------------------------------
         # on soft code of state 1
@@ -164,7 +164,9 @@ class Stimulus():
             #stim.draw()
             self.win.flip()
             if not self.bpod_thread.is_alive():
-                self.win.close()
+                self.run_closed_loop = False
+                self.run_open_loop = False
+                still_show_event.set()
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
@@ -191,7 +193,8 @@ class Stimulus():
             stim.draw()
             self.win.flip()
             if not self.bpod_thread.is_alive():
-                self.win.close()
+                self.run_open_loop = False
+                still_show_event.set()
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------

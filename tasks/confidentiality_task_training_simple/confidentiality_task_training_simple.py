@@ -27,8 +27,12 @@ from pybpodgui_api.models.session import Session
 # span subprocess
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-maxland_root = os.path.dirname(os.path.dirname(currentdir))
-modules_dir = os.path.join(maxland_root,"modules")
+if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(currentdir)),"modules")):
+    maxland_root = os.path.dirname(os.path.dirname(currentdir))
+    modules_dir = os.path.join(maxland_root,"modules")
+elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(currentdir))),"modules")):
+    maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
+    modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(0,modules_dir) 
 
 # import custom modules
@@ -50,7 +54,7 @@ settings_obj = TrialParameterHandler(usersettings, settings_folder, session_fold
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
 #TODO:
-bpod=Bpod('/dev/cu.usbmodem62917601')
+bpod=Bpod('COM7')
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
@@ -78,7 +82,7 @@ if settings_obj.run_session:
     # rotary encoder config
     # enable thresholds
     #TODO:
-    rotary_encoder_module = BpodRotaryEncoder('/dev/cu.usbmodem65305701', settings_obj, bpod)
+    rotary_encoder_module = BpodRotaryEncoder('COM7', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     rotary_encoder_module.enable_stream()
