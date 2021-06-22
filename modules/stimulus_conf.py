@@ -402,8 +402,10 @@ class Stimulus():
 
         if self.correct_stim_side["right"]:
             grating = self.gen_grating(grating_sf,grating_or,grating_size,self.settings.stim_end_pos[1])
+            print("right")
         elif self.correct_stim_side["left"]:
             grating = self.gen_grating(grating_sf,grating_or,grating_size,self.settings.stim_end_pos[0])
+            print("left")
         # generate gratings and stimuli
         #TODO:
         stim = self.gen_stim()
@@ -461,7 +463,7 @@ class Stimulus():
         still_show_event.clear()
 
     # Habituation Typ 2 complex =======================================================
-    def run_game_habituation_2_complex(self, display_stim_event, still_show_event):
+    def run_game_habituation_2_complex(self, display_stim_event, still_show_event, bpod_thread):
         # get right grating
         self.bpod_thread = bpod_thread
         grating_sf = self.settings.stimulus_correct["grating_sf"]

@@ -65,7 +65,7 @@ class UserInput():
 
         self.settings.life_plot = bool(self.var_liveplot.get())
         # tas specific setting ===
-        if self.task is "gambl":
+        if self.task == "gambl":
             self.settings.gamble_side = self.var_gamble_side.get()
             self.settings.blocks = self.get_blocks()
             self.settings.big_reward = float(self.var_big_reward.get())
@@ -73,7 +73,7 @@ class UserInput():
             # time dict
             self.settings.time_dict["time_open_loop_fail_punish"] = float(self.time_open_loop_fail_punish.var.get())
 
-        if self.task is "conf":
+        if self.task == "conf":
             self.settings.trial_number = int(self.var_trial_num.get())
             self.settings.reward = float(self.var_reward.get())
             # add correct stimulus
@@ -124,14 +124,14 @@ class UserInput():
         Returns:
             str: x y geometry of window
         """
-        if self.task is "gamble":
+        if self.task == "gamble":
             self.WINDOW_SIZE = [835, 920]
-        if self.task is "conf":
-            self.WINDOW_SIZE = [880, 1000]
+        if self.task == "conf":
+            self.WINDOW_SIZE = [880, 1070]
 
         screen_size = [self.root.winfo_screenwidth(), self.root.winfo_screenheight()]
         window_offset = [ int((screen_size[0]-self.WINDOW_SIZE[0])/2),
-                          10
+                          0
                         ]
         if self.WINDOW_SIZE[0] > screen_size[0]:
             self.WINDOW_SIZE[0] = screen_size[0]
@@ -473,7 +473,7 @@ class UserInput():
 
 
     # Confidentiality Task Specific Settings ======================================================================================================
-    def draw_window_bevore_conf(self):
+    def draw_window_bevore_conf(self,stage='training'):
         """tkinter window to get user input, variables and default values are read from settings object
         """
         # heading
@@ -662,10 +662,23 @@ class UserInput():
         lbl_drp_stim.grid(row=0, column=0, padx=(10,2), pady=8)
 
         #TODO: fix variable update
-        self.drp_stim['values'] = self.settings.drp_list #('three-stimuli','two-stimuli','one-stimulus')
-        self.drp_stim.grid(column = 1, row = 0)
-        idx = self.settings.drp_list.index(self.settings.stim_type)
-        self.drp_stim.current(idx) # set current value
+        if stage == "training":
+            self.drp_stim['values'] = self.settings.drp_list #('three-stimuli','two-stimuli','one-stimulus')
+            self.drp_stim.grid(column = 1, row = 0)
+            idx = self.settings.drp_list.index(self.settings.stim_type)
+            self.drp_stim.current(idx) # set current value
+        elif stage == "habituation_simple":
+            list_drp = ('three-stimuli')
+            self.drp_stim['values'] = list_drp
+            self.drp_stim.grid(column = 1, row = 0)
+            idx = list_drp.index(self.settings.stim_type)
+            self.drp_stim.current(idx) # set current valu
+        elif stage == "habituation_complex":
+            list_drp = ('three-stimuli','two-stimuli')
+            self.drp_stim['values'] = list_drp
+            self.drp_stim.grid(column = 1, row = 0)
+            idx = list_drp.index(self.settings.stim_type)
+            self.drp_stim.current(idx) # set current value
 
         # stimulus radius
         lbl_stim_rad =  tk.Label(frame6, text="Stim size [deg]:", font=self.fontStyleRegular)

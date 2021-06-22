@@ -54,13 +54,13 @@ settings_obj = TrialParameterHandler(usersettings, settings_folder, session_fold
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
 #TODO:
-bpod=Bpod('COM7')
+bpod=Bpod()
 
 # create tkinter userinput dialoge window
 # TODO: fix for windows
-#window = UserInput(settings_obj)
-#window.draw_window_bevore_conf()
-#window.show_window()
+window = UserInput(settings_obj)
+window.draw_window_bevore_conf(stage="habituation_simple")
+window.show_window()
 
 
 #settings_obj.run_session = True
@@ -82,7 +82,7 @@ if settings_obj.run_session:
     # rotary encoder config
     # enable thresholds
     #TODO:
-    rotary_encoder_module = BpodRotaryEncoder('COM7', settings_obj, bpod)
+    rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     rotary_encoder_module.enable_stream()
