@@ -40,6 +40,7 @@ class UserInput():
         Returns:
             settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
         """
+        self.settings.life_plot = bool(self.var_liveplot.get())
 
         # time dict
         self.settings.time_dict["time_start"] = float(self.time_start.var.get())
@@ -207,7 +208,7 @@ class UserInput():
         """tkinter dialog for opening stimulus file from folder
         """
         stim_file = filedialog.askopenfilename(initialdir = "../../stimulus/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("png files","*.png")))
-
+        self.settings.stim = stim_file
 
     def get_blocks(self):
         """update block variables for given block from userinput
@@ -352,56 +353,56 @@ class UserInput():
 
         # frame time ====================================================================
         lbl_time = tk.Label(self.root, text="TIME", font=self.fontStyleBox, fg='gray66').pack(anchor=tk.W, padx=self.padx-2, pady=(15,2))
-        frame6 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
-        frame6.pack(fill=tk.BOTH, padx=self.padx, pady=2)
+        frame5 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        frame5.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
-        frame6_0 = tk.Frame(frame6)
-        frame6_0.grid(row=0, column=0, pady= 8, sticky='W')
+        frame5_0 = tk.Frame(frame5)
+        frame5_0.grid(row=0, column=0, pady= 8, sticky='W')
 
         # row 0
         # create a new instance of object Time (defined below) with the parameters frame (werhe to place), fontstyle, name and default value
         # call the varaiable var from the instance to get the inputed value
-        self.time_start = self.Time(frame6_0, 0, self.fontStyleRegular, "Start wait Time",
+        self.time_start = self.Time(frame5_0, 0, self.fontStyleRegular, "Start wait Time",
                                             self.settings.time_dict["time_start"],
                                             "time bevor the trial starts"
                                             )
         # row 1
-        self.time_wheel_stopping_check = self.Time(frame6_0, 1, self.fontStyleRegular, "Stopping check",
+        self.time_wheel_stopping_check = self.Time(frame5_0, 1, self.fontStyleRegular, "Stopping check",
                                             self.settings.time_dict["time_wheel_stopping_check"],
                                             "time the wheel has to be stopped"
                                             )
         # row 2
-        self.time_wheel_stopping_punish = self.Time(frame6_0, 2, self.fontStyleRegular, "Not stpping punish",
+        self.time_wheel_stopping_punish = self.Time(frame5_0, 2, self.fontStyleRegular, "Not stpping punish",
                                                self.settings.time_dict["time_wheel_stopping_punish"],
                                                "time wait if the wheel is not stopped bevore new trial starts"
                                                )
         # row 3
-        self.time_stim_pres = self.Time(frame6_0, 3, self.fontStyleRegular, "Stim Presentation",
+        self.time_stim_pres = self.Time(frame5_0, 3, self.fontStyleRegular, "Stim Presentation",
                                    self.settings.time_dict["time_stim_pres"],
                                    "time stimulus is presented but not movable"
                                   )
         # row 4
-        self.time_open_loop = self.Time(frame6_0, 4, self.fontStyleRegular, "Open Loop",
+        self.time_open_loop = self.Time(frame5_0, 4, self.fontStyleRegular, "Open Loop",
                                    self.settings.time_dict["time_open_loop"],
                                    "time of open loop where wheel moves the stimulus"
                                    )
         # row 5
-        self.time_open_loop_fail_punish = self.Time(frame6_0, 5, self.fontStyleRegular, "Open Loop Fail",
+        self.time_open_loop_fail_punish = self.Time(frame5_0, 5, self.fontStyleRegular, "Open Loop Fail",
                                    self.settings.time_dict["time_open_loop_fail_punish"],
                                    "time wait if stimulus not moved far enough to position"
                                    )
         # row 6
-        self.time_stim_freez = self.Time(frame6_0, 6, self.fontStyleRegular, "Stim Freez",
+        self.time_stim_freez = self.Time(frame5_0, 6, self.fontStyleRegular, "Stim Freez",
                                    self.settings.time_dict["time_stim_freez"],
                                    "time stimulus is presented at reached position but not movable anymore"
                                    )
         # row 7
-        self.time_reward = self.Time(frame6_0, 7, self.fontStyleRegular, "Reward Time",
+        self.time_reward = self.Time(frame5_0, 7, self.fontStyleRegular, "Reward Time",
                                    self.settings.time_dict["time_reward"],
                                    "time the animal has for the reard = valve open + time after"
                                    )
         # row 8
-        self.time_inter_trial = self.Time(frame6_0, 8, self.fontStyleRegular, "Trial End",
+        self.time_inter_trial = self.Time(frame5_0, 8, self.fontStyleRegular, "Trial End",
                                    self.settings.time_dict["time_inter_trial"],
                                    "time at end of each Trial"
                                    )

@@ -1,11 +1,11 @@
 task = "gamble"
 
-"""PyBpod Gamble Task - Training Environment
+"""PyBpod Gambl Task - Training Environment
 
 main behavior file for pybpod gui
 load this file via the pybpod gui as a protocol
 
-The gamble tasks is designed for headfixed mice with three screens. The mouse can move a stimulus image or gif
+The gambl tasks is designed for headfixed mice with three screens. The mouse can move a stimulus image or gif
 from the center screen to eather the right or left screen via a wheel. Depending on the conditions the mouse
 will get a reward of defined amount if chosen the correct side.
 
@@ -30,9 +30,13 @@ from pybpodgui_api.models.session import Session
 
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
+dir = (os.path.dirname(os.path.dirname(currentdir)))
+if os.path.isdir(os.path.join(dir,"modules")):
+    maxland_root = dir
+else:
+    maxland_root = os.path.dirname(dir)
 modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(0,modules_dir) 
+sys.path.insert(-1,modules_dir) 
 
 # import custom modules
 from stimulus import Stimulus
@@ -46,7 +50,7 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-settings_folder = os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_recording")
+settings_folder = currentdir #os.path.join(session_folder.split('experiments')[0],"tasks","gamble_task_recording")
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
@@ -519,5 +523,6 @@ else:
     #todo donst save current session
     None
 
+stimulus_game.quite()
 rotary_encoder_module.close()
 bpod.close()

@@ -5,7 +5,7 @@ import csv
 
 
 class TrialParameterHandler():
-    def __init__(self, usersettings, settings_folder, session_folder, task):
+    def __init__(self, usersettings, settings_folder, session_folder):
         """class that handls user input and settings for each session
 
         Args:
@@ -219,7 +219,7 @@ class TrialParameterHandler():
         else:
             return False
 
-    def create_time_dict_gambl(self):
+    def create_time_dict_gamble(self):
         """create a dictionary with all the state times for the bpod state machine
 
         Returns:
@@ -289,12 +289,13 @@ class TrialParameterHandler():
                 "# time stimulus is presented at reached position but not movable anymore\n"
                 "TIME_STIM_FREEZ = "+repr(self.time_dict["time_stim_freez"])+"\n"
                 "# time the animal has for the reard = valve open + time after\n"
-                "REWARD_TIME ="+repr(self.time_dict["time_reward"])+"\n"
+                "REWARD_TIME = "+repr(self.time_dict["time_reward"])+"\n"
                 "# no reward time\n"
                 "NOREWARD_TIME = "+repr(self.time_dict["time_noreward"])+"\n"
                 "# time at end of each trial_num\n"
                 "INTER_TRIAL_TIME = "+repr(self.time_dict["time_inter_trial"])+"\n\n"
-                "# stimulus ====================================================\nSTIMULUS = "+json.dumps(self.stim)+"\n\n"
+                "# stimulus ====================================================\n"
+                "STIMULUS = "+json.dumps(self.stim)+"\n\n"
                 "# rotary Encoder ==============================================\n"
                 "\"\"\" Construct thresholds like this:\n"
                 "[\n\t-90, 90, # stimulus position in degrees of wheel movement\n"

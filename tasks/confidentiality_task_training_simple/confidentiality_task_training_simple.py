@@ -50,7 +50,7 @@ session_folder = os.getcwd()
 # TODO: correct for final foderl
 settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
 global settings_obj
-settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
+settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
 #TODO:
