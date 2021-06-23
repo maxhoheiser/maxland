@@ -22,6 +22,11 @@ class TrialParameterHandler():
         # life ploting
         self.life_plot = self.usersettings.LIFE_PLOT
 
+        #stimulus
+        self.stimulus_rad = self.usersettings.STIMULUS_RAD
+        self.stimulus_col = self.usersettings.STIMULUS_COL
+        self.bg_color = self.usersettings.BACKGROUND_COL
+
         # specific for gamble task =============================================
         if self.task == "gamble":
             self.gamble_side = self.usersettings.GAMBLE_SIDE
@@ -33,8 +38,6 @@ class TrialParameterHandler():
             self.big_reward = self.usersettings.BIG_REWARD
             self.small_reward = self.usersettings.SMALL_REWARD
             self.manual_reward = None
-            # stimulus
-            self.stim = self.usersettings.STIMULUS
             # reward valve open times
             self.big_reward_open_time = self.create_valve_open_time(self.usersettings.BIG_REWARD)
             self.small_reward_open_time = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
@@ -47,9 +50,6 @@ class TrialParameterHandler():
             # stimulus
             self.stimulus_correct = self.usersettings.STIMULUS_CORRECT
             self.stimulus_wrong = self.usersettings.STIMULUS_WRONG
-            self.stimulus_rad = self.usersettings.STIMULUS_RAD
-            self.stimulus_col = self.usersettings.STIMULUS_COL
-            self.bg_color = self.usersettings.BACKGROUND_COL
             self.stim_type = self.usersettings.STIMULUS_TYPE 
             self.drp_list = ('three-stimuli','two-stimuli','one-stimulus')
             # times
@@ -251,7 +251,7 @@ class TrialParameterHandler():
         """        
         with open(os.path.join(self.settings_folder,'usersettings.py'), 'w') as f:
             f.write(
-                "task='gamble'"
+                "task=\"gamble\"\n"
                 "\"\"\"specify custom settings for session in this file:\n\n"
                 "How to:\n"
                 "\tedit values for capital variables\n"
@@ -294,8 +294,10 @@ class TrialParameterHandler():
                 "NOREWARD_TIME = "+repr(self.time_dict["time_noreward"])+"\n"
                 "# time at end of each trial_num\n"
                 "INTER_TRIAL_TIME = "+repr(self.time_dict["time_inter_trial"])+"\n\n"
-                "# stimulus ====================================================\n"
-                "STIMULUS = "+json.dumps(self.stim)+"\n\n"
+                "# stimulus size and color - only for moving stimulus\n"
+                "STIMULUS_RAD = "+json.dumps(self.stimulus_rad)+" # pixel radius of stimulus\n"
+                "STIMULUS_COL = "+json.dumps(self.stimulus_col)+" #color of stimulus\n\n"
+                "BACKGROUND_COL = "+json.dumps(self.bg_color)+" #-1,-1,-1 for black\n"
                 "# rotary Encoder ==============================================\n"
                 "\"\"\" Construct thresholds like this:\n"
                 "[\n\t-90, 90, # stimulus position in degrees of wheel movement\n"

@@ -64,7 +64,11 @@ class UserInput():
         except:
             pass
 
-        self.settings.life_plot = bool(self.var_liveplot.get())
+        self.settings.life_plot = bool(self.var_liveplot.get()) #plot live or not
+        self.settings.bg_color = list(map(int, self.var_bg_col.get().split(','))) #screen backgroudn color TODO:
+        #stimulus
+        self.settings.stimulus_rad = int(self.var_stim_rad.get()) #TODO:
+        self.settings.stimulus_col = list(map(int, self.var_stim_col.get().split(','))) #TODO:
         # tas specific setting ===
         if self.task == "gambl":
             self.settings.gamble_side = self.var_gamble_side.get()
@@ -78,7 +82,6 @@ class UserInput():
             self.settings.trial_number = int(self.var_trial_num.get())
             self.settings.reward = float(self.var_reward.get())
             # add correct stimulus
-            self.settings.bg_color = list(map(int, self.var_bg_col.get().split(',')))
             self.settings.stimulus_correct = {
                 "grating_sf" : float(self.var_stim_correct_sf.get()),
                 "grating_ori" : float(self.var_stim_correct_or.get()),
@@ -93,8 +96,6 @@ class UserInput():
                 }
             # stimuli
             self.settings.stim_type = self.var_drp_stim.get()
-            self.settings.stimulus_rad = int(self.var_stim_rad.get())
-            self.settings.stimulus_col = list(map(int, self.var_stim_col.get().split(',')))
             # times
             self.settings.reward_open_time = float(self.var_reward.get())
             self.settings.insist_range_trigger = int(self.var_insist_range_trigger.get())
@@ -129,6 +130,8 @@ class UserInput():
             self.WINDOW_SIZE = [835, 920]
         if self.task == "conf":
             self.WINDOW_SIZE = [880, 1070]
+        else:
+            self.WINDOW_SIZE = [950, 1000]
 
         screen_size = [self.root.winfo_screenwidth(), self.root.winfo_screenheight()]
         window_offset = [ int((screen_size[0]-self.WINDOW_SIZE[0])/2),
@@ -230,7 +233,7 @@ class UserInput():
 
 
     # Window Bevore ====================================================================
-    def draw_window_bevore_gambl(self):
+    def draw_window_bevore_gamble(self):
         """tkinter window to get user input, variables and default values are read from settings object
         """
         # heading
@@ -309,14 +312,31 @@ class UserInput():
         # frame row 0
         frame4_0 = tk.Frame(frame4)
         frame4_0.grid(row=0, column=0, sticky='W')
-        # stimulus file
-        lbl_stim_pos =  tk.Label(frame4_0, text="Stimulus File (jpeg, png):", font=self.fontStyleRegular)
-        lbl_stim_pos.grid(row=0, column=0, padx=10, pady=8)
 
-        #ToDo
-        stimulus_name = self.settings.stim.split(os.sep)[-1]
-        self.btn_stim = tk.Button(frame4_0, text=stimulus_name, command=self.file_dialog_button, width = 20)
-        self.btn_stim.grid(row=0, column=1, pady=8)
+        # background color
+        lbl_bg_col =  tk.Label(frame4_0, text="Window Background:", font=self.fontStyleRegular)
+        lbl_bg_col.grid(row=0, column=0, padx=(10,5), pady=8)
+
+        self.var_bg_col= tk.StringVar(frame4_0, value=(','.join(map(str,self.settings.bg_color))))
+        self.etr_bg_col = tk.Entry(frame4_0, textvariable=self.var_bg_col, width=9)
+        self.etr_bg_col.grid(row=0, column=1, padx=(0,2), pady=8, sticky='W')
+
+        # stimulus radius
+        lbl_stim_rad =  tk.Label(frame4_0, text="Stim size [deg]:", font=self.fontStyleRegular)
+        lbl_stim_rad.grid(row=0, column=2, padx=(10,2), pady=8)
+
+        self.var_stim_rad = tk.StringVar(frame4_0, value=self.settings.stimulus_rad)
+        self.etr_stim_rad = tk.Entry(frame4_0, textvariable=self.var_stim_rad, width=4)
+        self.etr_stim_rad.grid(row=0, column=3, padx=(0,2), pady=8, sticky='W')
+
+        # stimulus color
+        lbl_stim_col =  tk.Label(frame4_0, text="Stim color [RGB]:", font=self.fontStyleRegular)
+        lbl_stim_col.grid(row=0, column=4, padx=(10,2), pady=8)
+
+        self.var_stim_col = tk.StringVar(frame4_0, value=(','.join(map(str,self.settings.stimulus_col))))
+        self.etr_stim_col = tk.Entry(frame4_0, textvariable=self.var_stim_col, width=9)
+        self.etr_stim_col.grid(row=0, column=5, padx=(0,2), pady=8, sticky='W')
+
 
         # frame row 1
         frame4_1 = tk.Frame(frame4)
@@ -796,6 +816,8 @@ class UserInput():
         btn_cancle.pack(side=tk.RIGHT)
         
 
+
+
     class Block():
         def __init__(self, block_num, frame, settings, fontStyleRegular, column_id):
             """helper class for drawing a block (compricing of probabilites and length) on tkinter user input window
@@ -852,9 +874,6 @@ class UserInput():
             self.var_prob_save = tk.StringVar(frame2, value=self.settings.blocks[self.num]["prob_reward_save_block"])
             self.etr_prob_save = tk.Entry(frame2, textvariable=self.var_prob_save, width=6)
             self.etr_prob_save.grid(row=1, column=2, padx=(0,10), pady=5, sticky='W')
-
-
-
 
 
     class Time():

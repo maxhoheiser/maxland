@@ -37,8 +37,8 @@ modules_dir = os.path.join(maxland_root,"modules")
 sys.path.insert(-1,modules_dir) 
 
 # import custom modules
-from stimulus_gambl import Stimulus
-from probability_gambl import ProbabilityConstuctor
+from stimulus_gamble import Stimulus
+from probability_gamble import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
 from parameter_handler import TrialParameterHandler
 from userinput import UserInput
@@ -52,21 +52,29 @@ settings_folder = currentdir #os.path.join(session_folder.split('experiments')[0
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object
-bpod=Bpod()
+bpod=Bpod('COM7')
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
-window.draw_window_bevore_gambl()
+window.draw_window_bevore_gamble()
 window.show_window()
 window.update_settings() 
 
+# create multiprocessing variabls
+# flags
+display_stim_event = threading.Event()
+start_open_loop_event = threading.Event()
+still_show_event = threading.Event()
+display_stim_event.clear()
+start_open_loop_event.clear()
+still_show_event.clear()
 
 # run session
 if settings_obj.run_session:
-    settings_obj.update_userinput_file_gambl()
+    settings_obj.update_userinput_file_gamble()
     # rotary encoder config
     # enable thresholds
-    rotary_encoder_module = BpodRotaryEncoder('COM4', settings_obj, bpod)
+    rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     #rotary_encoder_module.enable_stream()
@@ -74,14 +82,17 @@ if settings_obj.run_session:
     # softcode handler
     def softcode_handler(data):
         if data == settings_obj.SC_PRESENT_STIM:
-            stimulus_game.present_stimulus()
+            display_stim_event.set()
+            print("PRESENT STIMULUS")
         elif data == settings_obj.SC_START_OPEN_LOOP:
-            stimulus_game.start_open_loop()
+            start_open_loop_event.set()
+            print("START OPEN LOOP")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
-            print("threhsold")
             stimulus_game.stop_open_loop()
+            print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
-            stimulus_game.end_present_stimulus()
+            still_show_event.set()
+            print("end present stim")
         elif data == settings_obj.SC_START_LOGGING:
             rotary_encoder_module.rotary_encoder.enable_logging()
             #rotary_encoder_module.enable_logging()
@@ -107,8 +118,6 @@ if settings_obj.run_session:
     # state machine configs
     for trial in range(settings_obj.trial_num):
         #variables to print summary
-        var_side = "side"
-        var_reward = "reward"
         probability_dict = settings_obj.probability_list[trial]
         sma = StateMachine(bpod)
         # define states
@@ -409,18 +418,19 @@ if settings_obj.run_session:
             output_actions=[("SoftCode", settings_obj.SC_END_LOGGING)],
         )
 
-        # create pygame daemon
-        pa = threading.Thread(target=stimulus_game.run_game, daemon=True)
-        pa.start()
-
         # send & run state machine
         bpod.send_state_machine(sma)
+        pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
+        pa.start()
 
-        # wiat until state machine finished
-        if not bpod.run_state_machine(sma):
-            # Locks until state machine 'exit' is reached
-            pa.terminate()
-            break
+
+        # run stimulus game
+        stimulus_game.run_game(display_stim_event, 
+                                start_open_loop_event,
+                                still_show_event,
+                                )
+
+
 
         # post trial cleanup
         # append wheel postition
@@ -431,11 +441,10 @@ if settings_obj.run_session:
         #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
         # append stimulus postition
         #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
+        pa.join()
         print("---------------------------------------------------")
-        print(f"trial: {trial}")
-        print(f"side: {var_side}")
-        print(f"reward: {var_reward}")
-        print(f"probability: {probability_dict}")
+        #print(f"trial: {trial}")
+        #print(f"probability: {probability_dict}")
 
     #==========================================================================================================
     stimulus_game.stop_open_loop()  
@@ -473,6 +482,9 @@ if settings_obj.run_session:
 else:
     #todo donst save current session
     None
-stimulus_game.quite()
+try:
+    stimulus_game.quite()
+except:
+    pass
 rotary_encoder_module.close()
 bpod.close()

@@ -35,7 +35,7 @@ class Stimulus():
             #TODO:
             fullscr=True, 
             #TODO:
-            screen=1,#2, 
+            screen=2, 
             monitor=self.monitor,
             units="pix",
             winType='pyglet', allowGUI=False, allowStencil=False,
