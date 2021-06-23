@@ -492,6 +492,7 @@ if settings_obj.run_session:
                                 )
 
         # post trial cleanup
+        pa.join()
         print("---------------------------------------------------")
         #print(f"trial: {trial}")
         #print(f"side: {var_side}")

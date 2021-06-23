@@ -97,11 +97,7 @@ class Stimulus():
         return circle
 
     # Main psychpy loop ==============================================================
-    def run_game(self, 
-                display_stim_event, 
-                start_open_loop_event, 
-                still_show_event, 
-                ):
+    def run_game(self, display_stim_event, start_open_loop_event, still_show_event):
         # get right grating
         stim = self.gen_stim()
         stim.draw()
