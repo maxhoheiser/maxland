@@ -322,7 +322,7 @@ class UserInput():
         self.etr_bg_col.grid(row=0, column=1, padx=(0,2), pady=8, sticky='W')
 
         # stimulus radius
-        lbl_stim_rad =  tk.Label(frame4_0, text="Stim size [deg]:", font=self.fontStyleRegular)
+        lbl_stim_rad =  tk.Label(frame4_0, text="Stim size radius [pix]:", font=self.fontStyleRegular)
         lbl_stim_rad.grid(row=0, column=2, padx=(10,2), pady=8)
 
         self.var_stim_rad = tk.StringVar(frame4_0, value=self.settings.stimulus_rad)

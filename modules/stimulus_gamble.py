@@ -88,7 +88,7 @@ class Stimulus():
         circle = visual.Circle(
             win=self.win,
             name='cicle',
-            radius=self.get_gratings_size(self.settings.stimulus_rad)/2,
+            radius=self.settings.stimulus_rad,
             units='pix',
             edges=128,
             fillColor= self.settings.stimulus_col,
