@@ -175,12 +175,12 @@ class Stimulus():
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.enable_stream()
+        #self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
+        #self.rotary_encoder.rotary_encoder.set_zero_position()
         stim.draw
         self.win.flip()
         while self.run_open_loop:
@@ -197,13 +197,7 @@ class Stimulus():
                 #move stimulus with mouse
                 stim.pos+=(change,0)    
             stim.draw()
-            self.win.flip()
-            #if not bpod.run_state_machine(sma):
-            #    self.run_open_loop = False
-            #    self.run_closed_loop = False
-            #    still_show_event.set()
-            #    print("break")
-            #    break        
+            self.win.flip()     
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -253,22 +247,16 @@ class Stimulus():
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.enable_stream()
+        #self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
+        #self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -283,13 +271,7 @@ class Stimulus():
                 grating_right.pos+=(change,0)
             grating_left.draw()
             grating_right.draw
-            self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break    
+            self.win.flip()  
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -327,22 +309,15 @@ class Stimulus():
             grating.setPhase(stim_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
             self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
+        #self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -355,12 +330,6 @@ class Stimulus():
                 #move stimulus with mouse
                 grating.pos+=(change,0) 
             self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -391,12 +360,12 @@ class Stimulus():
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.enable_stream()
+        #self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
+        #self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -407,12 +376,6 @@ class Stimulus():
                 stim.pos+=(change,0)    
             stim.draw()
             self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -453,22 +416,16 @@ class Stimulus():
             grating.draw()
             #stim.draw()
             self.win.flip()
-            #if not bpod.run_state_machine(sma):
-            #    self.run_open_loop = False
-            #    self.run_closed_loop = False
-            #    still_show_event.set()
-            #    print("break")
-            #    break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.enable_stream()
+        #self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
+        #self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -482,12 +439,6 @@ class Stimulus():
                 stim.pos+=(change,0)    
             stim.draw()
             self.win.flip()
-            #if not bpod.run_state_machine(sma):
-            #    self.run_open_loop = False
-            #    self.run_closed_loop = False
-            #    still_show_event.set()
-            #    print("break")
-            #    break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -523,22 +474,16 @@ class Stimulus():
             grating.setPhase(grating_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
             self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.enable_stream()
+        #self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.rotary_encoder.set_zero_position()
+        #self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -551,12 +496,6 @@ class Stimulus():
                 grating.pos+=(change,0)  
             grating.draw()
             self.win.flip()
-            if not bpod.run_state_machine(sma):
-                self.run_open_loop = False
-                self.run_closed_loop = False
-                still_show_event.set()
-                print("break")
-                break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------

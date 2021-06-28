@@ -54,7 +54,6 @@ settings_obj = TrialParameterHandler(usersettings, settings_folder, session_fold
 bpod=Bpod()
 
 # create tkinter userinput dialoge window
-# TODO: fix for windows
 window = UserInput(settings_obj)
 window.draw_window_bevore_conf(stage="training")
 window.show_window()

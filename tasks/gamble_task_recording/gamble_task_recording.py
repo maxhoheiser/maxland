@@ -506,10 +506,13 @@ if settings_obj.run_session:
 
         #pa.join()
         print("---------------------------------------------------")
-        #print(f"trial: {trial}")
-        #print(f"side: {var_side}")
-        #print(f"reward: {var_reward}")
-        #print(f"probability: {probability_dict}")
+        try:
+            print(f"trial: {bpod.session.current_trial}")
+        except:
+            continue
+        # insist mode check
+        #TODO: quiry trial return object to find side
+        #probability_obj.insist_mode_check(bpod.session.current_trial)
 
     #==========================================================================================================
     #stimulus_game.stop_open_loop()  

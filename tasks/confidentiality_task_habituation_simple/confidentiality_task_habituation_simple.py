@@ -27,13 +27,22 @@ from pybpodgui_api.models.session import Session
 # span subprocess
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(currentdir)),"modules")):
-    maxland_root = os.path.dirname(os.path.dirname(currentdir))
-    modules_dir = os.path.join(maxland_root,"modules")
-elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(currentdir))),"modules")):
-    maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
-    modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(0,modules_dir) 
+#if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(currentdir)),"modules")):
+#    maxland_root = os.path.dirname(os.path.dirname(currentdir))
+#    modules_dir = os.path.join(maxland_root,"modules")
+#elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(currentdir))),"modules")):
+#    maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
+#    modules_dir = os.path.join(maxland_root,"modules")
+#sys.path.insert(0,modules_dir) 
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+dir = (os.path.dirname(os.path.dirname(currentdir)))
+if os.path.isdir(os.path.join(dir,"modules")):
+    maxland_root = dir
+else:
+    maxland_root = os.path.dirname(dir)
+modules_dir = os.path.join(maxland_root,"modules")
+sys.path.insert(-1,modules_dir) 
+
 
 # import custom modules
 from stimulus_conf import Stimulus
@@ -47,17 +56,13 @@ import usersettings
 
 # create settings object
 session_folder = os.getcwd()
-# TODO: correct for final foderl
 settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
-global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
-#TODO:
 bpod=Bpod()
 
 # create tkinter userinput dialoge window
-# TODO: fix for windows
 window = UserInput(settings_obj)
 window.draw_window_bevore_conf(stage="habituation_simple")
 window.show_window()
