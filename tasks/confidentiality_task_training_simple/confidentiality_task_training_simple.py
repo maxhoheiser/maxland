@@ -27,13 +27,13 @@ from pybpodgui_api.models.session import Session
 # span subprocess
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-if os.path.exists(os.path.join(os.path.dirname(os.path.dirname(currentdir)),"modules")):
-    maxland_root = os.path.dirname(os.path.dirname(currentdir))
-    modules_dir = os.path.join(maxland_root,"modules")
-elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(currentdir))),"modules")):
-    maxland_root = os.path.dirname(os.path.dirname(os.path.dirname(currentdir)))
-    modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(0,modules_dir) 
+dir = (os.path.dirname(os.path.dirname(currentdir)))
+if os.path.isdir(os.path.join(dir,"modules")):
+    maxland_root = dir
+else:
+    maxland_root = os.path.dirname(dir)
+modules_dir = os.path.join(maxland_root,"modules")
+sys.path.insert(-1,modules_dir) 
 
 # import custom modules
 from stimulus_conf import Stimulus
@@ -48,19 +48,17 @@ import usersettings
 # create settings object
 session_folder = os.getcwd()
 settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
-global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
 bpod=Bpod()
 
 # create tkinter userinput dialoge window
+# TODO: fix for windows
 window = UserInput(settings_obj)
 window.draw_window_bevore_conf(stage="training")
 window.show_window()
 
-
-#settings_obj.run_session = True
 
 # create multiprocessing variabls
 # flags
@@ -68,6 +66,15 @@ display_stim_event = threading.Event()
 still_show_event = threading.Event()
 display_stim_event.clear()
 still_show_event.clear()
+# set functions
+
+def closer_fn(stimulus_game,bpod,sma,display_stim_event,still_show_event):
+    if not bpod.run_state_machine(sma):
+        still_show_event.set()
+        display_stim_event.set() 
+        stimulus_game.win.close()
+        stimulus_game.close()
+        print("\nCLOSED\n")
 
 
 # run session
@@ -75,7 +82,6 @@ if settings_obj.run_session:
     settings_obj.update_userinput_file_conf()
     # rotary encoder config
     # enable thresholds
-    #TODO:
     rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
@@ -95,17 +101,18 @@ if settings_obj.run_session:
         elif data == settings_obj.SC_END_PRESENT_STIM:
             still_show_event.set()
             print("end present stim")
-        elif data == settings_obj.SC_START_LOGGING:
-            rotary_encoder_module.rotary_encoder.enable_logging()
-        elif data == settings_obj.SC_END_LOGGING:
-            rotary_encoder_module.rotary_encoder.disable_logging()
-            print("disable logging")
+        elif data == 9:
+            print("wheel not stopping")
+        #elif data == settings_obj.SC_START_LOGGING:
+        #    rotary_encoder_module.rotary_encoder.enable_logging()
+        ##elif data == settings_obj.SC_END_LOGGING:
+        #    rotary_encoder_module.rotary_encoder.disable_logging()
+        #    print("disable logging")
 
     bpod.softcode_handler_function = softcode_handler
 
     #probability constructor
     probability_obj = ProbabilityConstuctor(settings_obj)
-
 
     #stimulus
     # failsave for stimulus file
@@ -161,7 +168,7 @@ if settings_obj.run_session:
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings_obj.time_dict["time_wheel_stopping_punish"],
             state_change_conditions={"Tup":"reset_rotary_encoder_wheel_stopping_check"},
-            output_actions=[]
+            output_actions=[("SoftCode", 9)]
         )
 
         # Open Loop =====================================================================
@@ -256,7 +263,6 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_left_waiting",
-                # TODO: radnom time range?
                 state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
@@ -311,7 +317,6 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_right_waiting",
-                # TODO: random time range?
                 state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[]
@@ -338,31 +343,30 @@ if settings_obj.run_session:
 
         # send & run state machine
         bpod.send_state_machine(sma)
-        pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
-       
-        pa.start()
+        #pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
+        #pa.start()
+        #bpod.run_state_machine(sma)
 
+        closer = threading.Thread(target=closer_fn, args=(stimulus_game,bpod,sma,display_stim_event,still_show_event))
+        closer.start()
 
         # run stimulus game
-        #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
         if settings_obj.stim_type == "three-stimuli":
             print("three")
-            stimulus_game.run_game_3(display_stim_event, still_show_event,pa)
-            #pb = threading.Thread(target=stimulus_game.run_game_3, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_3(display_stim_event, still_show_event,bpod,sma)
         elif settings_obj.stim_type == "two-stimuli":
             print("tow")
-            stimulus_game.run_game_2(display_stim_event, still_show_event)
-            #pb = threading.Thread(target=stimulus_game.run_game_2, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_2(display_stim_event, still_show_event,bpod,sma)
         elif settings_obj.stim_type == "one-stimulus":
             print("one")
-            stimulus_game.run_game_1(display_stim_event, still_show_event)
-            #pb = threading.Thread(target=stimulus_game.run_game_1, args=(display_stim_event, still_show_event), daemon=True)
+            stimulus_game.run_game_1(display_stim_event, still_show_event,bpod,sma)
         else:
             print("\nNo correct stim type selected\n")
 
      
         # post trial cleanup
-        pa.join()
+        #pa.join()
+        closer.join()
         print("---------------------------------------------------")
         try:
             print(f"trial: {bpod.session.current_trial}")
@@ -388,7 +392,7 @@ if settings_obj.run_session:
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
     # save wheel movement of session
-    rotary_encoder_module.rotary_encoder.disable_logging()
+    #rotary_encoder_module.rotary_encoder.disable_logging()
     # append wheel postition
     #log = rotary_encoder_module.get_logging()
     #print(log)

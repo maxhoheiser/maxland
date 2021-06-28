@@ -50,7 +50,7 @@ session_folder = os.getcwd()
 # TODO: correct for final foderl
 settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
 global settings_obj
-settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder,"conf")
+settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
 # create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
 #TODO:
@@ -63,8 +63,6 @@ window.draw_window_bevore_conf(stage="habituation_simple")
 window.show_window()
 
 
-#settings_obj.run_session = True
-
 # create multiprocessing variabls
 # flags
 display_stim_event = threading.Event()
@@ -73,15 +71,19 @@ display_stim_event.clear()
 still_show_event.clear()
 # set functions
 
-#TODO:
-settings_obj.run_session = True
+def closer_fn(stimulus_game,bpod,sma,display_stim_event,still_show_event):
+    if not bpod.run_state_machine(sma):
+        still_show_event.set()
+        display_stim_event.set() 
+        stimulus_game.win.close()
+        stimulus_game.close()
+        print("\nCLOSED\n")
 
 # run session
 if settings_obj.run_session:
     settings_obj.update_userinput_file_conf()
     # rotary encoder config
     # enable thresholds
-    #TODO:
     rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
@@ -101,17 +103,18 @@ if settings_obj.run_session:
         elif data == settings_obj.SC_END_PRESENT_STIM:
             still_show_event.set()
             print("end present stim")
-        elif data == settings_obj.SC_START_LOGGING:
-            rotary_encoder_module.rotary_encoder.enable_logging()
-        elif data == settings_obj.SC_END_LOGGING:
-            rotary_encoder_module.rotary_encoder.disable_logging()
-            print("disable logging")
+        elif data == 9:
+            print("wheel not stopping")
+        #elif data == settings_obj.SC_START_LOGGING:
+        #    rotary_encoder_module.rotary_encoder.enable_logging()
+        #elif data == settings_obj.SC_END_LOGGING:
+        #    rotary_encoder_module.rotary_encoder.disable_logging()
+        #    print("disable logging")
 
     bpod.softcode_handler_function = softcode_handler
 
     #probability constructor 
     probability_obj = ProbabilityConstuctor(settings_obj)
-
 
     #stimulus
     # failsave for stimulus file
@@ -164,7 +167,7 @@ if settings_obj.run_session:
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings_obj.time_dict["time_wheel_stopping_punish"],
             state_change_conditions={"Tup":"reset_rotary_encoder_wheel_stopping_check"},
-            output_actions=[]
+            output_actions=[("SoftCode", 9)]
         )
 
         # Open Loop =====================================================================
@@ -292,17 +295,16 @@ if settings_obj.run_session:
 
         # send & run state machine
         bpod.send_state_machine(sma)
-        pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
-       
-        pa.start()
+        #pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
+        #pa.start()
 
+        closer = threading.Thread(target=closer_fn, args=(stimulus_game,bpod,sma,display_stim_event,still_show_event))
+        closer.start()
 
         # run stimulus game
-        #TODO: run correct game ('three-stimuli','two-stimuli','one-stimulus')
-
         if settings_obj.stim_type == "three-stimuli":
             print("three")
-            stimulus_game.run_game_habituation_3_simple(display_stim_event, still_show_event,pa)
+            stimulus_game.run_game_habituation_3_simple(display_stim_event, still_show_event,bpod,sma)
         elif settings_obj.stim_type == "two-stimuli":
             print("tow")
         elif settings_obj.stim_type == "one-stimulus":
@@ -312,7 +314,7 @@ if settings_obj.run_session:
 
 
         # post trial cleanup
-        pa.join()
+        closer.join()
         print("---------------------------------------------------")
         try:
             print(f"trial: {bpod.session.current_trial}")
@@ -324,7 +326,6 @@ if settings_obj.run_session:
 
     #=========================================================================================================
     print("finished")
-    stimulus_game.win.close()
     # user input after session
     window = UserInput(settings_obj)
     window.draw_window_after()
@@ -338,7 +339,7 @@ if settings_obj.run_session:
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
     # save wheel movement of session
-    rotary_encoder_module.rotary_encoder.disable_logging()
+    #rotary_encoder_module.rotary_encoder.disable_logging()
     # append wheel postition
     #log = rotary_encoder_module.get_logging()
     #print(log)

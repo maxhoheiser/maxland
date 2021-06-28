@@ -32,10 +32,8 @@ class Stimulus():
         #create a window
         self.win = visual.Window(
             size=(self.screen_size),
-            #TODO:
             fullscr=True, 
-            #TODO:
-            screen=2, 
+            screen=1,
             monitor=self.monitor,
             units="pix",
             winType='pyglet', allowGUI=False, allowStencil=False,
@@ -79,10 +77,15 @@ class Stimulus():
         return round(gain,2)
 
     def ceil(self,num):
-        if num > 20:
-            return 20
+        if num > 10:
+            return 10
         else:
             return num
+
+    def close(self):
+        self.win.close()
+        core.quit()
+
 
     def stop_closed_loop(self):
         self.run_closed_loop = False
@@ -124,9 +127,8 @@ class Stimulus():
 
     # Main psychpy loop ==============================================================
     # Stimulus Type 3 (main) = fixed gratings + moving circle
-    def run_game_3(self, display_stim_event, still_show_event, bpod_thread):
+    def run_game_3(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
-        self.bpod_thread = bpod_thread
         if self.correct_stim_side["right"]:
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
@@ -146,7 +148,6 @@ class Stimulus():
             right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
-        #TODO:
         grating_left = self.gen_grating(left_sf,left_or,left_size,self.settings.stim_end_pos[0])
         grating_right = self.gen_grating(right_sf,right_or,right_size,self.settings.stim_end_pos[1])
         stim = self.gen_stim()
@@ -155,6 +156,7 @@ class Stimulus():
         #-----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
+        print("present stimulus")
         while self.run_closed_loop:#self.run_closed_loop: 
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
@@ -163,35 +165,45 @@ class Stimulus():
             grating_right.draw()
             #stim.draw()
             self.win.flip()
-            if not self.bpod_thread.is_alive():
-                self.win.close()
+            #if not bpod.run_state_machine(sma):
+            #    self.run_open_loop = False
+            #    self.run_closed_loop = False
+            #    still_show_event.set()
+            #    print("break")
+            #    break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.set_zero_position()
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
+        stim.draw
+        self.win.flip()
         while self.run_open_loop:
             # dram moving gratings
+            # get rotary encoder change position
+            stream = self.rotary_encoder.rotary_encoder.read_stream()
             grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
             grating_left.draw()
             grating_right.draw()
-            # get rotary encoder change position
-            stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = self.ceil((pos - stream[-1][2])*self.gain) #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 stim.pos+=(change,0)    
-
             stim.draw()
             self.win.flip()
-            if not self.bpod_thread.is_alive():
-                self.win.close()
+            #if not bpod.run_state_machine(sma):
+            #    self.run_open_loop = False
+            #    self.run_closed_loop = False
+            #    still_show_event.set()
+            #    print("break")
+            #    break        
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -206,7 +218,7 @@ class Stimulus():
 
 
     # Stimulus Type 2 = moving gratings ===============================================
-    def run_game_2(self, display_stim_event, still_show_event):
+    def run_game_2(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         if self.correct_stim_side["left"]: #switch side because stim is moved to center not ball moved to stim
             right_sf = self.settings.stimulus_correct["grating_sf"]
@@ -241,31 +253,43 @@ class Stimulus():
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
+            if not bpod.run_state_machine(sma):
+                self.run_open_loop = False
+                self.run_closed_loop = False
+                still_show_event.set()
+                print("break")
+                break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.set_zero_position()
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
+            # get rotary encoder change position
+            stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')#advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
-            # get rotary encoder change position
-            stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = self.ceil((pos - stream[0][2])*self.gain) #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 grating_left.pos+=(change,0)  
-                grating_right.pos+=(change,0)    
+                grating_right.pos+=(change,0)
             grating_left.draw()
             grating_right.draw
-
             self.win.flip()
+            if not bpod.run_state_machine(sma):
+                self.run_open_loop = False
+                self.run_closed_loop = False
+                still_show_event.set()
+                print("break")
+                break    
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -279,7 +303,7 @@ class Stimulus():
         still_show_event.clear()
 
     # Stimulus Type 1 = single moving grating ==========================================
-    def run_game_1(self, display_stim_event, still_show_event):
+    def run_game_1(self, display_stim_event, still_show_event, bpod, sma):
         # get random stimulus always set the right stimulus as correct
         if self.correct_stim_side["right"]:
             stimulus = self.settings.stimulus_correct
@@ -303,28 +327,40 @@ class Stimulus():
             grating.setPhase(stim_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
             self.win.flip()
+            if not bpod.run_state_machine(sma):
+                self.run_open_loop = False
+                self.run_closed_loop = False
+                still_show_event.set()
+                print("break")
+                break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.set_zero_position()
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
+            # get rotary encoder change position
+            stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
             grating.setPhase(stim_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
-            # get rotary encoder change position
-            stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = self.ceil((pos - stream[-1][2])*self.gain) #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
-                grating.pos+=(change,0)  
-
+                grating.pos+=(change,0) 
             self.win.flip()
+            if not bpod.run_state_machine(sma):
+                self.run_open_loop = False
+                self.run_closed_loop = False
+                still_show_event.set()
+                print("break")
+                break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -341,9 +377,8 @@ class Stimulus():
     # HABITUATION ######################################################################
 
     # Habituation  Type 3 online center stim psychopy Loop =============================
-    def run_game_habituation_3_simple(self, display_stim_event, still_show_event, bpod_thread):
+    def run_game_habituation_3_simple(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
-        self.bpod_thread = bpod_thread
         stim = self.gen_stim()
         stim.draw()
         #-----------------------------------------------------------------------------
@@ -356,25 +391,28 @@ class Stimulus():
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.set_zero_position()
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = self.ceil((pos - stream[-1][2])*self.gain) #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 stim.pos+=(change,0)    
-
             stim.draw()
             self.win.flip()
-            if not self.bpod_thread.is_alive():
+            if not bpod.run_state_machine(sma):
                 self.run_open_loop = False
+                self.run_closed_loop = False
                 still_show_event.set()
+                print("break")
+                break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -388,9 +426,8 @@ class Stimulus():
         still_show_event.clear()
 
     # Habituation Typ 3 only single correct grating ====================================
-    def run_game_habituation_3_complex(self, display_stim_event, still_show_event, bpod_thread):
+    def run_game_habituation_3_complex(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
-        self.bpod_thread = bpod_thread
         grating_sf = self.settings.stimulus_correct["grating_sf"]
         grating_or = self.settings.stimulus_correct["grating_ori"]
         grating_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
@@ -404,7 +441,6 @@ class Stimulus():
             grating = self.gen_grating(grating_sf,grating_or,grating_size,self.settings.stim_end_pos[0])
             print("left")
         # generate gratings and stimuli
-        #TODO:
         stim = self.gen_stim()
         #-----------------------------------------------------------------------------
         # on soft code of state 1
@@ -417,36 +453,41 @@ class Stimulus():
             grating.draw()
             #stim.draw()
             self.win.flip()
-            if not self.bpod_thread.is_alive():
-                self.run_closed_loop = False
-                self.run_open_loop = False
-                still_show_event.set()
+            #if not bpod.run_state_machine(sma):
+            #    self.run_open_loop = False
+            #    self.run_closed_loop = False
+            #    still_show_event.set()
+            #    print("break")
+            #    break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.set_zero_position()
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
+            # get rotary encoder change position
+            stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
             grating.setPhase(grating_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
-            # get rotary encoder change position
-            stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream)>0:
-                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = self.ceil((pos - stream[-1][2])*self.gain) #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 stim.pos+=(change,0)    
-
             stim.draw()
             self.win.flip()
-            if not self.bpod_thread.is_alive():
-                self.run_open_loop = False
-                still_show_event.set()
+            #if not bpod.run_state_machine(sma):
+            #    self.run_open_loop = False
+            #    self.run_closed_loop = False
+            #    still_show_event.set()
+            #    print("break")
+            #    break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
@@ -460,9 +501,8 @@ class Stimulus():
         still_show_event.clear()
 
     # Habituation Typ 2 complex =======================================================
-    def run_game_habituation_2_complex(self, display_stim_event, still_show_event, bpod_thread):
+    def run_game_habituation_2_complex(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
-        self.bpod_thread = bpod_thread
         grating_sf = self.settings.stimulus_correct["grating_sf"]
         grating_or = self.settings.stimulus_correct["grating_ori"]
         grating_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
@@ -483,28 +523,40 @@ class Stimulus():
             grating.setPhase(grating_ps, '+')#advance phase by 0.05 of a cycle
             grating.draw()
             self.win.flip()
+            if not bpod.run_state_machine(sma):
+                self.run_open_loop = False
+                self.run_closed_loop = False
+                still_show_event.set()
+                print("break")
+                break
         #-------------------------------------------------------------------------
         # on soft code of state 2
         #-------------------------------------------------------------------------
         # reset rotary encoder
-        self.rotary_encoder.rotary_encoder.set_zero_position()
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         print("open loop")
         pos=0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
-            # dram moving gratings
-            grating.setPhase(grating_ps, '+')#advance phase by 0.05 of a cycle
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
+            # dram moving gratings
+            grating.setPhase(grating_ps, '+')#advance phase by 0.05 of a cycle
             if len(stream)>0:
-                change = (pos - stream[-1][2])*self.gain #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = self.ceil((pos - stream[-1][2])*self.gain) #self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 #move stimulus with mouse
                 grating.pos+=(change,0)  
             grating.draw()
-
             self.win.flip()
+            if not bpod.run_state_machine(sma):
+                self.run_open_loop = False
+                self.run_closed_loop = False
+                still_show_event.set()
+                print("break")
+                break
         #-------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         #-------------------------------------------------------------------------
