@@ -47,7 +47,7 @@ def install_environment():
     print("-" * 79)
     # Checks id env is already installed
     env = get_env()
-    create_command = "conda create -y -n maxland python=3.6"
+    create_command = "conda create -y -n maxland python=3.8"
     remove_command = "conda env remove -y -n malxand"
     # Installes the anaconda environment
     if env:

@@ -1,26 +1,25 @@
 
 import random
 
+
 class ProbabilityConstuctor():
     def __init__(self, settings):
         """object to calculate and handle stimulus sides
         Args:
             settings (TrialParameterHandler object): the object for all the session parameters from TrialPArameterHandler
-        """        
+        """
         self.settings = settings
-        self.stim_side_dict =  {}
+        self.stim_side_dict = {}
         # initialize random sides
         self.stim_side_dict = dict()
         # insist mode tracking
         self.chosen_sides_li = []
         self.insist_mode_chosen_side_li = []
-        self.insist_range_trigger = settings.insist_range_trigger #range to check for same side
-        self.insist_range_deactivate = settings.insist_range_deactivate # range in which number of correct choices have to occure to deactivate insit mode
-        self.insist_correct_deactivate = settings.insist_correct_deactivate # number of correct choice to deactivate insist mode
+        self.insist_range_trigger = settings.insist_range_trigger  # range to check for same side
+        self.insist_range_deactivate = settings.insist_range_deactivate  # range in which number of correct choices have to occure to deactivate insit mode
+        self.insist_correct_deactivate = settings.insist_correct_deactivate  # number of correct choice to deactivate insist mode
         self.insist_mode_active = False
         self.inisist_side = None
-        
-        
 
     def get_random_side(self):
         # check insist mode
@@ -35,22 +34,28 @@ class ProbabilityConstuctor():
         self.stim_side_dict["right"] = random_right
         self.stim_side_dict["left"] = not(random_right)
 
-
-    def insist_mode_check(self,trial):
+    def insist_mode_check(self, trial):
         # get chosen side
-        if trial:
+        #TODO: get current side from trial dict
+        # -> ritht : check_reward_right
+        # -> left : check_reward_left
+        #   
+        #
+        if "check_reward_left" in trial:
             current_side = "left"
-        elif trial:
+        elif "check_reward_right" in trial:
             current_side = "right"
+        else:
+            current_side = "non"
         self.chosen_sides_li.append(current_side)
-        # check for insist mode activate 
-        if not self.insist_mode_activte:
+        # check for insist mode activate
+        if not self.insist_mode_active:
             if len(self.chosen_sides_li) >= self.insist_range_trigger:
                 slice = self.chosen_sides_li[-self.insist_range_trigger:]
             else:
                 slice = self.chosen_sides_li
-            left_num_chosen = sum(map(lambda x: x=="left", slice))
-            right_num_chosen = sum(map(lambda x: x=="right", slice))
+            left_num_chosen = sum(map(lambda x: x == "left", slice))
+            right_num_chosen = sum(map(lambda x: x == "right", slice))
             if left_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
                 self.insist_side = "left"
@@ -58,7 +63,7 @@ class ProbabilityConstuctor():
                 self.insist_mode_active = True
                 self.insist_side = "right"
             print("\n--------------------------------\n")
-            print("INSISTE MODE ACTIVATED: ",self.insist_side)
+            print("INSISTE MODE ACTIVATED: ", self.insist_side)
             print("\n--------------------------------")
         # deactivate insist mode
         if self.insist_mode_active:
@@ -69,11 +74,11 @@ class ProbabilityConstuctor():
             else:
                 slice = self.insist_mode_chosen_side_li
             # check range if correct
-            insist_correct_choice = sum(map(lambda x: x==self.insist_side, slice))
+            insist_correct_choice = sum(map(lambda x: x == self.insist_side, slice))
             if insist_correct_choice >= self.insist_correct_deactivate:
                 self.insist_mode_active = False
                 self.insist_side = "right"
-                self.inist_mode_chosen_sde = [] #clear last insist mode list
+                self.inist_mode_chosen_sde = []  # clear last insist mode list
                 print("\n--------------------------------\n")
                 print("INSISTE MODE DEACTIVATED")
                 print("\n--------------------------------")

@@ -7,7 +7,7 @@ How to:
 
 """
 
-GAMBLE_SIDE = "Right"
+GAMBLE_SIDE = "Left"
 
 # Blocks ========================================================
 """Construct a Block like this:
@@ -21,36 +21,36 @@ GAMBLE_SIDE = "Right"
 BLOCKS = [
     {
         "trial_range_block": [
-            10,
-            10
+            1,
+            2
         ],
-        "prob_reward_gamble_block": 100.0,
-        "prob_reward_save_block": 100.0
+        "prob_reward_gamble_block": 10.0,
+        "prob_reward_save_block": 20.0
     },
     {
         "trial_range_block": [
-            10,
-            10
+            3,
+            4
         ],
-        "prob_reward_gamble_block": 100.0,
-        "prob_reward_save_block": 100.0
+        "prob_reward_gamble_block": 30.0,
+        "prob_reward_save_block": 40.0
     },
     {
         "trial_range_block": [
-            10,
-            10
+            5,
+            6
         ],
-        "prob_reward_gamble_block": 100.0,
-        "prob_reward_save_block": 100.0
+        "prob_reward_gamble_block": 50.0,
+        "prob_reward_save_block": 50.0
     }
 ]
 
 #========================================================
 # reward
 # big reward in ml
-BIG_REWARD = 0.5
+BIG_REWARD = 0.11
 # small rewar in ml
-SMALL_REWARD = 0.1
+SMALL_REWARD = 0.12
 
 LAST_CALLIBRATION = "2020.06.10"
 
@@ -105,7 +105,7 @@ end of 1st screen from center = 960 px
 end of 2nd screen from center = 960 + 1920px
 """
 
-LIFE_PLOT = True
+LIFE_PLOT = False
 # Animal ===================================================
 # animal waight in grams
 ANIMAL_WAIGHT = 10.0

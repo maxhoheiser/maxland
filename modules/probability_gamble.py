@@ -1,20 +1,21 @@
 
 import random
 
+
 class ProbabilityConstuctor():
     def __init__(self, settings):
         """object to calculate and handle probability for all events with given usersettings in session e.g. reward left and reward right probability
 
         Args:
             settings (TrialParameterHandler object): the object for all the session parameters from TrialPArameterHandler
-        """        
+        """
         self.settings = settings
         self.trial_num = self.block_trial_builder("trial_range_block")
         self.probability_list = []
         # define block number for block dict
         block_num = 0
         for block in self.settings.blocks:
-            self.probability_list.extend( self.block_list_builder(block, self.settings.gamble_side_left, block_num))
+            self.probability_list.extend(self.block_list_builder(block, self.settings.gamble_side_left, block_num))
             block_num += 1
         settings.probability_list = self.probability_list
         settings.trial_num = self.trial_num
@@ -27,7 +28,7 @@ class ProbabilityConstuctor():
 
         Returns:
             int: probabalistically derived trial number in given trial range
-        """        
+        """
         trial_num = 0
         for block in self.settings.blocks:
             block_trial_range = block[trial_range_block]
@@ -36,7 +37,6 @@ class ProbabilityConstuctor():
             block["block_trial_num"] = block_trial_num
             trial_num += block_trial_num
         return trial_num
-
 
     def probability_builder(self, probability, trial_num):
         """generate a random shuffeled list of defined probability of booleans
@@ -47,7 +47,7 @@ class ProbabilityConstuctor():
 
         Returns:
             list_rand (list): list of boolean values with gamble probability distribution
-        """        
+        """
         list_rand = []
         number_true = int(trial_num*probability)
         number_false = int(trial_num*(1-probability))
@@ -71,16 +71,16 @@ class ProbabilityConstuctor():
 
         Returns:
             [type]: [description]
-        """        
+        """
         gamble_reward_list = self.probability_builder((block["prob_reward_gamble_block"]/100), block["block_trial_num"])
         save_reward_list = self.probability_builder((block["prob_reward_save_block"]/100), block["block_trial_num"])
         block_list = []
         for trial in range(block["block_trial_num"]):
             trial_dict = {"gamble_left": gamble_left,
-                         "gamble_reward": gamble_reward_list[trial],
-                         "safe_reward": save_reward_list[trial],
-                         "block": block_num,
-                         }
+                          "gamble_reward": gamble_reward_list[trial],
+                          "safe_reward": save_reward_list[trial],
+                          "block": block_num,
+                          }
             block_list.append(trial_dict)
         block["block_rewards"] = block_list
         return block_list

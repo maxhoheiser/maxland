@@ -17,7 +17,7 @@ class pybpod_helper():
         self.hostname = os.environ['COMPUTERNAME']
 
     def populate_project_folder(self):
-        """copy all the necessary files for the bpod setup to the folder of this setup"""        
+        """copy all the necessary files for the bpod setup to the folder of this setup"""
         # create project
         self.create_project()
         # boards
@@ -39,7 +39,7 @@ class pybpod_helper():
         self.create_task(task_name)
         self.create_setup(exp_gamble, task_name, board, subject)
         # choice task
-        #self.create_experiment("choice_task")
+        # self.create_experiment("choice_task")
         #   habituation
         #   training
         #   recording
@@ -47,12 +47,9 @@ class pybpod_helper():
         # calibration, administer reward etc
         self.create_experiment("calibration_etc")
 
-
         print("Creating: default usersettings, user, and subject")
         self.create_defaults()
         # create project.json files
-
-
 
     # helper functions for task folder createion =======================================
 
@@ -61,7 +58,7 @@ class pybpod_helper():
 
         Args:
             task_name (str): name of the task
-        """        
+        """
         print(f"Creating {task_name} setup")
         task = self.project.find_task(task_name)
         if task != None:
@@ -91,13 +88,12 @@ class pybpod_helper():
             self.copytree(src, dest)
             print(f"Created task: {task_name}")
 
-
     def create_board(self):
         """create new bpod board for new setup
 
         Returns:
             bpod.board:
-        """        
+        """
         if not self.project.boards:
             # copy files to new board
             board = self.project.create_board()
@@ -109,8 +105,7 @@ class pybpod_helper():
             board = self.project.boards[0].name
         return board
 
-
-    def create_experiment(self,exp_name):
+    def create_experiment(self, exp_name):
         """create new experiment for setup
 
         Args:
@@ -118,13 +113,12 @@ class pybpod_helper():
 
         Returns:
             bpod.experiment:
-        """        
+        """
         exp = self.project.create_experiment()
         exp.name = exp_name
         self.project.save(self.project_path)
         print(f"Created experiment: {exp.name}")
         return exp
-
 
     def create_setup(self, experiment, setup_name, board, subject):
         """create new setup for setup
@@ -134,7 +128,7 @@ class pybpod_helper():
             setup_name (str): name of the setup
             board (bpod.board): board which will be added as default to the setup
             subject (bpod.subject): subject which will be added as default to the setup
-        """        
+        """
         # create experiment
         setup = experiment.create_setup()
         setup.name = setup_name
@@ -142,7 +136,6 @@ class pybpod_helper():
         setup + subject
         setup.detached = True
         self.project.save(self.project_path)
-
 
     def create_defaults(self):
         """routine to create default elements for new bpod setup
@@ -152,7 +145,7 @@ class pybpod_helper():
         Returns:
             bpod.user:
             bpod.subject:
-        """        
+        """
         # copy usersettings
         src = self.root_path/("scripts/user_settings.py")
         dest = self.project_path/"user_settings.py"
@@ -181,9 +174,8 @@ class pybpod_helper():
             print(f"Skipping creation: Subject <{subject.name}> already exists")
         return user, subject
 
-
     def create_project(self):
-        """create maxland project for new setup"""        
+        """create maxland project for new setup"""
         print("Creating default project")
         try:
             self.project.load(self.project_path)
@@ -193,7 +185,6 @@ class pybpod_helper():
             self.project.save(self.project_path)
             print(f"Created: project maxland_{self.hostname}")
 
-
     def copytree(self, src, dst, symlinks=False, ignore=None):
         """helper function to copy all files from one directory to another
 
@@ -202,7 +193,7 @@ class pybpod_helper():
             dst (os.path): path to destination folder
             symlinks (bool, optional): dont copy but use symbolic links to original files. Defaults to False.
             ignore (list, optional): ignore items in source. Defaults to None.
-        """        
+        """
         for item in os.listdir(src):
             s = os.path.join(src, item)
             d = os.path.join(dst, item)
@@ -213,4 +204,3 @@ class pybpod_helper():
                 shutil.copy2(s, d)
             else:
                 shutil.copy2(s, d)
-
