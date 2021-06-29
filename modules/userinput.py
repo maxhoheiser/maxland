@@ -49,6 +49,9 @@ class UserInput():
         self.settings.time_dict["time_open_loop"] = float(self.time_open_loop.var.get())
         self.settings.time_dict["time_stim_freez"] = float(self.time_stim_freez.var.get())
         self.settings.time_dict["time_reward"] = float(self.time_reward.var.get())
+        # update opening times
+        self.settings.time_dict["time_big_reward_waiting"] = self.settings.time_dict["time_reward"] - self.settings.big_reward
+        self.settings.time_dict["time_small_reward_waiting"] = self.settings.time_dict["time_reward"] - self.settings.small_reward
         self.settings.time_dict["time_inter_trial"] = float(self.time_inter_trial.var.get())
         self.settings.time_dict["time_open_loop_fail_punish"] = float(self.time_open_loop_fail_punish.var.get())
         self.settings.min_inter_trial_time()
