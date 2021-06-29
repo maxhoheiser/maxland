@@ -39,8 +39,8 @@ class TrialParameterHandler():
             self.small_reward = self.usersettings.SMALL_REWARD
             self.manual_reward = None
             # reward valve open times
-            self.big_reward_open_time = self.create_valve_open_time(self.usersettings.BIG_REWARD)
-            self.small_reward_open_time = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
+            self.time_dict["big_reward_open_time"] = self.create_valve_open_time(self.usersettings.BIG_REWARD)
+            self.time_dict["small_reward_open_time"] = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
             # times
             self.time_dict = self.create_time_dict_gamble()
 
@@ -110,6 +110,23 @@ class TrialParameterHandler():
         self.notes = None
 
     # helper functions ========================================================================================
+
+    def update_params(self):
+        if self.task == "gamble":
+            # update open time
+            self.time_dict["big_reward_open_time"] = self.create_valve_open_time(self.big_reward)
+            self.time_dict["small_reward_open_time"] = self.create_valve_open_time(self.small_reward)
+            # check that reward time >= open time
+            if self.time_dict["time_reward"] < self.time_dict["big_reward_open_time"]:
+                self.time_dict["time_reward"] = self.time_dict["big_reward_open_time"]
+            if self.time_dict["time_reward"] < self.time_dict["small_reward_open_time"]:
+                self.time_dict["time_reward"] = self.time_dict["small_reward_open_time"]
+            # update time waiting
+            self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["big_reward_open_time"]
+            self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["small_reward_open_time"]
+
+        elif self.task == "conf":
+            pass
 
     def min_inter_trial_time(self):
         """for the stimulus pygame to run somethly ther has to be a minimum time of 1 second between the end of the open loop
@@ -225,6 +242,7 @@ class TrialParameterHandler():
             "time_reward": self.usersettings.REWARD_TIME,
             "time_noreward": self.usersettings.NOREWARD_TIME,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
+            #TODO: fix
             "time_big_reward_waiting": (self.usersettings.REWARD_TIME - self.big_reward_open_time),
             "time_small_reward_waiting": (self.usersettings.REWARD_TIME - self.small_reward_open_time),
             # "time_big_reward_waiting": (self.usersettings.REWARD_TIME),
