@@ -95,7 +95,7 @@ class TrialParameterHandler():
         self.SCREEN_HEIGHT = 1536
 
         self.MON_DIST = 16  # Distance between subject's eyes and monitor
-        self.MON_WIDTH = 20  # Width of your monitor in cm
+        self.MON_WIDTH = 60  # Width of your monitor in cm
         # self.SCREEN_SIZE = (2048,1536)  #[1024, 1280]  # Pixel-dimensions of your monitor
 
         # wheel postition

@@ -20,9 +20,9 @@ from psychopy import visual, event, monitors, core, tools
 from math import tan
 
 # Monitor parameters
-MON_DISTANCE = 15  # Distance between subject's eyes and monitor
-MON_WIDTH = 35.79  # Width of your monitor in cm
-MON_SIZE = [1792, 1120]  # Pixel-dimensions of your monitor
+MON_DISTANCE = 16  # Distance between subject's eyes and monitor
+MON_WIDTH = #35.79  # Width of your monitor in cm
+MON_SIZE = [6144,1536]#[1792, 1120]  # Pixel-dimensions of your monitor
 SAVE_FOLDER = 'templateData'  # Log is saved to this folder. The folder is created if it does not exist.
 
 # 1. creates window in which the grating will be placed (background)
@@ -53,7 +53,7 @@ win = visual.Window(
     color=[-1, -1, -1],  # Color of background as [r,g,b].Each take values between -1.0 and 1.0.
     units="pix",  # "deg",
     fullscr=True,
-    screen=0,
+    screen=1,
 )
 
 

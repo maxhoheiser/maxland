@@ -66,7 +66,7 @@ class Stimulus():
         """
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
 
-    def get_gratings_size(self, deg):
+    def get_grating_size(self, deg):
         """calculate gratin size in pixel based on visual angle
         """
         return tools.monitorunittools.deg2pix(deg,self.monitor)
@@ -74,7 +74,7 @@ class Stimulus():
     def get_grating_sf(self, sf):
         """calculate spatial frequency given in visual angle in pixel
         """
-        return tools.monitorunittools.pix2deg(sf,self.monitor)
+        return sf #tools.monitorunittools.pix2deg(sf,self.monitor)
 
     def get_gain(self):
         clicks = 1024/365 * abs(self.settings.thresholds[0])  # each full rotation = 1024 clicks
@@ -116,7 +116,7 @@ class Stimulus():
         circle = visual.Circle(
             win=self.win,
             name='cicle',
-            radius=self.get_gratings_size(self.settings.stimulus_rad)/2, # convet from vis angle to pixel and fomr diameter to radius
+            radius=self.get_grating_size(self.settings.stimulus_rad)/2, # convet from vis angle to pixel and fomr diameter to radius
             units='pix',
             edges=128,
             fillColor=self.settings.stimulus_col,
@@ -129,22 +129,22 @@ class Stimulus():
     def run_game_3(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         if self.correct_stim_side["right"]:
-            right_sf = self.get_gratings_sf((self.settings.stimulus_correct["grating_sf"])
+            right_sf = self.get_grating_sf((self.settings.stimulus_correct["grating_sf"]))
             right_or = self.settings.stimulus_correct["grating_ori"]
-            right_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
+            right_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
-            left_sf = self.get_gratings_sf(self.settings.stimulus_wrong["grating_sf"])
+            left_sf = self.get_grating_sf(self.settings.stimulus_wrong["grating_sf"])
             left_or = self.settings.stimulus_wrong["grating_ori"]
-            left_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
+            left_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
         elif self.correct_stim_side["left"]:
-            left_sf = self.get_gratings_sf(self.settings.stimulus_correct["grating_sf"])
+            left_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
             left_or = self.settings.stimulus_correct["grating_ori"]
-            left_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
+            left_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
-            right_sf = self.get_gratings_sf(self.settings.stimulus_wrong["grating_sf"])
+            right_sf = self.get_grating_sf(self.settings.stimulus_wrong["grating_sf"])
             right_or = self.settings.stimulus_wrong["grating_ori"]
-            right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
+            right_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
         grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.stim_end_pos[0])
@@ -184,7 +184,7 @@ class Stimulus():
             grating_left.draw()
             grating_right.draw()
             if len(stream) > 0:
-                change = self.ceil((pos - stream[-1][2])*self.gain)  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change  = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -209,20 +209,20 @@ class Stimulus():
         if self.correct_stim_side["left"]:  # switch side because stim is moved to center not ball moved to stim
             right_sf = self.settings.stimulus_correct["grating_sf"]
             right_or = self.settings.stimulus_correct["grating_ori"]
-            right_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
+            right_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
             left_sf = self.settings.stimulus_wrong["grating_sf"]
             left_or = self.settings.stimulus_wrong["grating_ori"]
-            left_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
+            left_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
         elif self.correct_stim_side["right"]:  # switch side because stim is moved to center not ball moved to stim
             left_sf = self.settings.stimulus_correct["grating_sf"]
             left_or = self.settings.stimulus_correct["grating_ori"]
-            left_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
+            left_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
             right_sf = self.settings.stimulus_wrong["grating_sf"]
             right_or = self.settings.stimulus_wrong["grating_ori"]
-            right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
+            right_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
         # generate gratings and stimuli
         grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.stim_end_pos[0])
@@ -287,7 +287,7 @@ class Stimulus():
             print("wrong")
         stim_sf = stimulus["grating_sf"]
         stim_or = stimulus["grating_ori"]
-        stim_size = self.get_gratings_size(stimulus["grating_size"])
+        stim_size = self.get_grating_size(stimulus["grating_size"])
         stim_ps = stimulus["grating_speed"]
         # generate gratings and stimuli
         grating = self.gen_grating(stim_sf, stim_or, stim_size, 0)  # self.settings.stim_end_pos[0])
@@ -385,7 +385,7 @@ class Stimulus():
         # get right grating
         grating_sf = self.settings.stimulus_correct["grating_sf"]
         grating_or = self.settings.stimulus_correct["grating_ori"]
-        grating_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
+        grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
         grating_ps = self.settings.stimulus_correct["grating_speed"]
 
         if self.correct_stim_side["right"]:
@@ -447,7 +447,7 @@ class Stimulus():
         # get right grating
         grating_sf = self.settings.stimulus_correct["grating_sf"]
         grating_or = self.settings.stimulus_correct["grating_ori"]
-        grating_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
+        grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
         grating_ps = self.settings.stimulus_correct["grating_speed"]
 
         if self.correct_stim_side["right"]:
