@@ -38,11 +38,11 @@ class TrialParameterHandler():
             self.big_reward = self.usersettings.BIG_REWARD
             self.small_reward = self.usersettings.SMALL_REWARD
             self.manual_reward = None
+            # times
+            self.time_dict = self.create_time_dict_gamble()
             # reward valve open times
             self.time_dict["big_reward_open_time"] = self.create_valve_open_time(self.usersettings.BIG_REWARD)
             self.time_dict["small_reward_open_time"] = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
-            # times
-            self.time_dict = self.create_time_dict_gamble()
 
         # specific for confidentiality task =============================================
         if self.task == "conf":
