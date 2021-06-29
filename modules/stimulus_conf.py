@@ -1,4 +1,4 @@
-from psychopy import visual, core, monitors  # import some libraries from PsychoPy
+from psychopy import visual, core, monitors, tools  # import some libraries from PsychoPy
 from math import tan as tan
 import random
 
@@ -66,11 +66,15 @@ class Stimulus():
         """
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
 
-    def get_gratings_size(self, grating_size):
+    def get_gratings_size(self, deg):
         """calculate gratin size in pixel based on visual angle
         """
-        x = self.mon_dist*tan(grating_size/2)  # half width of stim in size
-        return (x/self.mon_width)*self.screen_size[0]
+        return tools.monitorunittools.deg2pix(deg,self.monitor)
+    
+    def get_grating_sf(self, sf):
+        """calculate spatial frequency given in visual angle in pixel
+        """
+        return tools.monitorunittools.pix2deg(sf,self.monitor)
 
     def get_gain(self):
         clicks = 1024/365 * abs(self.settings.thresholds[0])  # each full rotation = 1024 clicks
@@ -112,7 +116,7 @@ class Stimulus():
         circle = visual.Circle(
             win=self.win,
             name='cicle',
-            radius=self.get_gratings_size(self.settings.stimulus_rad)/2,
+            radius=self.get_gratings_size(self.settings.stimulus_rad)/2, # convet from vis angle to pixel and fomr diameter to radius
             units='pix',
             edges=128,
             fillColor=self.settings.stimulus_col,
@@ -125,20 +129,20 @@ class Stimulus():
     def run_game_3(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         if self.correct_stim_side["right"]:
-            right_sf = self.settings.stimulus_correct["grating_sf"]
+            right_sf = self.get_gratings_sf((self.settings.stimulus_correct["grating_sf"])
             right_or = self.settings.stimulus_correct["grating_ori"]
             right_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
-            left_sf = self.settings.stimulus_wrong["grating_sf"]
+            left_sf = self.get_gratings_sf(self.settings.stimulus_wrong["grating_sf"])
             left_or = self.settings.stimulus_wrong["grating_ori"]
             left_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
         elif self.correct_stim_side["left"]:
-            left_sf = self.settings.stimulus_correct["grating_sf"]
+            left_sf = self.get_gratings_sf(self.settings.stimulus_correct["grating_sf"])
             left_or = self.settings.stimulus_correct["grating_ori"]
             left_size = self.get_gratings_size(self.settings.stimulus_correct["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
-            right_sf = self.settings.stimulus_wrong["grating_sf"]
+            right_sf = self.get_gratings_sf(self.settings.stimulus_wrong["grating_sf"])
             right_or = self.settings.stimulus_wrong["grating_ori"]
             right_size = self.get_gratings_size(self.settings.stimulus_wrong["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]

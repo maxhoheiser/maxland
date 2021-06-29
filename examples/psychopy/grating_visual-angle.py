@@ -16,61 +16,92 @@ determining the proportion of the patch that will be blurred by the raised cosin
 
 Low spatial frequency, bars get wider
 '''
-from psychopy import visual,event,monitors,core
+from psychopy import visual, event, monitors, core, tools
+from math import tan
 
 # Monitor parameters
-MON_DISTANCE = 16  # Distance between subject's eyes and monitor
-MON_WIDTH = 30  # Width of your monitor in cm
-MON_SIZE = [1024, 1280]  # Pixel-dimensions of your monitor
+MON_DISTANCE = 15  # Distance between subject's eyes and monitor
+MON_WIDTH = 35.79  # Width of your monitor in cm
+MON_SIZE = [1792, 1120]  # Pixel-dimensions of your monitor
 SAVE_FOLDER = 'templateData'  # Log is saved to this folder. The folder is created if it does not exist.
 
-
-# Stimulus parameters
-grating_SF = 0.25  # 4 cycles per degree visual angle
-grating_SIZE = 45  # in degrees visual angle
-grating_ori = 45
-
-
-#1. creates window in which the grating will be placed (background)
+# 1. creates window in which the grating will be placed (background)
 my_monitor = monitors.Monitor('testMonitor', width=MON_WIDTH, distance=MON_DISTANCE)  # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
 my_monitor.setSizePix(MON_SIZE)
 
+# Stimulus parameters
+grating_SF = 0.25  # 4 cycles per degree visual angle
+grating_SIZE = 60  # in degrees visual angle
+grating_ori = 45
+
+
+
+def get_size(angle):
+    x_cm = 2 * MON_DISTANCE * tan(angle/2)
+    x_pix = x_cm * MON_SIZE[0]/MON_WIDTH
+    return x_pix
+
+x_in_pix = get_size(grating_SIZE)
+
+grating_SIZE_pix = tools.monitorunittools.deg2pix(grating_SIZE,my_monitor)
+grating_SF_pix = tools.monitorunittools.pix2deg(grating_SF,my_monitor)
+
+
 win = visual.Window(
-    monitor= my_monitor,
-    size= MON_SIZE, # Put the value from the display. size of the window in pixels
-    color=[0.169,0.169, 0.169], #Color of background as [r,g,b].Each take values between -1.0 and 1.0.
-    units="pix",#"deg",
-    fullscr=False
+    monitor=my_monitor,
+    size=MON_SIZE,  # Put the value from the display. size of the window in pixels
+    color=[-1, -1, -1],  # Color of background as [r,g,b].Each take values between -1.0 and 1.0.
+    units="pix",  # "deg",
+    fullscr=True,
+    screen=0,
 )
 
 
-#2. creates grating in window
-grating = visual.GratingStim(
+# 2. creates grating in window in degree
+grating_deg = visual.GratingStim(
     win=win,
-    contrast = 1, # unchanged contrast (from 1 to -1)
+    contrast=1,  # unchanged contrast (from 1 to -1)
     units="deg",
-    #pos = (0.0, 0.0), #in the middle of the screen. It is convertes internally in a numpy array
     size=grating_SIZE,
-    #sf = 5.0 / 200.0, # set the spatial frequency 5 cycles/ 150 pixels. 
-    sf = grating_SF, 
-    tex = 'sin', # texture used
-    ori = grating_ori,
-    mask='raisedCos'
+    sf=grating_SF,
+    tex='sin',  # texture used
+    ori=grating_ori,
+    mask='raisedCos',
+    pos=(-30, 0)
 )
 
 
-#this creates a never-ending loop
+
+
+# 2. creates grating in window in degree
+grating_pix = visual.GratingStim(
+    win=win,
+    contrast=1,  # unchanged contrast (from 1 to -1)
+    units="pix",
+    size=grating_SIZE_pix,
+    sf=grating_SF_pix,
+    tex='sin',  # texture used
+    ori=grating_ori,
+    mask='raisedCos',
+    pos=(30, 0)
+)
+
+
+# this creates a never-ending loop
 trialClock = core.Clock()
 t = 0
 
-while t < 10: 
+while t < 5:
     t = trialClock.getTime()
-    grating.setPhase(1.5, '+')  # temporal phase. Increment (+) the phase by 0.015 of a cycle
-    grating.setPhase(1.5*t)
-    grating.draw()
-    win.flip() 
-    #win.update() it produce the same that win.flip()
-    #win.getMovieFrame(buffer='front') # values,back, none
+    grating_deg.setPhase(1.5, '+')  # temporal phase. Increment (+) the phase by 0.015 of a cycle
+    grating_deg.setPhase(1.5*t)
+    grating_pix.setPhase(1.5, '+')  # temporal phase. Increment (+) the phase by 0.015 of a cycle
+    grating_pix.setPhase(1.5*t)
+    grating_deg.draw()
+    grating_pix.draw()
+    win.flip()
+    # win.update() it produce the same that win.flip()
+    # win.getMovieFrame(buffer='front') # values,back, none
 
 
 #filename = str(globals()['grating_ori'])+ str(globals()['grating_SF']) + '.mp4'
@@ -79,3 +110,4 @@ while t < 10:
 #win.saveMovieFrames(fileName = 'drif90_025.mp4')
 
 win.close()
+

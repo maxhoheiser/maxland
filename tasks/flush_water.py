@@ -5,20 +5,11 @@ ntrials = 1
 valve_on_time = 30
 iti = 0.5
 
-# =============================================================================
-# CONNECT TO BPOD
-# =============================================================================
 bpod = Bpod()
 
-# =============================================================================
-# TRIAL PARAMETERS AND STATE MACHINE
-# =============================================================================
 
 for i in range(ntrials):
     print("Starting trial: ", i + 1)
-    # =============================================================================
-    #     Start state machine definition
-    # =============================================================================
     sma = StateMachine(bpod)
     sma.add_state(
         state_name="init",
@@ -48,9 +39,9 @@ for i in range(ntrials):
     if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         break
 
-    print("Current trial info: {0}".format(bpod.session.current_trial))
+    try:
+        print("Current trial info: {0}".format(bpod.session.current_trial))
+    except:
+        pass
 
 bpod.close()
-
-if __name__ == "__main__":
-    print("main")
