@@ -41,8 +41,8 @@ class TrialParameterHandler():
             # times
             self.time_dict = self.create_time_dict_gamble()
             # reward valve open times
-            self.time_dict["open_time_big_reward"] = self.create_valve_open_time(self.usersettings.BIG_REWARD)
-            self.time_dict["open_time_small_reward"] = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
+            self.time_dict["time_big_reward_open"] = self.create_valve_open_time(self.usersettings.BIG_REWARD)
+            self.time_dict["time_small_reward_open"] = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
 
         # specific for confidentiality task =============================================
         if self.task == "conf":
@@ -114,16 +114,16 @@ class TrialParameterHandler():
     def update_params(self):
         if self.task == "gamble":
             # update open time
-            self.time_dict["big_reward_open_time"] = self.create_valve_open_time(self.big_reward)
-            self.time_dict["small_reward_open_time"] = self.create_valve_open_time(self.small_reward)
+            self.time_dict["time_big_reward_open"] = self.create_valve_open_time(self.big_reward)
+            self.time_dict["time_small_reward_open"] = self.create_valve_open_time(self.small_reward)
             # check that reward time >= open time
-            if self.time_dict["time_reward"] < self.time_dict["big_reward_open_time"]:
-                self.time_dict["time_reward"] = self.time_dict["big_reward_open_time"]
-            if self.time_dict["time_reward"] < self.time_dict["small_reward_open_time"]:
-                self.time_dict["time_reward"] = self.time_dict["small_reward_open_time"]
+            if self.time_dict["time_reward"] < self.time_dict["time_big_reward_open"]:
+                self.time_dict["time_reward"] = self.time_dict["time_big_reward_open"]
+            if self.time_dict["time_reward"] < self.time_dict["time_small_reward_open"]:
+                self.time_dict["time_reward"] = self.time_dict["time_small_reward_open"]
             # update time waiting
-            self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["big_reward_open_time"]
-            self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["small_reward_open_time"]
+            self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
+            self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
 
         elif self.task == "conf":
             pass
@@ -243,12 +243,10 @@ class TrialParameterHandler():
             "time_noreward": self.usersettings.NOREWARD_TIME,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
             #TODO: fix
-            "time_big_reward_waiting": (self.usersettings.REWARD_TIME - self.big_reward_open_time),
-            "time_small_reward_waiting": (self.usersettings.REWARD_TIME - self.small_reward_open_time),
-            # "time_big_reward_waiting": (self.usersettings.REWARD_TIME),
-            # "time_small_reward_waiting": (self.usersettings.REWARD_TIME),
-            "open_time_big_reward": self.big_reward_open_time,
-            "open_time_small_reward": self.small_reward_open_time,
+            "time_big_reward_open": self.create_valve_open_time(self.big_reward),
+            "time_small_reward_open": self.create_valve_open_time(self.small_reward),
+            "time_big_reward_waiting": (self.usersettings.REWARD_TIME - self.create_valve_open_time(self.big_reward),),
+
         }
         return time_dict
 

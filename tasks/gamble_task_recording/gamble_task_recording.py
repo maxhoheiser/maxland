@@ -44,6 +44,7 @@ from parameter_handler import TrialParameterHandler
 from rotaryencoder import BpodRotaryEncoder
 from probability_gamble import ProbabilityConstuctor
 from stimulus_gamble import Stimulus
+from helperfunctions import *
 
 # import usersettings
 from userinput import UserInput
@@ -72,22 +73,13 @@ start_open_loop_event.clear()
 still_show_event.clear()
 
 
-def closer_fn(stimulus_game, bpod, sma, display_stim_event, start_open_loop_event, still_show_event):
-    if not bpod.run_state_machine(sma):
-        still_show_event.set()
-        start_open_loop_event.set()
-        display_stim_event.set()
-        stimulus_game.win.close()
-        stimulus_game.close()
-        print("\nCLOSED\n")
-
-
 # run session
 if settings_obj.run_session:
     settings_obj.update_userinput_file_gamble()
     # rotary encoder config
     # enable thresholds
-    rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
+    com_port = find_rotary_com_port()
+    rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     rotary_encoder_module.enable_stream()
@@ -273,7 +265,7 @@ if settings_obj.run_session:
                 )
                 sma.add_state(
                     state_name="big_reward_left",
-                    state_timer=settings_obj.time_dict["open_time_big_reward"],
+                    state_timer=settings_obj.time_dict["time_big_reward_open"],
                     state_change_conditions={"Tup": "reward_left_waiting"},
                     output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                     ("Valve1", 255),
@@ -320,7 +312,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="small_reward_left",
-                state_timer=settings_obj.time_dict["open_time_small_reward"],
+                state_timer=settings_obj.time_dict["time_small_reward_open"],
                 state_change_conditions={"Tup": "reward_left_waiting"},
                 output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                 ("Valve1", 255),
@@ -382,7 +374,7 @@ if settings_obj.run_session:
                 )
                 sma.add_state(
                     state_name="big_reward_right",
-                    state_timer=settings_obj.time_dict["open_time_big_reward"],
+                    state_timer=settings_obj.time_dict["time_big_reward_open"],
                     state_change_conditions={"Tup": "reward_right_waiting"},
                     output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                     ("Valve1", 255),
@@ -429,7 +421,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="small_reward_right",
-                state_timer=settings_obj.time_dict["open_time_small_reward"],
+                state_timer=settings_obj.time_dict["time_small_reward_open"],
                 state_change_conditions={"Tup": "reward_right_waiting"},
                 output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                 ("Valve1", 255),
@@ -542,5 +534,5 @@ if settings_obj.run_session:
 
     # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
-rotary_encoder_module.close()
+tryer(rotary_encoder_module.close())()
 bpod.close()
