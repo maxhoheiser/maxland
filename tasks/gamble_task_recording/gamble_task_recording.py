@@ -44,10 +44,11 @@ from parameter_handler import TrialParameterHandler
 from rotaryencoder import BpodRotaryEncoder
 from probability_gamble import ProbabilityConstuctor
 from stimulus_gamble import Stimulus
+from userinput import UserInput
 from helperfunctions import *
 
 # import usersettings
-from userinput import UserInput
+import usersettings
 
 # create settings object
 session_folder = os.getcwd()
@@ -344,7 +345,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_left_waiting",
-                state_timer=settings_obj.REWARD_TIME,
+                state_timer=settings_obj.time_dict["time_reward"],
                 state_change_conditions={"Tup": "inter_trial"},
                 output_actions=[('BNC1', 0), ('BNC2', 1)]
             )
@@ -497,6 +498,7 @@ if settings_obj.run_session:
                                )
 
         # post trial cleanup
+        closer.join()
         print("---------------------------------------------------")
         try:
             print(f"trial: {bpod.session.current_trial}")

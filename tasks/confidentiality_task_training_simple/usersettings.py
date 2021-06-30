@@ -27,31 +27,31 @@ STIMULUS_TYPE = "three-stimuli" #three-stimuli #two-stimuli #one-stimulus
 
 #===============================================================
 # reward in ml
-REWARD = 2.0
+REWARD = 6.0
 
 LAST_CALLIBRATION = "2020.06.10"
 
 # state machine settings =======================================
 # waiting time beginning of each trial
-TIME_START = 2.0
+TIME_START = 10.0
 # time the wheel has to be stopped
-TIME_WHEEL_STOPPING_CHECK = 3.0
+TIME_WHEEL_STOPPING_CHECK = 9.0
 # time wait if the wheel is not stopped bevore new trial starts
-TIME_WHEEL_STOPPING_PUNISH = 4.0
+TIME_WHEEL_STOPPING_PUNISH = 8.0
 # time stimulus is presented but not movable
-TIME_PRESENT_STIM = 5.0
+TIME_PRESENT_STIM = 7.0
 # time of open loop where wheel moves the stimulus
 TIME_OPEN_LOOP = 6.0
 # time wait if stimulus not moved far enough to position
-TIME_OPEN_LOOP_FAIL_PUNISH = 7.0
+TIME_OPEN_LOOP_FAIL_PUNISH = 5.0
 # time stimulus is presented at reached position but not movable anymore
-TIME_STIM_FREEZ = 8.0
+TIME_STIM_FREEZ = 4.0
 # time the animal has for the reard = valve open + time after
-REWARD_TIME =9.0
+REWARD_TIME =6.0
 # no reward time
-TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [10.0, 11.0]
+TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [2.0, 1.0]
 # time at end of each trial_num
-INTER_TRIAL_TIME = 13.0
+INTER_TRIAL_TIME = 1.5
 
 # Insist Mode =================================================
 RANGE_INSIST_TRIGGER = 10

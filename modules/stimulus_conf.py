@@ -129,7 +129,7 @@ class Stimulus():
     def run_game_3(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         if self.correct_stim_side["right"]:
-            right_sf = self.get_grating_sf((self.settings.stimulus_correct["grating_sf"]))
+            right_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
             right_or = self.settings.stimulus_correct["grating_ori"]
             right_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
@@ -172,7 +172,7 @@ class Stimulus():
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.set_zero_position()
         stim.draw
         self.win.flip()
         while self.run_open_loop:
@@ -207,20 +207,20 @@ class Stimulus():
     def run_game_2(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         if self.correct_stim_side["left"]:  # switch side because stim is moved to center not ball moved to stim
-            right_sf = self.settings.stimulus_correct["grating_sf"]
+            right_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
             right_or = self.settings.stimulus_correct["grating_ori"]
             right_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
-            left_sf = self.settings.stimulus_wrong["grating_sf"]
+            left_sf = self.get_grating_sf(self.settings.stimulus_wrong["grating_sf"])
             left_or = self.settings.stimulus_wrong["grating_ori"]
             left_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
         elif self.correct_stim_side["right"]:  # switch side because stim is moved to center not ball moved to stim
-            left_sf = self.settings.stimulus_correct["grating_sf"]
+            left_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
             left_or = self.settings.stimulus_correct["grating_ori"]
             left_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             left_ps = self.settings.stimulus_correct["grating_speed"]
-            right_sf = self.settings.stimulus_wrong["grating_sf"]
+            right_sf = self.get_grating_sf(self.settings.stimulus_wrong["grating_sf"])
             right_or = self.settings.stimulus_wrong["grating_ori"]
             right_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
             right_ps = self.settings.stimulus_correct["grating_speed"]
@@ -248,6 +248,7 @@ class Stimulus():
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.set_zero_position()
         # self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
@@ -256,7 +257,7 @@ class Stimulus():
             grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
             if len(stream) > 0:
-                change = self.ceil((pos - stream[0][2])*self.gain)  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating_left.pos += (change, 0)
@@ -281,11 +282,9 @@ class Stimulus():
         # get random stimulus always set the right stimulus as correct
         if self.correct_stim_side["right"]:
             stimulus = self.settings.stimulus_correct
-            print("correct")
         elif self.correct_stim_side["left"]:
             stimulus = self.settings.stimulus_wrong
-            print("wrong")
-        stim_sf = stimulus["grating_sf"]
+        stim_sf = self.get_grating_sf(stimulus["grating_sf"])
         stim_or = stimulus["grating_ori"]
         stim_size = self.get_grating_size(stimulus["grating_size"])
         stim_ps = stimulus["grating_speed"]
@@ -296,6 +295,7 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
+        print("present stimulus")
         while self.run_closed_loop:  # self.run_closed_loop:
             # dram moving gratings
             grating.setPhase(stim_ps, '+')  # advance phase by 0.05 of a cycle
@@ -309,7 +309,7 @@ class Stimulus():
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -317,7 +317,7 @@ class Stimulus():
             grating.setPhase(stim_ps, '+')  # advance phase by 0.05 of a cycle
             grating.draw()
             if len(stream) > 0:
-                change = self.ceil((pos - stream[-1][2])*self.gain)  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating.pos += (change, 0)
@@ -357,12 +357,12 @@ class Stimulus():
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream) > 0:
-                change = self.ceil((pos - stream[-1][2])*self.gain)  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -383,17 +383,15 @@ class Stimulus():
     # Habituation Typ 3 only single correct grating ====================================
     def run_game_habituation_3_complex(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
-        grating_sf = self.settings.stimulus_correct["grating_sf"]
+        grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
         grating_or = self.settings.stimulus_correct["grating_ori"]
         grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
         grating_ps = self.settings.stimulus_correct["grating_speed"]
 
         if self.correct_stim_side["right"]:
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[1])
-            print("right")
         elif self.correct_stim_side["left"]:
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[0])
-            print("left")
         # generate gratings and stimuli
         stim = self.gen_stim()
         # -----------------------------------------------------------------------------
@@ -416,7 +414,7 @@ class Stimulus():
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
@@ -424,7 +422,7 @@ class Stimulus():
             grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
             grating.draw()
             if len(stream) > 0:
-                change = self.ceil((pos - stream[-1][2])*self.gain)  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -445,7 +443,7 @@ class Stimulus():
     # Habituation Typ 2 complex =======================================================
     def run_game_habituation_2_complex(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
-        grating_sf = self.settings.stimulus_correct["grating_sf"]
+        grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
         grating_or = self.settings.stimulus_correct["grating_ori"]
         grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
         grating_ps = self.settings.stimulus_correct["grating_speed"]
@@ -473,14 +471,14 @@ class Stimulus():
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
+        self.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
             grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
             if len(stream) > 0:
-                change = self.ceil((pos - stream[-1][2])*self.gain)  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating.pos += (change, 0)

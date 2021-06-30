@@ -77,7 +77,7 @@ class BpodRotaryEncoder():
     def get_logging(self):
         return self.rotary_encoder.get_logged_data()
 
-    def set_position_zero(self):
+    def set_zero_position(self):
         self.rotary_encoder.set_zero_position()
 
     def set_wrap_point(self, wrap_point):

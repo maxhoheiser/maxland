@@ -41,11 +41,11 @@ class TrialParameterHandler():
             # times
             self.time_dict = self.create_time_dict_gamble()
             # reward valve open times
-            self.time_dict["time_big_reward_open"] = self.create_valve_open_time(self.usersettings.BIG_REWARD)
-            self.time_dict["time_small_reward_open"] = self.create_valve_open_time(self.usersettings.SMALL_REWARD)
+
 
         # specific for confidentiality task =============================================
         if self.task == "conf":
+            self.reward = self.usersettings.REWARD
             self.trial_number = self.usersettings.TRIAL_NUMBER
             # stimulus
             self.stimulus_correct = self.usersettings.STIMULUS_CORRECT
@@ -53,7 +53,6 @@ class TrialParameterHandler():
             self.stim_type = self.usersettings.STIMULUS_TYPE
             self.drp_list = ('three-stimuli', 'two-stimuli', 'one-stimulus')
             # times
-            self.reward_open_time = self.create_valve_open_time(self.usersettings.REWARD_TIME)
             self.reward = self.usersettings.REWARD
             self.time_dict = self.create_time_dict_conf()
             # insist mode
@@ -126,7 +125,14 @@ class TrialParameterHandler():
             self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
 
         elif self.task == "conf":
-            pass
+            # update open time
+            self.time_dict["time_reward_open"] = self.create_valve_open_time(self.reward)
+            # check that reward time >= open time
+            if self.time_dict["time_reward"] < self.time_dict["time_reward_open"]:
+                self.time_dict["time_reward"] = self.time_dict["time_reward_open"]
+            # update time waiting
+            self.time_dict["time_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_reward_open"]
+
 
     def min_inter_trial_time(self):
         """for the stimulus pygame to run somethly ther has to be a minimum time of 1 second between the end of the open loop
@@ -242,10 +248,10 @@ class TrialParameterHandler():
             "time_reward": self.usersettings.REWARD_TIME,
             "time_noreward": self.usersettings.NOREWARD_TIME,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
-            #TODO: fix
             "time_big_reward_open": self.create_valve_open_time(self.big_reward),
             "time_small_reward_open": self.create_valve_open_time(self.small_reward),
-            "time_big_reward_waiting": (self.usersettings.REWARD_TIME - self.create_valve_open_time(self.big_reward),),
+            "time_big_reward_waiting": (self.usersettings.REWARD_TIME - self.create_valve_open_time(self.big_reward)),
+            "time_small_reward_waiting": (self.usersettings.REWARD_TIME - self.create_valve_open_time(self.small_reward)),
 
         }
         return time_dict
@@ -324,11 +330,6 @@ class TrialParameterHandler():
         Returns:
             time_dict (dict): dictionary with all the state times
         """
-        # test correct times
-        if self.usersettings.REWARD_TIME >= self.reward_open_time:
-            time_reward = self.usersettings.REWARD_TIME
-        else:
-            time_reward = self.reward_open_time
         time_dict = {
             "time_start": self.usersettings.TIME_START,
             "time_wheel_stopping_check": self.usersettings.TIME_WHEEL_STOPPING_CHECK,
@@ -337,11 +338,11 @@ class TrialParameterHandler():
             "time_open_loop": self.usersettings.TIME_OPEN_LOOP,
             "time_open_loop_fail_punish": self.usersettings.TIME_OPEN_LOOP_FAIL_PUNISH,
             "time_stim_freez": self.usersettings.TIME_STIM_FREEZ,
-            "time_reward": time_reward,
+            "time_reward": self.usersettings.REWARD_TIME,
+            "time_reward_open": self.create_valve_open_time(self.reward),
             "time_range_noreward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
             "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
-            "open_time_reward": self.reward_open_time,
-            "time_reward_waiting": self.usersettings.REWARD_TIME-self.reward_open_time
+            "time_reward_waiting": (self.usersettings.REWARD_TIME-self.create_valve_open_time(self.reward)),
         }
         return time_dict
 

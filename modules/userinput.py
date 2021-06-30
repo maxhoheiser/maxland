@@ -48,7 +48,8 @@ class UserInput():
         self.settings.time_dict["time_stim_pres"] = float(self.time_stim_pres.var.get())
         self.settings.time_dict["time_open_loop"] = float(self.time_open_loop.var.get())
         self.settings.time_dict["time_stim_freez"] = float(self.time_stim_freez.var.get())
-        self.settings.time_dict["time_reward"] = float(self.time_reward.var.get())
+        self.settings.time_dict["time_reward"] = float(self.time_reward.var.get()) #TODO:
+        self.settings.time_dict["time_noreward"] = float(self.time_reward.var.get()) #TODO:
         self.settings.time_dict["time_inter_trial"] = float(self.time_inter_trial.var.get())
         self.settings.time_dict["time_open_loop_fail_punish"] = float(self.time_open_loop_fail_punish.var.get())
         self.settings.min_inter_trial_time()
@@ -96,13 +97,15 @@ class UserInput():
             # stimuli
             self.settings.stim_type = self.var_drp_stim.get()
             # times
-            self.settings.reward_open_time = float(self.var_reward.get())
+            self.settings.reward = float(self.var_reward.get())
             self.settings.insist_range_trigger = int(self.var_insist_range_trigger.get())
             self.settings.insist_range_deactivate = int(self.var_insist_range_deact.get())
             self.settings.insist_correct_deactivate = int(self.var_insist_cor.get())
             self.settings.time_dict["time_range_noreward_punish"] = [float(self.time_noreward_punish.var_1.get()),
                                                                      float(self.time_noreward_punish.var_2.get())
                                                                      ]
+            # update time dict
+            self.settings.update_params()
 
     # update settings variables
     def update_settings_after(self):
@@ -162,13 +165,14 @@ class UserInput():
         """ok button for window after session, checks if animal weight after is input valid"""
         self.etr_animal_weight_after
         # check if animal weight is put in correctly
-        if len(self.var_animal_weight_after.get()) != 0 and self.is_float(self.var_animal_weight_after.get()):
-            self.update_settings_after()
-        elif len(self.var_animal_weight_after.get()) == 0:
-            messagebox.showwarning("Warning", "Please input animal weight")
-        else:
-            messagebox.showwarning("Warning", "Animal weight must be a float or integer")
-        self.close()
+        #if len(self.var_animal_weight_after.get()) != 0 and self.is_float(self.var_animal_weight_after.get()):
+        #    self.update_settings_after()
+        #elif len(self.var_animal_weight_after.get()) == 0:
+        #    messagebox.showwarning("Warning", "Please input animal weight")
+        #else:
+        #    messagebox.showwarning("Warning", "Animal weight must be a float or integer")
+        self.root.destroy()
+        #self.close()
 
     def cancle_button(self):
         self.settings.run_session = False

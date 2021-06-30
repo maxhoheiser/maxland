@@ -42,10 +42,12 @@ sys.path.insert(-1, modules_dir)
 from parameter_handler import TrialParameterHandler
 from rotaryencoder import BpodRotaryEncoder
 from probability_conf import ProbabilityConstuctor
-#from stimulus_conf import Stimulus
+from userinput import UserInput
+from helperfunctions import *
+from stimulus_conf import Stimulus
 
 # import usersettings
-from userinput import UserInput
+import usersettings
 
 # create settings object
 session_folder = os.getcwd()
@@ -69,22 +71,13 @@ display_stim_event.clear()
 still_show_event.clear()
 # set functions
 
-
-def closer_fn(stimulus_game, bpod, sma, display_stim_event, still_show_event):
-    if not bpod.run_state_machine(sma):
-        still_show_event.set()
-        display_stim_event.set()
-        stimulus_game.win.close()
-        stimulus_game.close()
-        print("\nCLOSED\n")
-
-
 # run session
 if settings_obj.run_session:
     settings_obj.update_userinput_file_conf()
     # rotary encoder config
     # enable thresholds
-    rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
+    com_port = find_rotary_com_port()
+    rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     rotary_encoder_module.enable_stream()
@@ -157,7 +150,7 @@ if settings_obj.run_session:
         # wheel not stoping check
         sma.add_state(
             state_name="wheel_stopping_check",
-            state_timer=5,  # settings_obj.time_dict["time_wheel_stopping_check"],
+            state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
             state_change_conditions={
                 "Tup": "present_stim",
                 settings_obj.THRESH_LEFT: "wheel_stopping_check_failed_punish",
@@ -235,7 +228,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_left",
-                state_timer=settings_obj.time_dict["open_time_reward"],
+                state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_left_waiting"},
                 output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                 ("Valve1", 255)
@@ -289,7 +282,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_right",
-                state_timer=settings_obj.time_dict["open_time_reward"],
+                state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_right_waiting"},
                 output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                 ("Valve1", 255)
@@ -404,5 +397,5 @@ if settings_obj.run_session:
 
     # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
-rotary_encoder_module.close()
+tryer(rotary_encoder_module.close())()
 bpod.close()

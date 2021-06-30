@@ -24,17 +24,16 @@ from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
 
 
-# span subprocess
 # add module path to sys path
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+currentdir = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
 dir = (os.path.dirname(os.path.dirname(currentdir)))
-if os.path.isdir(os.path.join(dir,"modules")):
+if os.path.isdir(os.path.join(dir, "modules")):
     maxland_root = dir
 else:
     maxland_root = os.path.dirname(dir)
-modules_dir = os.path.join(maxland_root,"modules")
-sys.path.insert(-1,modules_dir) 
+modules_dir = os.path.join(maxland_root, "modules")
+sys.path.insert(-1, modules_dir)
 
 # import custom modules
 from stimulus_conf import Stimulus
@@ -42,6 +41,7 @@ from probability_conf import ProbabilityConstuctor
 from rotaryencoder import BpodRotaryEncoder
 from parameter_handler import TrialParameterHandler
 from userinput import UserInput
+from helperfunctions import *
 
 # import usersettings
 import usersettings
@@ -60,29 +60,20 @@ window = UserInput(settings_obj)
 window.draw_window_bevore_conf(stage="habituation_complex")
 window.show_window()
 
-
 # create multiprocessing variabls
 # flags
 display_stim_event = threading.Event()
 still_show_event = threading.Event()
 display_stim_event.clear()
 still_show_event.clear()
-# set functions
-
-def closer_fn(stimulus_game,bpod,sma,display_stim_event,still_show_event):
-    if not bpod.run_state_machine(sma):
-        still_show_event.set()
-        display_stim_event.set() 
-        stimulus_game.win.close()
-        stimulus_game.close()
-        print("\nCLOSED\n")
 
 # run session
 if settings_obj.run_session:
     settings_obj.update_userinput_file_conf()
     # rotary encoder config
     # enable thresholds
-    rotary_encoder_module = BpodRotaryEncoder('COM6', settings_obj, bpod)
+    com_port = find_rotary_com_port()
+    rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
     rotary_encoder_module.enable_stream()
@@ -156,7 +147,7 @@ if settings_obj.run_session:
         #wheel not stoping check 
         sma.add_state(
             state_name="wheel_stopping_check",
-            state_timer=5,#settings_obj.time_dict["time_wheel_stopping_check"],
+            state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
             state_change_conditions={
                     "Tup":"present_stim",
                     settings_obj.THRESH_LEFT:"wheel_stopping_check_failed_punish",
@@ -234,7 +225,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_left",
-                state_timer=settings_obj.time_dict["open_time_reward"],
+                state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_left_waiting"},
                 output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                 ("Valve1", 255)
@@ -288,7 +279,7 @@ if settings_obj.run_session:
             )
             sma.add_state(
                 state_name="reward_right",
-                state_timer=settings_obj.time_dict["open_time_reward"],
+                state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_right_waiting"},
                 output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
                                 ("Valve1", 255)
@@ -346,7 +337,8 @@ if settings_obj.run_session:
         #pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
         #pa.start()
 
-        closer = threading.Thread(target=closer_fn, args=(stimulus_game,bpod,sma,display_stim_event,still_show_event))
+        closer = threading.Thread(target=closer_fn, args=(
+            stimulus_game,bpod,sma,display_stim_event,still_show_event))
         closer.start()
 
         # run stimulus game
@@ -372,7 +364,6 @@ if settings_obj.run_session:
         # insist mode check
         #TODO: quiry trial return object to find side
         #probability_obj.insist_mode_check(bpod.session.current_trial)
-
     #=========================================================================================================
     print("finished")
     # user input after session
@@ -410,7 +401,7 @@ else:
     None
 
 
-rotary_encoder_module.close()
+tryer(rotary_encoder_module.close())()
 bpod.close()
 
 
