@@ -1,6 +1,7 @@
 from psychopy import visual, core, monitors, tools  # import some libraries from PsychoPy
 from math import tan as tan
 import random
+import time
 
 
 class Stimulus():
@@ -127,6 +128,10 @@ class Stimulus():
     # Main psychpy loop ==============================================================
     # Stimulus Type 3 (main) = fixed gratings + moving circle
     def run_game_3(self, display_stim_event, still_show_event, bpod, sma):
+        display_stim_event.clear()
+        still_show_event.clear()
+        self.run_closed_loop = True
+        self.run_open_loop = True
         # get right grating
         if self.correct_stim_side["right"]:
             right_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
@@ -162,19 +167,20 @@ class Stimulus():
             grating_right.setPhase(right_ps, '+')
             grating_left.draw()
             grating_right.draw()
+            stim.draw()
             self.win.flip()
         # -------------------------------------------------------------------------
         # on soft code of state 2
         # -------------------------------------------------------------------------
         # reset rotary encoder
-        # self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        self.rotary_encoder.set_zero_position()
-        stim.draw
-        self.win.flip()
+        #self.rotary_encoder.set_zero_position()
+        #stim.draw
+        #self.win.flip()
+        time.sleep(0.01)
+        print("open loop")
         while self.run_open_loop:
             # dram moving gratings
             # get rotary encoder change position
