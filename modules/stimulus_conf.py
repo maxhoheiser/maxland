@@ -24,7 +24,7 @@ class Stimulus():
         self.correct_stim_side = correct_stim_side
         #self.gain = self.get_gain()
         self.gain_left, self.gain_right = [round(abs(y/x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
-        self.gain = self.gain_left
+        self.gain = self.gain_left #TODO:
         # monitor configuration
         # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
         self.monitor = monitors.Monitor('testMonitor', width=self.mon_width, distance=self.mon_dist)

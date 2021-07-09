@@ -289,7 +289,7 @@ if settings_obj.run_session:
         #pa.start()
 
         closer = threading.Thread(target=closer_fn, args=(
-            stimulus_game,bpod,sma,display_stim_event,still_show_event))
+            stimulus_game, bpod, sma, display_stim_event, still_show_event, rotary_encoder_module))
         closer.start()
 
         # run stimulus game

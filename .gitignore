@@ -7,3 +7,13 @@ behavior/.DS_Store
 .DS_Store
 maxland_TRAINING01/*
 maxland_RECORDING01/*
+tasks/confidentiality_task_habituation_complex/__init__.py
+tasks/confidentiality_task_habituation_simple/__init__.py
+tasks/confidentiality_task_training_simple/__init__.py
+tasks/gamble_task_recording/__init__.py
+tasks/gamble_task_training/__init__.py
+tasks/gamble_task_recording/gamble_task_recording.json
+tasks/confidentiality_task_training_simple/confidentiality_task_training_simple.json
+tasks/confidentiality_task_habituation_simple/confidentiality_task_habituation_simple.json
+tasks/confidentiality_task_habituation_complex/confidentiality_task_habituation_complex.json
+tasks/gamble_task_training/gamble_task_training.json

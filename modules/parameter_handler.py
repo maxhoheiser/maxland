@@ -123,7 +123,8 @@ class TrialParameterHandler():
             # update time waiting
             self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
             self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
-
+            # update gamble side bool
+            self.gamble_side_left = self.get_gambl_side()
         elif self.task == "conf":
             # update open time
             self.time_dict["time_reward_open"] = self.create_valve_open_time(self.reward)
