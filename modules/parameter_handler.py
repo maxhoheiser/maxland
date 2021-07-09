@@ -79,6 +79,7 @@ class TrialParameterHandler():
         self.SC_END_PRESENT_STIM = 4
         self.SC_START_LOGGING = 5
         self.SC_END_LOGGING = 6
+        self.SC_STOP_CLOSE_LOOP = 6
 
         # rotary encoder
         self.WHEEL_DIAMETER = 6.3
