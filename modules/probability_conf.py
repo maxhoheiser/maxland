@@ -1,5 +1,6 @@
 
 import random
+import numpy as np
 
 
 class ProbabilityConstuctor():
@@ -41,10 +42,12 @@ class ProbabilityConstuctor():
         # -> left : check_reward_left
         #   
         #
-        if "check_reward_left" in trial:
+        if not np.isnan(trial.states_durrations["check_reward_left"][0][0]):
             current_side = "left"
-        elif "check_reward_right" in trial:
+            print("current side: left")
+        elif not np.isnan(trial.states_durrations["check_reward_right"][0][0]):
             current_side = "right"
+            print("current side: right")
         else:
             current_side = "non"
         self.chosen_sides_li.append(current_side)
@@ -58,27 +61,30 @@ class ProbabilityConstuctor():
             right_num_chosen = sum(map(lambda x: x == "right", slice))
             if left_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
-                self.insist_side = "left"
+                self.insist_side = "right"
+                print("\n--------------------------------\n")
+                print("INSIST MODE ACTIVATED: insist right")
+                print("\n--------------------------------")
             if right_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
-                self.insist_side = "right"
-            print("\n--------------------------------\n")
-            print("INSISTE MODE ACTIVATED: ", self.insist_side)
-            print("\n--------------------------------")
+                self.insist_side = "left"
+                print("\n--------------------------------\n")
+                print("INSIST MODE ACTIVATED: insist left")
+                print("\n--------------------------------")
         # deactivate insist mode
-        if self.insist_mode_active:
+        elif self.insist_mode_active:
             self.insist_mode_chosen_side_li.append(current_side)
             # get insist mode slice
             if len(self.insist_mode_chosen_side_li) >= self.insist_range_deactivate:
-                slice = self.insist_mode_chosen_side_li[-self.insist_correct_deactivate:]
+                slice = self.insist_mode_chosen_side_li[-self.insist_range_deactivate:]
             else:
                 slice = self.insist_mode_chosen_side_li
             # check range if correct
             insist_correct_choice = sum(map(lambda x: x == self.insist_side, slice))
             if insist_correct_choice >= self.insist_correct_deactivate:
                 self.insist_mode_active = False
-                self.insist_side = "right"
+                self.insist_side = "none"
                 self.inist_mode_chosen_sde = []  # clear last insist mode list
                 print("\n--------------------------------\n")
-                print("INSISTE MODE DEACTIVATED")
+                print("INSIST MODE DEACTIVATED")
                 print("\n--------------------------------")

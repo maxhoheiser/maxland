@@ -341,19 +341,21 @@ if settings_obj.run_session:
             stimulus_game, bpod, sma, display_stim_event, still_show_event, rotary_encoder_module))
         closer.start()
 
-        # run stimulus game
-        if settings_obj.stim_type == "three-stimuli":
-            print("three")
-            stimulus_game.run_game_habituation_3_complex(display_stim_event, still_show_event,bpod,sma)
-        elif settings_obj.stim_type == "two-stimuli":
-            print("tow")
-            stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,bpod,sma)
-        elif settings_obj.stim_type == "one-stimulus":
-            print("one")
-        else:
-            print("\nNo correct stim type selected\n")
-
-     
+        try:
+            # run stimulus game
+            if settings_obj.stim_type == "three-stimuli":
+                print("three")
+                stimulus_game.run_game_habituation_3_complex(display_stim_event, still_show_event,bpod,sma)
+            elif settings_obj.stim_type == "two-stimuli":
+                print("tow")
+                stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,bpod,sma)
+            elif settings_obj.stim_type == "one-stimulus":
+                print("one")
+            else:
+                print("\nNo correct stim type selected\n")
+        except:
+            continue
+        
         # post trial cleanup
         closer.join()
         print("---------------------------------------------------")

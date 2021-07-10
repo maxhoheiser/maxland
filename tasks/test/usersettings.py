@@ -16,7 +16,7 @@ STIMULUS_CORRECT = {"grating_sf": 0.01, "grating_ori": 0.1, "grating_size": 46.0
 STIMULUS_WRONG = {"grating_sf": 0.004, "grating_ori": 93.0, "grating_size": 42.0, "grating_speed": 0.01}
 
 # trials
-TRIAL_NUMBER = 20
+TRIAL_NUMBER = 1
 
 # stimulus size and color - only for moving stimulus
 STIMULUS_RAD = 44 # pixel radius of stimulus
@@ -33,30 +33,30 @@ LAST_CALLIBRATION = "2020.06.10"
 
 # state machine settings =======================================
 # waiting time beginning of each trial
-TIME_START = 0.0
+TIME_START = 10.0
 # time the wheel has to be stopped
-TIME_WHEEL_STOPPING_CHECK = 1.0
+TIME_WHEEL_STOPPING_CHECK = 9.0
 # time wait if the wheel is not stopped bevore new trial starts
-TIME_WHEEL_STOPPING_PUNISH = 1.0
+TIME_WHEEL_STOPPING_PUNISH = 8.0
 # time stimulus is presented but not movable
-TIME_PRESENT_STIM = 0.0
+TIME_PRESENT_STIM = 7.0
 # time of open loop where wheel moves the stimulus
 TIME_OPEN_LOOP = 6.0
 # time wait if stimulus not moved far enough to position
-TIME_OPEN_LOOP_FAIL_PUNISH = 1.0
+TIME_OPEN_LOOP_FAIL_PUNISH = 5.0
 # time stimulus is presented at reached position but not movable anymore
-TIME_STIM_FREEZ = 1.0
+TIME_STIM_FREEZ = 4.0
 # time the animal has for the reard = valve open + time after
 REWARD_TIME =6.0
 # no reward time
-TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [0.0, 0.0]
+TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [2.0, 1.0]
 # time at end of each trial_num
 INTER_TRIAL_TIME = 1.5
 
 # Insist Mode =================================================
-RANGE_INSIST_TRIGGER = 5
-NUMBER_CORRECT_INSIST_DEACTIVATE = 5
-RANGE_INSIST_DEACTIVATE = 3
+RANGE_INSIST_TRIGGER = 8
+NUMBER_CORRECT_INSIST_DEACTIVATE = 3
+RANGE_INSIST_DEACTIVATE = 5
 
 
 # rotary Encoder ==============================================

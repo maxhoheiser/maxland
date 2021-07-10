@@ -361,7 +361,7 @@ if settings_obj.run_session:
         closer.join()
         print("---------------------------------------------------")
         try:
-            print(f"trial: {bpod.session.current_trial}")
+            print(bpod.session.current_trial)
             # insist mode check
             probability_obj.insist_mode_check(bpod.session.current_trial)
         except:
