@@ -42,10 +42,10 @@ class ProbabilityConstuctor():
         # -> left : check_reward_left
         #   
         #
-        if not np.isnan(trial.states_durrations["check_reward_left"][0][0]):
+        if not np.isnan(trial.states_durations["check_reward_left"][0][0]):
             current_side = "left"
             print("current side: left")
-        elif not np.isnan(trial.states_durrations["check_reward_right"][0][0]):
+        elif not np.isnan(trial.states_durations["check_reward_right"][0][0]):
             current_side = "right"
             print("current side: right")
         else:

@@ -187,7 +187,7 @@ class TrialParameterHandler():
         Args:
             session_name (string): name of current bpod session
         """
-        file_name = session_name + "_usersettings.json"
+        file_name = session_name + "_settings_obj.json"
         file_path = os.path.join(self.session_folder, file_name)
         del_keys = ["usersettings",
                     "stimulus_position",

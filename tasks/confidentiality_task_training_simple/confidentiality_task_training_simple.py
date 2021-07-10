@@ -86,10 +86,10 @@ if settings_obj.run_session:
     def softcode_handler(data):
         if data == settings_obj.SC_PRESENT_STIM:
             display_stim_event.set()
-            print("PRESENT STIMULUS")
+            print("present stimulus")
         elif data == settings_obj.SC_START_OPEN_LOOP:
             stimulus_game.stop_closed_loop()
-            print("START OPEN LOOP")
+            print("start open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
             print("stop open loop")
@@ -343,37 +343,39 @@ if settings_obj.run_session:
             stimulus_game, bpod, sma, display_stim_event, still_show_event, rotary_encoder_module))
         closer.start()
 
-        # run stimulus game
-        if settings_obj.stim_type == "three-stimuli":
-            print("three")
-            stimulus_game.run_game_3(display_stim_event, still_show_event, bpod, sma)
-        elif settings_obj.stim_type == "two-stimuli":
-            print("tow")
-            stimulus_game.run_game_2(display_stim_event, still_show_event, bpod, sma)
-        elif settings_obj.stim_type == "one-stimulus":
-            print("one")
-            stimulus_game.run_game_1(display_stim_event, still_show_event, bpod, sma)
-        else:
-            print("\nNo correct stim type selected\n")
-
-        # post trial cleanup
-        # pa.join()
-        closer.join()
-        print("---------------------------------------------------")
         try:
-            print(bpod.session.current_trial)
-            # insist mode check
-            probability_obj.insist_mode_check(bpod.session.current_trial)
+            # run stimulus game
+            if settings_obj.stim_type == "three-stimuli":
+                print("three")
+                stimulus_game.run_game_3(display_stim_event, still_show_event, bpod, sma)
+            elif settings_obj.stim_type == "two-stimuli":
+                print("tow")
+                stimulus_game.run_game_2(display_stim_event, still_show_event, bpod, sma)
+            elif settings_obj.stim_type == "one-stimulus":
+                print("one")
+                stimulus_game.run_game_1(display_stim_event, still_show_event, bpod, sma)
+            else:
+                print("\nNo correct stim type selected\n")
         except:
-            continue
+            break
+        # post trial cleanup
+        closer.join()
+        probability_obj.insist_mode_check(bpod.session.current_trial)
+        
+        print("---------------------------------------------------\n")
+        #try:
+        #    print(bpod.session.current_trial)
+        #    # insist mode check
+        #except:
+        #    continue
 
     # =========================================================================================================
     print("finished")
 
     # user input after session
-    window = UserInput(settings_obj)
-    window.draw_window_after()
-    window.show_window()
+    #window = UserInput(settings_obj)
+    #window.draw_window_after()
+    #window.show_window()
 
     # save session settings
     session_name = bpod.session_name
@@ -399,4 +401,4 @@ if settings_obj.run_session:
     # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
 tryer(rotary_encoder_module.close())()
-bpod.close()
+#bpod.close()

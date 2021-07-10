@@ -91,10 +91,10 @@ if settings_obj.run_session:
     def softcode_handler(data):
         if data == settings_obj.SC_PRESENT_STIM:
             display_stim_event.set()
-            print("PRESENT STIMULUS")
+            print("present stimulus")
         elif data == settings_obj.SC_START_OPEN_LOOP:
             start_open_loop_event.set()
-            print("START OPEN LOOP")
+            print("start open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
             print("stop open loop")
@@ -444,14 +444,16 @@ if settings_obj.run_session:
             stimulus_game, bpod, sma, display_stim_event, start_open_loop_event, still_show_event))
         closer.start()
 
-        # run stimulus game
-        stimulus_game.run_game(display_stim_event,
-                               start_open_loop_event,
-                               still_show_event,
-                               bpod,
-                               sma
-                               )
-
+        try:
+            # run stimulus game
+            stimulus_game.run_game(display_stim_event,
+                                start_open_loop_event,
+                                still_show_event,
+                                bpod,
+                                sma
+                                )
+        except:
+            break
         # post trial cleanup
         # append wheel postition
         #log = rotary_encoder_module.get_logging()
@@ -472,9 +474,9 @@ if settings_obj.run_session:
     print("finished")
 
     # user input after session
-    window = UserInput(settings_obj)
-    window.draw_window_after()
-    window.show_window()
+    #window = UserInput(settings_obj)
+    #window.draw_window_after()
+    #window.show_window()
 
     # save session settings
     session_name = bpod.session_name
@@ -497,4 +499,4 @@ if settings_obj.run_session:
     # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
 tryer(rotary_encoder_module.close())()
-bpod.close()
+#bpod.close()

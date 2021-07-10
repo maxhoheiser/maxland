@@ -89,10 +89,10 @@ if settings_obj.run_session:
     def softcode_handler(data):
         if data == settings_obj.SC_PRESENT_STIM:
             display_stim_event.set()
-            print("PRESENT STIMULUS")
+            print("present stimulus")
         elif data == settings_obj.SC_START_OPEN_LOOP:
             start_open_loop_event.set()
-            print("START OPEN LOOP")
+            print("start open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
             print("stop open loop")
@@ -489,52 +489,28 @@ if settings_obj.run_session:
         closer = threading.Thread(target=closer_fn, args=(stimulus_game, bpod, sma, display_stim_event, start_open_loop_event, still_show_event))
         closer.start()
 
-        # run stimulus game
-        stimulus_game.run_game(display_stim_event,
-                               start_open_loop_event,
-                               still_show_event,
-                               bpod,
-                               sma
-                               )
+        try:
+            # run stimulus game
+            stimulus_game.run_game(display_stim_event,
+                                start_open_loop_event,
+                                still_show_event,
+                                bpod,
+                                sma
+                                )
+        except:
+            break
 
         # post trial cleanup
         closer.join()
         print("---------------------------------------------------")
-        try:
-            print(f"trial: {bpod.session.current_trial}")
-        except:
-            continue
 
     # ==========================================================================================================
-    # stimulus_game.stop_open_loop()
-    # stimulus_game.end_present_stimulus()
-    # stimulus_game.end_trial()
     print("finished")
-
-    # user input after session
-    window = UserInput(settings_obj)
-    window.draw_window_after()
-    window.show_window()
 
     # save session settings
     session_name = bpod.session_name
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
-    # save wheel movement of session
-    # rotary_encoder_module.rotary_encoder.disable_logging()
-    # append wheel postition
-    #log = rotary_encoder_module.get_logging()
-    # print(log)
-    # settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
-    # append stimulus postition
-    # settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
-    # settings_obj.save_wheel_movement(session_name)
-    # save stimulus postition of session
-    # settings_obj.save_stimulus_postition(session_name)
-
-    # push session to alyx
-
-    # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
 tryer(rotary_encoder_module.close())()
-bpod.close()
+#bpod.close()

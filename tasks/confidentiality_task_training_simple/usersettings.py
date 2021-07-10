@@ -55,8 +55,8 @@ INTER_TRIAL_TIME = 1.5
 
 # Insist Mode =================================================
 RANGE_INSIST_TRIGGER = 5
-NUMBER_CORRECT_INSIST_DEACTIVATE = 5
-RANGE_INSIST_DEACTIVATE = 3
+NUMBER_CORRECT_INSIST_DEACTIVATE = 3
+RANGE_INSIST_DEACTIVATE = 5
 
 
 # rotary Encoder ==============================================

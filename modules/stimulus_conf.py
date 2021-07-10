@@ -160,7 +160,6 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        print("present stimulus")
         while self.run_closed_loop:  # self.run_closed_loop:
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
@@ -180,7 +179,6 @@ class Stimulus():
         #stim.draw
         #self.win.flip()
         time.sleep(0.01)
-        print("open loop")
         while self.run_open_loop:
             # dram moving gratings
             # get rotary encoder change position
@@ -200,7 +198,6 @@ class Stimulus():
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
         still_show_event.wait()
-        print("end")
         self.win.flip()
         # cleanup for next loop
         self.run_closed_loop = True
@@ -251,7 +248,6 @@ class Stimulus():
         # reset rotary encoder
         # self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         self.rotary_encoder.set_zero_position()
@@ -275,7 +271,6 @@ class Stimulus():
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
         still_show_event.wait()
-        print("end")
         self.win.flip()
         # cleanup for next loop
         self.run_closed_loop = True
@@ -301,7 +296,6 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        print("present stimulus")
         while self.run_closed_loop:  # self.run_closed_loop:
             # dram moving gratings
             grating.setPhase(stim_ps, '+')  # advance phase by 0.05 of a cycle
@@ -312,7 +306,6 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # reset rotary encoder
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         self.rotary_encoder.set_zero_position()
@@ -332,7 +325,6 @@ class Stimulus():
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
         still_show_event.wait()
-        print("end")
         self.win.flip()
         # cleanup for next loop
         self.run_closed_loop = True
@@ -360,7 +352,6 @@ class Stimulus():
         # reset rotary encoder
         # self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         self.rotary_encoder.set_zero_position()
@@ -378,7 +369,6 @@ class Stimulus():
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
         still_show_event.wait()
-        print("end")
         self.win.flip()
         # cleanup for next loop
         self.run_closed_loop = True
@@ -417,7 +407,6 @@ class Stimulus():
         # reset rotary encoder
         # self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         self.rotary_encoder.set_zero_position()
@@ -438,7 +427,6 @@ class Stimulus():
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
         still_show_event.wait()
-        print("end")
         self.win.flip()
         # cleanup for next loop
         self.run_closed_loop = True
@@ -474,7 +462,6 @@ class Stimulus():
         # reset rotary encoder
         # self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         self.rotary_encoder.set_zero_position()
@@ -494,7 +481,6 @@ class Stimulus():
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
         still_show_event.wait()
-        print("end")
         self.win.flip()
         # cleanup for next loop
         self.run_closed_loop = True

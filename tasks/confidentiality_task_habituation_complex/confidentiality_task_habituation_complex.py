@@ -82,10 +82,10 @@ if settings_obj.run_session:
     def softcode_handler(data):
         if data == settings_obj.SC_PRESENT_STIM:
             display_stim_event.set()
-            print("PRESENT STIMULUS")
+            print("present stimulus")
         elif data == settings_obj.SC_START_OPEN_LOOP:
             stimulus_game.stop_closed_loop()
-            print("START OPEN LOOP")
+            print("start open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
             print("stop open loop")
@@ -94,11 +94,6 @@ if settings_obj.run_session:
             print("end present stim")
         elif data == 9:
             print("wheel not stopping")
-        #elif data == settings_obj.SC_START_LOGGING:
-        #    rotary_encoder_module.rotary_encoder.enable_logging()
-        #elif data == settings_obj.SC_END_LOGGING:
-        #    rotary_encoder_module.rotary_encoder.disable_logging()
-        #    print("disable logging")
 
     bpod.softcode_handler_function = softcode_handler
 
@@ -334,8 +329,6 @@ if settings_obj.run_session:
 
         # send & run state machine
         bpod.send_state_machine(sma)
-        #pa = threading.Thread(target=bpod.run_state_machine, args=(sma,), daemon=True)
-        #pa.start()
 
         closer = threading.Thread(target=closer_fn, args=(
             stimulus_game, bpod, sma, display_stim_event, still_show_event, rotary_encoder_module))
@@ -349,30 +342,17 @@ if settings_obj.run_session:
             elif settings_obj.stim_type == "two-stimuli":
                 print("tow")
                 stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,bpod,sma)
-            elif settings_obj.stim_type == "one-stimulus":
-                print("one")
             else:
                 print("\nNo correct stim type selected\n")
         except:
-            continue
+            break
         
         # post trial cleanup
         closer.join()
         print("---------------------------------------------------")
-        try:
-            print(f"trial: {bpod.session.current_trial}")
-        except:
-            continue
-        # insist mode check
-        #TODO: quiry trial return object to find side
-        #probability_obj.insist_mode_check(bpod.session.current_trial)
+
     #=========================================================================================================
     print("finished")
-    # user input after session
-    window = UserInput(settings_obj)
-    window.draw_window_after()
-    window.show_window()
-
     # save session settings
     session_name = bpod.session_name
     # add sides_li & time_li to settings_obj
@@ -380,30 +360,8 @@ if settings_obj.run_session:
     settings_obj.times_li = times_li
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
-    # save wheel movement of session
-    #rotary_encoder_module.rotary_encoder.disable_logging()
-    # append wheel postition
-    #log = rotary_encoder_module.get_logging()
-    #print(log)
-    #settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
-    # append stimulus postition
-    #settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
-    #settings_obj.save_wheel_movement(session_name)
-    # save stimulus postition of session
-    #settings_obj.save_stimulus_postition(session_name)
-
-    # push session to alyx
-
-
-    #print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
-
-# remove session from pybpod if not run_loop
-else:
-    #todo donst save current session
-    None
-
 
 tryer(rotary_encoder_module.close())()
-bpod.close()
+#bpod.close()
 
 
