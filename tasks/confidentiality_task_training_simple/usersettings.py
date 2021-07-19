@@ -11,9 +11,9 @@ How to:
 #grating_SF = 0.25  # 4 cycles per degree visual angle
 #grating_ori = 0   # in degree
 
-STIMULUS_CORRECT = {"grating_sf": 0.01, "grating_ori": 0.1, "grating_size": 46.0, "grating_speed": 0.04}
+STIMULUS_CORRECT = {"grating_sf": 0.01, "grating_ori": 0.1, "grating_size": 40.0, "grating_speed": 0.04}
 
-STIMULUS_WRONG = {"grating_sf": 0.004, "grating_ori": 93.0, "grating_size": 42.0, "grating_speed": 0.01}
+STIMULUS_WRONG = {"grating_sf": 0.04, "grating_ori": 90.0, "grating_size": 40.0, "grating_speed": 0.01}
 
 # trials
 TRIAL_NUMBER = 20
@@ -23,7 +23,7 @@ STIMULUS_RAD = 44 # pixel radius of stimulus
 STIMULUS_COL = [0, 255, 1]#color of stimulus
 
 BACKGROUND_COL = [-1, -1, -1]#-1,-1,-1 for black
-STIMULUS_TYPE = "three-stimuli" #three-stimuli #two-stimuli #one-stimulus
+STIMULUS_TYPE = "two-stimuli" #three-stimuli #two-stimuli #one-stimulus
 
 #===============================================================
 # reward in ml
@@ -39,7 +39,7 @@ TIME_WHEEL_STOPPING_CHECK = 1.0
 # time wait if the wheel is not stopped bevore new trial starts
 TIME_WHEEL_STOPPING_PUNISH = 1.0
 # time stimulus is presented but not movable
-TIME_PRESENT_STIM = 0.0
+TIME_PRESENT_STIM = 10.0
 # time of open loop where wheel moves the stimulus
 TIME_OPEN_LOOP = 6.0
 # time wait if stimulus not moved far enough to position
@@ -51,12 +51,12 @@ REWARD_TIME =6.0
 # no reward time
 TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [0.0, 0.0]
 # time at end of each trial_num
-INTER_TRIAL_TIME = 1.5
+INTER_TRIAL_TIME = 0.5
 
 # Insist Mode =================================================
 RANGE_INSIST_TRIGGER = 5
-NUMBER_CORRECT_INSIST_DEACTIVATE = 3
-RANGE_INSIST_DEACTIVATE = 5
+NUMBER_CORRECT_INSIST_DEACTIVATE = 5
+RANGE_INSIST_DEACTIVATE = 3
 
 
 # rotary Encoder ==============================================
@@ -68,15 +68,15 @@ RANGE_INSIST_DEACTIVATE = 5
 """
 # threhsolds for event signaling between rotary encoder and bpod
 ALL_THRESHOLDS = [
-    -91,
-    92,
+    -90,
+    90,
     -1,
     1
 ]
 # speed of movement
 STIM_END_POS = [
     -1901,
-    1903
+    1901
 ] # pixel
 """
 end of 1st screen from center = 960 px

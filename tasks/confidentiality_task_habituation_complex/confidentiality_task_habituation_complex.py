@@ -349,6 +349,7 @@ if settings_obj.run_session:
         
         # post trial cleanup
         closer.join()
+        probability_obj.insist_mode_check(bpod.session.current_trial)
         print("---------------------------------------------------")
 
     #=========================================================================================================

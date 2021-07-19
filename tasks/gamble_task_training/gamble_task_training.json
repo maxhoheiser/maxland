@@ -1,0 +1,11 @@
+{
+    "__CREATED-ON__": "2021-06-23 16:33:15.946669",
+    "__DEF-TEXT__": "This file contains information about a PyBpod protocol.",
+    "__DEF-URL__": "http://pybpod.readthedocs.org",
+    "__SOFTWARE__": "PyBpod GUI API v1.8.2",
+    "__UPDATED-ON__": "2021-06-23 16:33:15.946669",
+    "__UUID4__": "d7a528ac-d81f-4bdd-b57b-611719a362dc",
+    "commands": [],
+    "name": "gamble_task_training",
+    "trigger-softcodes": false
+}

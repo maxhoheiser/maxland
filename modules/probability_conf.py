@@ -37,11 +37,6 @@ class ProbabilityConstuctor():
 
     def insist_mode_check(self, trial):
         # get chosen side
-        #TODO: get current side from trial dict
-        # -> ritht : check_reward_right
-        # -> left : check_reward_left
-        #   
-        #
         if not np.isnan(trial.states_durations["check_reward_left"][0][0]):
             current_side = "left"
             print("current side: left")

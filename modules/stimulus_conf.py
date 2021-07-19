@@ -265,7 +265,7 @@ class Stimulus():
                 grating_left.pos += (change, 0)
                 grating_right.pos += (change, 0)
             grating_left.draw()
-            grating_right.draw
+            grating_right.draw()
             self.win.flip()
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement

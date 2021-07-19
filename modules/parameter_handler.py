@@ -140,8 +140,8 @@ class TrialParameterHandler():
         """for the stimulus pygame to run somethly ther has to be a minimum time of 1 second between the end of the open loop
         and the change of the flag which quits the pygame and resets it
         """
-        if self.time_dict["time_inter_trial"] < 1.5:
-            self.time_dict["time_inter_trial"] = 1.5
+        #if self.time_dict["time_inter_trial"] < 1.5:
+        #    self.time_dict["time_inter_trial"] = 1.5
 
     def create_valve_open_time(self, time):
         """generate open time for valve for rewards given in ml, depends on BIG_REWARD and SALL_REWARD from usersettings and calibration courfe
