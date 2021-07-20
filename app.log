@@ -26,3 +26,18 @@ Traceback (most recent call last):
     with open(os.path.join(self.path, self.name+'.json'), 'r') as stream:
 FileNotFoundError: [Errno 2] No such file or directory: 'C:\\maxland\\maxland.json'
 19/07/2021 06:51:31 | WARNING | pyforms_generic_editor.plugins.loader | install_plugins | Plugins path was not defined by user
+20/07/2021 01:36:52 | WARNING | pyforms_generic_editor.plugins.loader | install_plugins | Plugins path was not defined by user
+20/07/2021 01:37:08 | WARNING | pyforms_generic_editor.editor.base_editor | init_form | [Errno 2] No such file or directory: 'C:\\maxland/C:\\maxland.json'
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/maxland/lib/python3.8/site-packages/pyforms_generic_editor/editor/base_editor.py", line 75, in init_form
+    self.model.open_project(conf.DEFAULT_PROJECT_PATH)
+  File "/opt/anaconda3/envs/maxland/lib/python3.8/site-packages/pybpodgui_plugin/models/projects/projects_treenode.py", line 38, in open_project
+    project = super().open_project(project_path)
+  File "/opt/anaconda3/envs/maxland/lib/python3.8/site-packages/pybpodgui_plugin/models/projects/projects_window.py", line 75, in open_project
+    project.load(str(project_path))
+  File "/opt/anaconda3/envs/maxland/lib/python3.8/site-packages/pybpodgui_plugin/models/project/project_treenode.py", line 140, in load
+    super(ProjectTreeNode, self).load(project_path)
+  File "/opt/anaconda3/envs/maxland/lib/python3.8/site-packages/pybpodgui_api/models/project/project_io.py", line 37, in load
+    with open(os.path.join(self.path, self.name+'.json'), 'r') as stream:
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\maxland/C:\\maxland.json'
+20/07/2021 01:46:07 | WARNING | pyforms_generic_editor.plugins.loader | install_plugins | Plugins path was not defined by user

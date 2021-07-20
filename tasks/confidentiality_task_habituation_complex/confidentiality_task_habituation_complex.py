@@ -52,10 +52,11 @@ settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"ta
 global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
-# create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
+# create bpod object 'COM6' '/dev/cu.usbmodem62917601'
 bpod=Bpod()
+#bpod= Bpod('/dev/cu.usbmodem62917601') #TODO:
 
-# create tkinter userinput dialoge window
+ create tkinter userinput dialoge window
 window = UserInput(settings_obj)
 window.draw_window_bevore_conf(stage="habituation_complex")
 window.show_window()
@@ -67,16 +68,19 @@ still_show_event = threading.Event()
 display_stim_event.clear()
 still_show_event.clear()
 
+#settings_obj.run_session = True #TODO:
+
 # run session
 if settings_obj.run_session:
     settings_obj.update_userinput_file_conf()
     # rotary encoder config
     # enable thresholds
     com_port = find_rotary_com_port()
+    #com_port = '/dev/cu.usbmodem65305701' #TODO:
     rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
-    rotary_encoder_module.enable_stream()
+    #rotary_encoder_module.enable_stream()
 
     # softcode handler
     def softcode_handler(data):

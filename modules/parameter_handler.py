@@ -134,7 +134,10 @@ class TrialParameterHandler():
                 self.time_dict["time_reward"] = self.time_dict["time_reward_open"]
             # update time waiting
             self.time_dict["time_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_reward_open"]
-
+            # check inist deactivate range and number
+            if self.insist_range_deactivate < self.insist_correct_deactivate:
+                self.insist_range_deactivate = self.insist_correct_deactivate
+            
 
     def min_inter_trial_time(self):
         """for the stimulus pygame to run somethly ther has to be a minimum time of 1 second between the end of the open loop

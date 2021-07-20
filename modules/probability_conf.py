@@ -20,7 +20,7 @@ class ProbabilityConstuctor():
         self.insist_range_deactivate = settings.insist_range_deactivate  # range in which number of correct choices have to occure to deactivate insit mode
         self.insist_correct_deactivate = settings.insist_correct_deactivate  # number of correct choice to deactivate insist mode
         self.insist_mode_active = False
-        self.inisist_side = None
+        self.insist_side = None
 
     def get_random_side(self):
         # check insist mode
@@ -56,12 +56,14 @@ class ProbabilityConstuctor():
             right_num_chosen = sum(map(lambda x: x == "right", slice))
             if left_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
+                self.chosen_sides_li = [] #TODO: if not wanted remove this
                 self.insist_side = "right"
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist right")
                 print("\n--------------------------------")
             if right_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
+                self.chosen_sides_li = [] #TODO: if not wanted remove this
                 self.insist_side = "left"
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist left")

@@ -80,7 +80,7 @@ if settings_obj.run_session:
     rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
-    rotary_encoder_module.enable_stream()
+    #rotary_encoder_module.enable_stream()
 
     # softcode handler
     def softcode_handler(data):
