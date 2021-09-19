@@ -1,5 +1,6 @@
 
 import random
+from tasks.confidentiality_task_training_simple.usersettings import RULE_SWITCH_RANGE
 import numpy as np
 
 
@@ -10,9 +11,10 @@ class ProbabilityConstuctor():
             settings (TrialParameterHandler object): the object for all the session parameters from TrialPArameterHandler
         """
         self.settings = settings
-        self.stim_side_dict = {}
         # initialize random sides
         self.stim_side_dict = dict()
+        self.correct_choice = []
+        self.current_coice = False
         # insist mode tracking
         self.chosen_sides_li = []
         self.insist_mode_chosen_side_li = []
@@ -21,6 +23,11 @@ class ProbabilityConstuctor():
         self.insist_correct_deactivate = settings.insist_correct_deactivate  # number of correct choice to deactivate insist mode
         self.insist_mode_active = False
         self.insist_side = None
+        # rule switching
+        self.rule_switch_range = settings.rule_switch_range  # range in which the rule switch is activated
+        self.rule_switch_correct = settings.rule_switch_correct  # number of correct choices to switch rule
+        self.rule_active = "RU0"  # id of active rule
+
 
     def get_random_side(self):
         # check insist mode
@@ -35,7 +42,13 @@ class ProbabilityConstuctor():
         self.stim_side_dict["right"] = random_right
         self.stim_side_dict["left"] = not(random_right)
 
-    def insist_mode_check(self, trial):
+    def get_stim_side(self, trial):
+        """
+        Args:
+            trial (Trial object): the current trial object
+        Returns:
+            current_side (str): the side the stimulus is on
+        """
         # get chosen side
         if not np.isnan(trial.states_durations["check_reward_left"][0][0]):
             current_side = "left"
@@ -46,6 +59,19 @@ class ProbabilityConstuctor():
         else:
             current_side = "non"
         self.chosen_sides_li.append(current_side)
+        # check if current trial side == correct side
+        if current_side == "right" and self.stim_side_dict["right"] == True:
+            self.correct_choice.append(True)
+            self.current_coice = True
+        elif current_side == "left" and self.stim_side_dict["left"] == True:
+            self.correct_choice.append(True)
+            self.current_coice = True
+        else:
+            self.correct_choice.append(False)
+            self.current_coice = False
+        return current_side
+
+    def insist_mode_check(self):
         # check for insist mode activate
         if not self.insist_mode_active:
             if len(self.chosen_sides_li) >= self.insist_range_trigger:
@@ -85,3 +111,18 @@ class ProbabilityConstuctor():
                 print("\n--------------------------------\n")
                 print("INSIST MODE DEACTIVATED")
                 print("\n--------------------------------")
+
+    def rule_switch_check(self):
+            if len(self.correct_choice) >= self.rule_switch_range:
+                slice = self.correct_choice[-self.rule_switch_range:]
+            else:
+                slice = self.correct_choice
+            correct_chosen = sum(slice) # get number of correct choices
+            # check if rule switch
+            if correct_chosen >= self.rule_switch_correct:
+                self.rule_active = "RU1" # switch to rule 1
+                print("\n switch to rule RU1\n")
+                # invert stimulus configuration
+                bk = self.settings.stimulus_correct.copy()
+                self.settings.stimulus_correct = self.settings.stimulus_wrong.copy()
+                self.settings.stimulus_wrong = bk

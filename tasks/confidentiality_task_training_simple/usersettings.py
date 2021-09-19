@@ -58,6 +58,9 @@ RANGE_INSIST_TRIGGER = 5
 NUMBER_CORRECT_INSIST_DEACTIVATE = 5
 RANGE_INSIST_DEACTIVATE = 3
 
+# Rule Switching Mode =========================================
+RULE_SWITCH_RANGE = 10
+RULE_SWITCH_CORRECT = 5
 
 # rotary Encoder ==============================================
 """ Construct thresholds like this:

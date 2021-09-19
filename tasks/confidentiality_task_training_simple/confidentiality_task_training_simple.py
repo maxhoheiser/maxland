@@ -44,7 +44,7 @@ from rotaryencoder import BpodRotaryEncoder
 from probability_conf import ProbabilityConstuctor
 from userinput import UserInput
 from helperfunctions import *
-from stimulus_conf import Stimulus
+#from stimulus_conf import Stimulus
 
 # import usersettings
 import usersettings
@@ -112,9 +112,12 @@ if settings_obj.run_session:
     # stimulus
     # failsave for stimulus file
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
+    # list of side for correct stimulus
     sides_li = []
-    # times
-    times_li = []
+    # list of toples (bool insist mode active, insist mode side)
+    insist_mode_li = []
+    # active rule list
+    active_rule_li = []
 
     # create main state machine aka trial loop ====================================================================
     # state machine configs
@@ -122,12 +125,13 @@ if settings_obj.run_session:
         # create random stimulus side
         probability_obj.get_random_side()
         sides_li.append(probability_obj.stim_side_dict.copy())
+        insist_mode_li.append((probability_obj.insist_mode_active, probability_obj.insist_side))
+        active_rule_li.append(probability_obj.rule_active)
         # get random punish time
         punish_time = round(random.uniform(
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
             float(settings_obj.time_dict['time_range_noreward_punish'][1])
         ), 2)
-        times_li.append(punish_time)
         # construct states
 
         sma = StateMachine(bpod)
@@ -360,7 +364,9 @@ if settings_obj.run_session:
             break
         # post trial cleanup
         closer.join()
-        probability_obj.insist_mode_check(bpod.session.current_trial)
+        probability_obj.get_stim_side(bpod.session.current_trial):
+        probability_obj.insist_mode_check()
+        probability_obj.rule_switch_check()
         
         print("---------------------------------------------------\n")
         #try:
@@ -379,9 +385,12 @@ if settings_obj.run_session:
 
     # save session settings
     session_name = bpod.session_name
-    # add sides_li & time_li to settings_obj
+    # add sides_li (with each side for each trial chosen)
     settings_obj.sides_li = sides_li
-    settings_obj.times_li = times_li
+    # add insist mode li to settings_obj
+    settings_obj.insist_mode_li = insist_mode_li
+    # add rule switch li to settings_obj
+    settings_obj.rule_switch_li = active_rule_li
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
     # save wheel movement of session

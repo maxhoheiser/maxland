@@ -398,6 +398,7 @@ class Stimulus():
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[0])
         # generate gratings and stimuli
         stim = self.gen_stim()
+        stim.draw() #TODO: bugfix but now always all three stims are shown immediately
         # -----------------------------------------------------------------------------
         # on soft code of state 1
         # -----------------------------------------------------------------------------
