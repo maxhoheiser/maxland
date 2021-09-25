@@ -115,7 +115,7 @@ if settings_obj.run_session:
     # list of side for correct stimulus
     sides_li = []
     # punish times list
-    times_li = []
+    times_punish_li = []
     # list of toples (bool insist mode active, insist mode side)
     insist_mode_li = []
     # active rule list
@@ -134,7 +134,7 @@ if settings_obj.run_session:
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
             float(settings_obj.time_dict['time_range_noreward_punish'][1])
         ), 2)
-        times_li.append(punish_time)
+        times_punish_li.append(punish_time)
         # construct states
 
         sma = StateMachine(bpod)
@@ -391,7 +391,7 @@ if settings_obj.run_session:
     # add sides_li (with each side for each trial chosen)
     settings_obj.sides_li = sides_li
     # add times list to settings_obj
-    settings_obj.times_li = times_li
+    settings_obj.times_punish_li = times_punish_li
     # add insist mode li to settings_obj
     settings_obj.insist_mode_li = insist_mode_li
     # add rule switch li to settings_obj

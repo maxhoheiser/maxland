@@ -55,8 +55,7 @@ settings_obj = TrialParameterHandler(usersettings, settings_folder, session_fold
 # create bpod object 'COM6' '/dev/cu.usbmodem62917601'
 bpod=Bpod()
 #bpod= Bpod('/dev/cu.usbmodem62917601') #TODO:
-
- create tkinter userinput dialoge window
+#create tkinter userinput dialoge window
 window = UserInput(settings_obj)
 window.draw_window_bevore_conf(stage="habituation_complex")
 window.show_window()
@@ -109,7 +108,7 @@ if settings_obj.run_session:
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
     sides_li = []
     # times
-    times_li = []
+    times_punish_li = []
     # list of toples (bool insist mode active, insist mode side)
     insist_mode_li = []
     # active rule list
@@ -121,13 +120,14 @@ if settings_obj.run_session:
     for trial in range(settings_obj.trial_number):
         # create random stimulus side
         probability_obj.get_random_side()
-        sides_li.append(probability_obj.stim_side_dict.copy())
+        sides_li.append(probability_obj.stim_side_dict.copy()) # put corect and wrong side in sides_li
+        insist_mode_li.append((probability_obj.insist_mode_active, probability_obj.insist_side)) # put insist mode status in inist_mode_li
         # get random punish time
         punish_time = round(random.uniform(
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
             float(settings_obj.time_dict['time_range_noreward_punish'][1])
             ),2)
-        times_li.append(punish_time)
+        times_punish_li.append(punish_time)
         # construct states
         
         sma = StateMachine(bpod)
@@ -357,7 +357,7 @@ if settings_obj.run_session:
         
         # post trial cleanup
         closer.join()
-        probability_obj.get_stim_side(bpod.session.current_trial):
+        probability_obj.get_stim_side(bpod.session.current_trial)
         probability_obj.insist_mode_check()
         print("---------------------------------------------------")
 
@@ -367,7 +367,7 @@ if settings_obj.run_session:
     session_name = bpod.session_name
     # add sides_li & time_li to settings_obj
     settings_obj.sides_li = sides_li
-    settings_obj.times_li = times_li
+    settings_obj.times_punish_li = times_punish_li
     # add insist mode li to settings_obj
     settings_obj.insist_mode_li = insist_mode_li
     # save usersettings of session

@@ -109,8 +109,6 @@ if settings_obj.run_session:
     #stimulus
     # failsave for stimulus file
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
-    # list of side for correct stimulus
-    sides_li = []
     # punish times list
     times_li = []
     # list of toples (bool insist mode active, insist mode side)
@@ -313,8 +311,6 @@ if settings_obj.run_session:
     print("finished")
     # save session settings
     session_name = bpod.session_name
-    # add sides_li & time_li to settings_obj
-    settings_obj.sides_li = sides_li
     settings_obj.times_li = times_li
     # add insist mode li to settings_obj
     settings_obj.insist_mode_li = insist_mode_li
