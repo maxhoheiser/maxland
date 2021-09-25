@@ -60,6 +60,7 @@ class TrialParameterHandler():
             self.insist_correct_deactivate = self.usersettings.NUMBER_CORRECT_INSIST_DEACTIVATE
             self.insist_range_deactivate = self.usersettings.RANGE_INSIST_DEACTIVATE
             # rule switching
+            self.rule_switch_initial_wait = self.usersettings.RULE_SWITCH_INITIAL_WAIT
             self.rule_switch_range = self.usersettings.RULE_SWITCH_RANGE
             self.rule_switch_correct = self.usersettings.RULE_SWITCH_CORRECT
 
@@ -409,8 +410,9 @@ class TrialParameterHandler():
                 "NUMBER_CORRECT_INSIST_DEACTIVATE = "+json.dumps(self.insist_range_deactivate)+"\n"
                 "RANGE_INSIST_DEACTIVATE = "+json.dumps(self.insist_correct_deactivate)+"\n\n\n"
                 "# Rule Switching Mode =========================================\n"
-                "RULE_SWITCH_RANGE = "+json.dumps(self.rule_switch_range)+"\n"
-                "RULE_SWITCH_CORRECT = "+json.dumps(self.rule_switch_correct)+"\n"
+                "RULE_SWITCH_INITIAL_WAIT = "+json.dumps(self.rule_switch_initial_wait)+" # wait for n trials bevore checking for rule switching\n"
+                "RULE_SWITCH_RANGE = "+json.dumps(self.rule_switch_range)+"# range of trials for checking for rule switching\n"
+                "RULE_SWITCH_CORRECT = "+json.dumps(self.rule_switch_correct)+"# number of correct trials for rule switching\n"
                 "# rotary Encoder ==============================================\n"
                 "\"\"\" Construct thresholds like this:\n"
                 "[\n\t-90, 90, # stimulus position in degrees of wheel movement\n"

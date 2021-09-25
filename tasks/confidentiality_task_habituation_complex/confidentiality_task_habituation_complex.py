@@ -110,7 +110,11 @@ if settings_obj.run_session:
     sides_li = []
     # times
     times_li = []
-    
+    # list of toples (bool insist mode active, insist mode side)
+    insist_mode_li = []
+    # active rule list
+    active_rule_li = []
+
 
     # create main state machine aka trial loop ====================================================================
     # state machine configs
@@ -353,7 +357,8 @@ if settings_obj.run_session:
         
         # post trial cleanup
         closer.join()
-        probability_obj.insist_mode_check(bpod.session.current_trial)
+        probability_obj.get_stim_side(bpod.session.current_trial):
+        probability_obj.insist_mode_check()
         print("---------------------------------------------------")
 
     #=========================================================================================================
@@ -363,6 +368,8 @@ if settings_obj.run_session:
     # add sides_li & time_li to settings_obj
     settings_obj.sides_li = sides_li
     settings_obj.times_li = times_li
+    # add insist mode li to settings_obj
+    settings_obj.insist_mode_li = insist_mode_li
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
 

@@ -109,11 +109,15 @@ if settings_obj.run_session:
     #stimulus
     # failsave for stimulus file
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
+    # list of side for correct stimulus
     sides_li = []
-    # times
+    # punish times list
     times_li = []
+    # list of toples (bool insist mode active, insist mode side)
+    insist_mode_li = []
+    # active rule list
+    active_rule_li = []
     
-
     # create main state machine aka trial loop ====================================================================
     # state machine configs
     for trial in range(settings_obj.trial_number):
@@ -312,6 +316,8 @@ if settings_obj.run_session:
     # add sides_li & time_li to settings_obj
     settings_obj.sides_li = sides_li
     settings_obj.times_li = times_li
+    # add insist mode li to settings_obj
+    settings_obj.insist_mode_li = insist_mode_li
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
 

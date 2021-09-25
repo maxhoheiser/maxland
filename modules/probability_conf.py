@@ -24,6 +24,7 @@ class ProbabilityConstuctor():
         self.insist_mode_active = False
         self.insist_side = None
         # rule switching
+        self.rule_switch_initial_wait = settings.rule_switch_initial_wait # trials to wait bevore checking for rule switch
         self.rule_switch_range = settings.rule_switch_range  # range in which the rule switch is activated
         self.rule_switch_correct = settings.rule_switch_correct  # number of correct choices to switch rule
         self.rule_active = "RU0"  # id of active rule
@@ -112,7 +113,8 @@ class ProbabilityConstuctor():
                 print("INSIST MODE DEACTIVATED")
                 print("\n--------------------------------")
 
-    def rule_switch_check(self):
+    def rule_switch_check(self,current_trial_num):
+        if current_trial_num >= self.rule_switch_initial_wait: # wait initial trials bevore checking for rule switch
             if len(self.correct_choice) >= self.rule_switch_range:
                 slice = self.correct_choice[-self.rule_switch_range:]
             else:

@@ -58,6 +58,10 @@ RANGE_INSIST_TRIGGER = 11
 NUMBER_CORRECT_INSIST_DEACTIVATE = 11
 RANGE_INSIST_DEACTIVATE = 11
 
+# Rule Switching Mode =========================================
+RULE_SWITCH_INITIAL_WAIT = 9000 # wait for n trials bevore checking for rule switching
+RULE_SWITCH_RANGE = 10 # range of trials for checking for rule switching
+RULE_SWITCH_CORRECT = 8 # number of correct trials for rule switching
 
 # rotary Encoder ==============================================
 """ Construct thresholds like this:
