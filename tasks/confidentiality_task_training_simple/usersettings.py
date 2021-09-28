@@ -63,6 +63,11 @@ RULE_SWITCH_INITIAL_WAIT = 10 # wait for n trials bevore checking for rule switc
 RULE_SWITCH_RANGE = 10 # range of trials for checking for rule switching
 RULE_SWITCH_CORRECT = 8 # number of correct trials for rule switching
 
+# Fade away ===================================================
+FADE_ACTIVE = True
+FADE_START = -1900 # edge closer to center of fade away window covering stimulus
+FADE_END = -2000 # edge further from center of fade away window covering stimulus
+
 # rotary Encoder ==============================================
 """ Construct thresholds like this:
 [

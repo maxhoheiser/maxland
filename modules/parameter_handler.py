@@ -63,6 +63,10 @@ class TrialParameterHandler():
             self.rule_switch_initial_wait = self.usersettings.RULE_SWITCH_INITIAL_WAIT
             self.rule_switch_range = self.usersettings.RULE_SWITCH_RANGE
             self.rule_switch_correct = self.usersettings.RULE_SWITCH_CORRECT
+            # fade away box
+            self.fade_active = self.usersettings.FADE_ACTIVE # bool status for fade away box
+            self.fade_start = self.usersettings.FADE_START # from center to left side where fade away starts
+            self.fade_end = self.usersettings.FADE_END # from left center to left side where fade away ends
 
         # calibration
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
@@ -412,7 +416,11 @@ class TrialParameterHandler():
                 "# Rule Switching Mode =========================================\n"
                 "RULE_SWITCH_INITIAL_WAIT = "+json.dumps(self.rule_switch_initial_wait)+" # wait for n trials bevore checking for rule switching\n"
                 "RULE_SWITCH_RANGE = "+json.dumps(self.rule_switch_range)+"# range of trials for checking for rule switching\n"
-                "RULE_SWITCH_CORRECT = "+json.dumps(self.rule_switch_correct)+"# number of correct trials for rule switching\n"
+                "RULE_SWITCH_CORRECT = "+json.dumps(self.rule_switch_correct)+"# number of correct trials for rule switching\n\n"
+                "# Fade away ==================================================="
+                "FADE_ACTIVE = "+self.fade_active+"\n"
+                "FADE_START = "+self.fade_start+" # from center to left side where stimulus fade away begins"
+                "FADE_END = "+self.fade_end+" # from center to left side where stimulus fade away ends"
                 "# rotary Encoder ==============================================\n"
                 "\"\"\" Construct thresholds like this:\n"
                 "[\n\t-90, 90, # stimulus position in degrees of wheel movement\n"
