@@ -27,7 +27,7 @@ class ProbabilityConstuctor():
         self.rule_switch_initial_wait = settings.rule_switch_initial_wait # trials to wait bevore checking for rule switch
         self.rule_switch_range = settings.rule_switch_range  # range in which the rule switch is activated
         self.rule_switch_correct = settings.rule_switch_correct  # number of correct choices to switch rule
-        self.rule_active = "RU0"  # id of active rule
+        self.rule_active = "RU0"  # id of active rule switch RU1 active
 
 
     def get_random_side(self):
@@ -115,7 +115,7 @@ class ProbabilityConstuctor():
 
     def rule_switch_check(self,current_trial_num):
         if current_trial_num >= self.rule_switch_initial_wait: # wait initial trials bevore checking for rule switch
-            if len(self.correct_choice) >= self.rule_switch_range:
+            if len(self.correct_choice) > self.rule_switch_range: #> not >= because trial counter in main states loop starts from 1 not 0
                 slice = self.correct_choice[-self.rule_switch_range:]
             else:
                 slice = self.correct_choice
