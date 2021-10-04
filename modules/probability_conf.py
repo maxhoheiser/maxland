@@ -115,10 +115,11 @@ class ProbabilityConstuctor():
 
     def rule_switch_check(self,current_trial_num):
         if current_trial_num >= self.rule_switch_initial_wait: # wait initial trials bevore checking for rule switch
-            if len(self.correct_choice) > self.rule_switch_range: #> not >= because trial counter in main states loop starts from 1 not 0
-                slice = self.correct_choice[-self.rule_switch_range:]
+            rule_switch_range = self.correct_choice[self.rule_switch_initial_wait:] # only check for rule switch after initial wait
+            if len(rule_switch_range) > self.rule_switch_range: #> not >= because trial counter in main states loop starts from 1 not 0
+                slice = rule_switch_range[-self.rule_switch_range:]
             else:
-                slice = self.correct_choice
+                slice = rule_switch_range
             correct_chosen = sum(slice) # get number of correct choices
             # check if rule switch
             if correct_chosen >= self.rule_switch_correct:
