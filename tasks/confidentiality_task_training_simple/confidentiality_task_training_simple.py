@@ -11,11 +11,8 @@ In addition it uses three custom classes:
 
 """
 
-import usersettings
 import threading
-import os
-import sys
-import inspect
+import os, sys, inspect
 import json
 import random
 import time
@@ -27,7 +24,6 @@ from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
 
 
-# span subprocess
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 dir = (os.path.dirname(os.path.dirname(currentdir)))
@@ -398,21 +394,7 @@ if settings_obj.run_session:
     settings_obj.rule_switch_li = active_rule_li
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
-    # save wheel movement of session
-    # rotary_encoder_module.rotary_encoder.disable_logging()
-    # append wheel postition
-    #log = rotary_encoder_module.get_logging()
-    # print(log)
-    # settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
-    # append stimulus postition
-    # settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
-    # settings_obj.save_wheel_movement(session_name)
-    # save stimulus postition of session
-    # settings_obj.save_stimulus_postition(session_name)
 
-    # push session to alyx
-
-    # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()

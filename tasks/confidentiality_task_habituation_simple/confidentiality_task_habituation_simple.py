@@ -12,7 +12,7 @@ In addition it uses three custom classes:
 """
 
 import threading
-import os,sys,inspect
+import os, sys,inspect
 import json
 import random
 import time
@@ -109,8 +109,10 @@ if settings_obj.run_session:
     #stimulus
     # failsave for stimulus file
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
+    # list of side for correct stimulus
+    sides_li = []
     # punish times list
-    times_li = []
+    times_punish_li = []
     # list of toples (bool insist mode active, insist mode side)
     insist_mode_li = []
     # active rule list
@@ -124,7 +126,7 @@ if settings_obj.run_session:
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
             float(settings_obj.time_dict['time_range_noreward_punish'][1])
             ),2)
-        times_li.append(punish_time)
+        times_punish_li.append(punish_time)
         # construct states
         
         sma = StateMachine(bpod)
@@ -311,7 +313,7 @@ if settings_obj.run_session:
     print("finished")
     # save session settings
     session_name = bpod.session_name
-    settings_obj.times_li = times_li
+    settings_obj.times_li = times_punish_li
     # add insist mode li to settings_obj
     settings_obj.insist_mode_li = insist_mode_li
     # save usersettings of session
@@ -319,5 +321,3 @@ if settings_obj.run_session:
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
-
-
