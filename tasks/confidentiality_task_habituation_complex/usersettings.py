@@ -63,6 +63,10 @@ RULE_SWITCH_INITIAL_WAIT = 9000 # wait for n trials bevore checking for rule swi
 RULE_SWITCH_RANGE = 10 # range of trials for checking for rule switching
 RULE_SWITCH_CORRECT = 8 # number of correct trials for rule switching
 
+# Fade Away ===================================================
+FADE_ACTIVE=True# bool status for fade away box
+FADE_START=550 # from center to left side where fade away starts
+FADE_END=800 # from left center to left side where fade away ends
 
 # rotary Encoder ==============================================
 """ Construct thresholds like this:

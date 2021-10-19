@@ -54,6 +54,12 @@ class Stimulus():
 
         self.run_closed_loop = True
         self.run_open_loop = True
+        # fade change
+        if self.settings.fade_active:
+            self.fade_start = abs(self.settings.fade_start)
+            self.fade_end = abs(self.settings.fade_end)
+            self.fade_range = self.fade_end-self.fade_start
+            #self.fade_factor = self.get_fade_factor()
 
     # helper functions ===============================================================
     def keep_on_scrren(self, position_x):
@@ -109,7 +115,8 @@ class Stimulus():
             sf=grating_sf,
             ori=grating_or,
             contrast=1,  # unchanged contrast (from 1 to -1)
-            mask='raisedCos'
+            mask='raisedCos',
+            opacity = 1.0 # ranging 1.0 (opaque) to 0.0 (transparent)
         )
         return grating
 
@@ -122,8 +129,28 @@ class Stimulus():
             edges=128,
             fillColor=self.settings.stimulus_col,
             pos=(0, 0),
+            opacity=1.0,
         )
         return circle
+    """
+    def get_fade_factor(self):
+        ""
+        relation pixel change to fade change of stimulus
+        % = pixel_change * face_curve
+        depending on start 100% and stop 0% position from usersettings
+        ""
+        fade_range = abs(self.fade_end)-abs(self.fade_start)
+        fade_factor = int(100/fade_range)
+        return fade_factor
+    """
+
+    def get_opacity(self,pos):
+        #delta = abs(pos) - self.fade_start
+        opacity = ( (self.fade_end-abs(pos)) / self.fade_range )
+        #if opacity < 0:
+        #    opacity = 0
+        return round(opacity,1)
+
 
     # Main psychpy loop ==============================================================
     # Stimulus Type 3 (main) = fixed gratings + moving circle
@@ -266,6 +293,12 @@ class Stimulus():
                 # move stimulus with mouse
                 grating_left.pos += (change, 0)
                 grating_right.pos += (change, 0)
+                # update opacity (fade away)
+                print(grating_left.pos[0],self.get_opacity(grating_left.pos[0]))
+                if grating_left.pos[0] < -self.fade_start:
+                    grating_left.opacity=self.get_opacity(grating_left.pos[0])
+                if grating_right.pos[0] > self.fade_start:
+                    grating_right.opacity=self.get_opacity(grating_right.pos[0])
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
