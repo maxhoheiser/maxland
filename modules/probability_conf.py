@@ -123,7 +123,7 @@ class ProbabilityConstuctor():
                 slice = rule_switch_range
             correct_chosen = sum(slice) # get number of correct choices
             # check if rule switch
-            if rule_switch:
+            if self.rule_switch:
                 if correct_chosen >= self.rule_switch_correct:
                     self.rule_active = "RU1" # switch to rule 1
                     self.rule_switch = False # deactivate rule switch
