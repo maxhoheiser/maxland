@@ -98,7 +98,9 @@ class ProbabilityConstuctor():
                 print("\n--------------------------------")
         # deactivate insist mode
         elif self.insist_mode_active:
-            self.insist_mode_chosen_side_li.append(current_side)
+            self.insist_mode_chosen_side_li.append(self.chosen_sides_li[-1])
+            print(self.chosen_sides_li)
+            print(self.insist_mode_chosen_side_li)
             # get insist mode slice
             if len(self.insist_mode_chosen_side_li) >= self.insist_range_deactivate:
                 slice = self.insist_mode_chosen_side_li[-self.insist_range_deactivate:]
@@ -109,7 +111,7 @@ class ProbabilityConstuctor():
             if insist_correct_choice >= self.insist_correct_deactivate:
                 self.insist_mode_active = False
                 self.insist_side = "none"
-                self.inist_mode_chosen_sde = []  # clear last insist mode list
+                self.insist_mode_chosen_side_li = []  # clear last insist mode list
                 print("\n--------------------------------\n")
                 print("INSIST MODE DEACTIVATED")
                 print("\n--------------------------------")

@@ -363,7 +363,7 @@ if settings_obj.run_session:
             break
         # post trial cleanup
         closer.join()
-        probability_obj.get_stim_side(bpod.session.current_trial):
+        probability_obj.get_stim_side(bpod.session.current_trial)
         probability_obj.insist_mode_check()
         probability_obj.rule_switch_check(trial)
         
@@ -393,8 +393,11 @@ if settings_obj.run_session:
     # add rule switch li to settings_obj
     settings_obj.rule_switch_li = active_rule_li
     # save usersettings of session
+    print("\nsaved\n")
     settings_obj.save_usersettings(session_name)
 
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
+settings_obj.save_usersettings(session_name)
+
