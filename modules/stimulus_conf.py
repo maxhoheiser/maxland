@@ -58,6 +58,7 @@ class Stimulus():
         if self.settings.fade_active:
             self.fade_start = abs(self.settings.fade_start)
             self.fade_end = abs(self.settings.fade_end)
+            self.fade_range = self.fade_end-self.fade_start
             #self.fade_factor = self.get_fade_factor()
 
     # helper functions ===============================================================
@@ -128,6 +129,7 @@ class Stimulus():
             edges=128,
             fillColor=self.settings.stimulus_col,
             pos=(0, 0),
+            opacity=1.0,
         )
         return circle
     """
@@ -143,11 +145,11 @@ class Stimulus():
     """
 
     def get_opacity(self,pos):
-        delta = abs(pos)-self.fade_start
-        opacity = ( (self.fade_end-delta) / self.fade_end )
-        if opacity < 0:
-            opacity = 0
-        return opacity
+        #delta = abs(pos) - self.fade_start
+        opacity = ( (self.fade_end-abs(pos)) / self.fade_range )
+        #if opacity < 0:
+        #    opacity = 0
+        return round(opacity,1)
 
 
     # Main psychpy loop ==============================================================
@@ -292,10 +294,11 @@ class Stimulus():
                 grating_left.pos += (change, 0)
                 grating_right.pos += (change, 0)
                 # update opacity (fade away)
-                if grating_left.pos < -self.fade_start:
-                    grating_left.opacity=0.5#self.get_opacity(pos[0])
-                if grating_right.pos > self.fade_start:
-                    grating_right.opacity=0.5#self.get_opacity(pos[0])
+                print(grating_left.pos[0],self.get_opacity(grating_left.pos[0]))
+                if grating_left.pos[0] < -self.fade_start:
+                    grating_left.opacity=self.get_opacity(grating_left.pos[0])
+                if grating_right.pos[0] > self.fade_start:
+                    grating_right.opacity=self.get_opacity(grating_right.pos[0])
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
