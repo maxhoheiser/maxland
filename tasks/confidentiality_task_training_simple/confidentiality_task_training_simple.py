@@ -84,13 +84,13 @@ if settings_obj.run_session:
             display_stim_event.set()
             print("present stimulus")
         elif data == settings_obj.SC_START_OPEN_LOOP:
-            stimulus_game.stop_closed_loop()
+            stimulus_game.stop_closed_loop_before()
             print("start open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
-            still_show_event.set()
+            stimulus_game.stop_closed_loop_after()
             print("end present stim")
         elif data == 9:
             print("wheel not stopping")
@@ -233,15 +233,15 @@ if settings_obj.run_session:
                 state_name="reward_left",
                 state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_left_waiting"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
-                                ("Valve1", 255)
+                output_actions=[("Valve1", 255)
                                 ]
             )
             sma.add_state(
                 state_name="reward_left_waiting",
                 state_timer=settings_obj.time_dict["time_reward_waiting"],
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[]
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)
+                                ]
             )
         else:
             print("noreward_left")
@@ -287,15 +287,15 @@ if settings_obj.run_session:
                 state_name="reward_right",
                 state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_right_waiting"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
-                                ("Valve1", 255)
+                output_actions=[("Valve1", 255)
                                 ]
             )
             sma.add_state(
                 state_name="reward_right_waiting",
                 state_timer=settings_obj.time_dict["time_reward_waiting"],
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[]
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)
+                                ]
             )
         else:
             print("noreward_right")

@@ -51,9 +51,10 @@ class Stimulus():
             frameDur = 1.0 / round(expInfo['frameRate'])
         else:
             frameDur = 1.0 / 60.0  # could not measure, so guess
-
-        self.run_closed_loop = True
+        # moving grating loops
+        self.run_closed_loop_before = True #closed loop before
         self.run_open_loop = True
+        self.run_closed_loop_after = True #closed loop after
         # fade change
         if self.settings.fade_active:
             self.fade_start = abs(self.settings.fade_start)
@@ -98,11 +99,19 @@ class Stimulus():
         self.win.close()
         core.quit()
 
-    def stop_closed_loop(self):
-        self.run_closed_loop = False
+    def stop_closed_loop_before(self):
+        self.run_closed_loop_before = False
 
     def stop_open_loop(self):
         self.run_open_loop = False
+    
+    def stop_closed_loop_after(self):
+        self.run_closed_loop_after = False
+    
+    def reset_loop_flags(self):
+        self.run_closed_loop_before = True
+        self.run_open_loop = True
+        self.run_closed_loop_after = True
 
     # stimulus functions =============================================================
     def gen_grating(self, grating_sf, grating_or, grating_size, pos):
@@ -157,8 +166,7 @@ class Stimulus():
     def run_game_3(self, display_stim_event, still_show_event, bpod, sma):
         display_stim_event.clear()
         still_show_event.clear()
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         # get right grating
         if self.correct_stim_side["right"]:
             right_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
@@ -187,7 +195,7 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        while self.run_closed_loop:  # self.run_closed_loop:
+        while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
@@ -227,11 +235,14 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
-        self.win.flip()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()        self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
 
@@ -265,7 +276,7 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        while self.run_closed_loop:  # self.run_closed_loop:
+        while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
             grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, '+')
@@ -306,13 +317,16 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()
         self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         display_stim_event.clear()
-        still_show_event.clear()
 
     # Stimulus Type 1 = single moving grating ==========================================
     def run_game_1(self, display_stim_event, still_show_event, bpod, sma):
@@ -332,7 +346,7 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        while self.run_closed_loop:  # self.run_closed_loop:
+        while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
             grating.setPhase(stim_ps, '+')  # advance phase by 0.05 of a cycle
             grating.draw()
@@ -363,11 +377,14 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
-        self.win.flip()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()        self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
 
@@ -409,11 +426,14 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
-        self.win.flip()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()        self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
 
@@ -437,7 +457,7 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        while self.run_closed_loop:  # self.run_closed_loop:
+        while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
             grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
             grating.draw()
@@ -470,11 +490,14 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
-        self.win.flip()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()        self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
 
@@ -495,7 +518,7 @@ class Stimulus():
         # -----------------------------------------------------------------------------
         # present initial stimulus
         display_stim_event.wait()
-        while self.run_closed_loop:  # self.run_closed_loop:
+        while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
             grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
             grating.draw()
@@ -526,10 +549,13 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
-        self.win.flip()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, '+')
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()        self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
-        self.run_open_loop = True
+        self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
