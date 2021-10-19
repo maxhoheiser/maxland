@@ -23,7 +23,7 @@ STIMULUS_RAD = 44 # pixel radius of stimulus
 STIMULUS_COL = [0, 255, 1]#color of stimulus
 
 BACKGROUND_COL = [-1, -1, -1]#-1,-1,-1 for black
-STIMULUS_TYPE = "three-stimuli" #three-stimuli #two-stimuli #one-stimulus
+STIMULUS_TYPE = "two-stimuli" #three-stimuli #two-stimuli #one-stimulus
 
 #===============================================================
 # reward in ml
@@ -66,8 +66,8 @@ RULE_SWITCH_CORRECT = 8# number of correct trials for rule switching
 
 # Fade away ===================================================
 FADE_ACTIVE = True# bool status for fade away box
-FADE_START = 550 # from center to left side where stimulus fade away begins
-FADE_END = 800 # from center to left side where stimulus fade away ends
+FADE_START = 1950 # from center to left side where stimulus fade away begins
+FADE_END = 3000 # from center to left side where stimulus fade away ends
 
 # rotary Encoder ==============================================
 """ Construct thresholds like this:
