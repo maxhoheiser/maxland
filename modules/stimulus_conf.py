@@ -339,10 +339,9 @@ class Stimulus():
         still_show_event.clear()
 
     # HABITUATION ######################################################################
-
-    # Habituation  Type 3 online center stim psychopy Loop =============================
-
-    def run_game_habituation_3_simple(self, display_stim_event, still_show_event, bpod, sma):
+    # SIMPLE
+    # Habituation  Type 1 online center stim psychopy Loop =============================
+    def run_game_habituation_1_simple(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         stim = self.gen_stim()
         stim.draw()
@@ -383,8 +382,8 @@ class Stimulus():
         self.run_open_loop = True
         display_stim_event.clear()
         still_show_event.clear()
-
-    # Habituation Typ 3 only single correct grating ====================================
+    # COMPLEX
+    # Habituation complex type 3 only single correct grating ====================================
     def run_game_habituation_3_complex(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
@@ -445,7 +444,7 @@ class Stimulus():
         display_stim_event.clear()
         still_show_event.clear()
 
-    # Habituation Typ 2 complex =======================================================
+    # Habituation complex Typ 2 only correct stimulus =======================================================
     def run_game_habituation_2_complex(self, display_stim_event, still_show_event, bpod, sma):
         # get right grating
         grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
