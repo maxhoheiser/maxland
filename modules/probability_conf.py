@@ -28,6 +28,7 @@ class ProbabilityConstuctor():
         self.rule_switch_range = settings.rule_switch_range  # range in which the rule switch is activated
         self.rule_switch_correct = settings.rule_switch_correct  # number of correct choices to switch rule
         self.rule_active = "RU0"  # id of active rule switch RU1 active
+        self.rule_switch = True # flag to check if rule switch is active - deactivate after first rule switch
 
 
     def get_random_side(self):
@@ -122,10 +123,14 @@ class ProbabilityConstuctor():
                 slice = rule_switch_range
             correct_chosen = sum(slice) # get number of correct choices
             # check if rule switch
-            if correct_chosen >= self.rule_switch_correct:
-                self.rule_active = "RU1" # switch to rule 1
-                print("\n switch to rule RU1\n")
-                # invert stimulus configuration
-                bk = self.settings.stimulus_correct.copy()
-                self.settings.stimulus_correct = self.settings.stimulus_wrong.copy()
-                self.settings.stimulus_wrong = bk
+            if rule_switch:
+                if correct_chosen >= self.rule_switch_correct:
+                    self.rule_active = "RU1" # switch to rule 1
+                    self.rule_switch = False # deactivate rule switch
+                    print("\n--------------------------------\n")
+                    print("\n switch to rule RU1\n")
+                    print("\n--------------------------------\n")
+                    # invert stimulus configuration
+                    bk = self.settings.stimulus_correct.copy()
+                    self.settings.stimulus_correct = self.settings.stimulus_wrong.copy()
+                    self.settings.stimulus_wrong = bk
