@@ -118,10 +118,7 @@ if settings_obj.run_session:
     # create main state machine aka trial loop ====================================================================
     # state machine configs
     for trial in range(settings_obj.trial_number):
-        # create random stimulus side
         probability_obj.get_random_side()
-        sides_li.append(probability_obj.stim_side_dict.copy()) # put corect and wrong side in sides_li
-        insist_mode_li.append((probability_obj.insist_mode_active, probability_obj.insist_side)) # put insist mode status in inist_mode_li
         # get random punish time
         punish_time = round(random.uniform(
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
@@ -218,48 +215,26 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        if probability_obj.stim_side_dict["left"]:
-            print("reward_left")
-            sma.add_state(
-                state_name="check_reward_left",
-                state_timer=0,
-                state_change_conditions={"Tup": "reward_left"},
-                output_actions=[]
-            )
-            sma.add_state(
-                state_name="reward_left",
-                state_timer=settings_obj.time_dict["time_reward_open"],
-                state_change_conditions={"Tup": "reward_left_waiting"},
-                output_actions=[("Valve1", 255)
-                                ]
-            )
-            sma.add_state(
-                state_name="reward_left_waiting",
-                state_timer=settings_obj.time_dict["time_reward_waiting"],
-                state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-            )
-        else:
-            print("noreward_left")
-            # no reward
-            sma.add_state(
-                    state_name="check_reward_left",
-                    state_timer=0,
-                    state_change_conditions={"Tup": "no_reward_left"},
-                    output_actions=[]
-                )
-            sma.add_state(
-                state_name="no_reward_left",
-                state_timer=0,
-                state_change_conditions={"Tup": "reward_left_waiting"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-            )
-            sma.add_state(
-                state_name="reward_left_waiting",
-                state_timer=punish_time,
-                state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[]
-            )
+        print("reward_left")
+        sma.add_state(
+            state_name="check_reward_left",
+            state_timer=0,
+            state_change_conditions={"Tup": "reward_left"},
+            output_actions=[]
+        )
+        sma.add_state(
+            state_name="reward_left",
+            state_timer=settings_obj.time_dict["time_reward_open"],
+            state_change_conditions={"Tup": "reward_left_waiting"},
+            output_actions=[("Valve1", 255)
+                            ]
+        )
+        sma.add_state(
+            state_name="reward_left_waiting",
+            state_timer=settings_obj.time_dict["time_reward_waiting"],
+            state_change_conditions={"Tup": "inter_trial"},
+            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+        )
 
         #=========================================================================================
         # reward right
@@ -271,49 +246,27 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        if probability_obj.stim_side_dict["right"]:
-            print("reward_right")
-            sma.add_state(
-                state_name="check_reward_right",
-                state_timer=0,
-                state_change_conditions={"Tup": "reward_right"},
-                output_actions=[]
-            )
-            sma.add_state(
-                state_name="reward_right",
-                state_timer=settings_obj.time_dict["time_reward_open"],
-                state_change_conditions={"Tup": "reward_right_waiting"},
-                output_actions=[("Valve1", 255)
-                                ]
-            )
-            sma.add_state(
-                state_name="reward_right_waiting",
-                state_timer=settings_obj.time_dict["time_reward_waiting"],
-                state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-            )
-        else:
-            print("noreward_right")
-            # no reward
-            sma.add_state(
-                    state_name="check_reward_right",
-                    state_timer=0,
-                    state_change_conditions={"Tup": "no_reward_right"},
-                    output_actions=[]
-                )
-            sma.add_state(
-                state_name="no_reward_right",
-                state_timer=0,
-                state_change_conditions={"Tup": "reward_right_waiting"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-            )
-            sma.add_state(
-                state_name="reward_right_waiting",
-                state_timer=punish_time,
-                state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[]
-            )
-
+        print("reward_right")
+        sma.add_state(
+            state_name="check_reward_right",
+            state_timer=0,
+            state_change_conditions={"Tup": "reward_right"},
+            output_actions=[]
+        )
+        sma.add_state(
+            state_name="reward_right",
+            state_timer=settings_obj.time_dict["time_reward_open"],
+            state_change_conditions={"Tup": "reward_right_waiting"},
+            output_actions=[("Valve1", 255)
+                            ]
+        )
+        sma.add_state(
+            state_name="reward_right_waiting",
+            state_timer=settings_obj.time_dict["time_reward_waiting"],
+            state_change_conditions={"Tup": "inter_trial"},
+            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+        )
+        
         # inter trial cleanup ===========================================================
         # inter trial time
         sma.add_state(
@@ -344,10 +297,7 @@ if settings_obj.run_session:
             # run stimulus game
             if settings_obj.stim_type == "three-stimuli":
                 print("three")
-                stimulus_game.run_game_habituation_3_complex(display_stim_event, still_show_event,bpod,sma)
-            elif settings_obj.stim_type == "two-stimuli":
-                print("tow")
-                stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,bpod,sma)
+                stimulus_game.run_game_3(display_stim_event, still_show_event,bpod,sma)
             else:
                 print("\nNo correct stim type selected\n")
         except:
@@ -355,8 +305,6 @@ if settings_obj.run_session:
         
         # post trial cleanup
         closer.join()
-        probability_obj.get_stim_side(bpod.session.current_trial)
-        probability_obj.insist_mode_check()
         print("---------------------------------------------------")
 
     #=========================================================================================================
@@ -364,10 +312,7 @@ if settings_obj.run_session:
     # save session settings
     session_name = bpod.session_name
     # add sides_li & time_li to settings_obj
-    settings_obj.sides_li = sides_li
     settings_obj.times_punish_li = times_punish_li
-    # add insist mode li to settings_obj
-    settings_obj.insist_mode_li = insist_mode_li
     # save usersettings of session
     settings_obj.save_usersettings(session_name)
 
