@@ -63,6 +63,10 @@ RULE_SWITCH_INITIAL_WAIT = 9000 # wait for n trials bevore checking for rule swi
 RULE_SWITCH_RANGE = 10 # range of trials for checking for rule switching
 RULE_SWITCH_CORRECT = 8 # number of correct trials for rule switching
 
+# Fade away ===================================================
+FADE_START = 1950 # from center to left side where stimulus fade away begins
+FADE_END = 3000 # from center to left side where stimulus fade away ends
+
 # rotary Encoder ==============================================
 """ Construct thresholds like this:
 [

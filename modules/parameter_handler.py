@@ -64,7 +64,6 @@ class TrialParameterHandler():
             self.rule_switch_range = self.usersettings.RULE_SWITCH_RANGE
             self.rule_switch_correct = self.usersettings.RULE_SWITCH_CORRECT
             # fade away box
-            self.fade_active = self.usersettings.FADE_ACTIVE # bool status for fade away box
             self.fade_start = self.usersettings.FADE_START # from center to left side where fade away starts
             self.fade_end = self.usersettings.FADE_END # from left center to left side where fade away ends
 
@@ -418,7 +417,6 @@ class TrialParameterHandler():
                 "RULE_SWITCH_RANGE = "+json.dumps(self.rule_switch_range)+"# range of trials for checking for rule switching\n"
                 "RULE_SWITCH_CORRECT = "+json.dumps(self.rule_switch_correct)+"# number of correct trials for rule switching\n\n"
                 "# Fade away ===================================================\n"
-                "FADE_ACTIVE = "+repr(self.fade_active)+ "# bool status for fade away box\n"
                 "FADE_START = "+repr(self.fade_start)+" # from center to left side where stimulus fade away begins\n"
                 "FADE_END = "+repr(self.fade_end)+" # from center to left side where stimulus fade away ends\n\n"
                 "# rotary Encoder ==============================================\n"
