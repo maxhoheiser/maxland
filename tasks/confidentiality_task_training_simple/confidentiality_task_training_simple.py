@@ -91,7 +91,6 @@ if settings_obj.run_session:
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
             stimulus_game.stop_closed_loop_after()
-            still_show_event.set()
             print("end present stim")
         elif data == 9:
             print("wheel not stopping")
@@ -375,27 +374,27 @@ if settings_obj.run_session:
         #except:
         #    continue
 
-        # =========================================================================================================
-        print("finished")
+    # =========================================================================================================
+    print("finished")
 
-        # user input after session
-        #window = UserInput(settings_obj)
-        #window.draw_window_after()
-        #window.show_window()
+    # user input after session
+    #window = UserInput(settings_obj)
+    #window.draw_window_after()
+    #window.show_window()
 
-        # save session settings
-        session_name = bpod.session_name
-        # add sides_li (with each side for each trial chosen)
-        settings_obj.sides_li = sides_li
-        # add times list to settings_obj
-        settings_obj.times_punish_li = times_punish_li
-        # add insist mode li to settings_obj
-        settings_obj.insist_mode_li = insist_mode_li
-        # add rule switch li to settings_obj
-        settings_obj.rule_switch_li = active_rule_li
-        # save usersettings of session
-        print("\nsaved\n")
-        settings_obj.save_usersettings(session_name)
+    # save session settings
+    session_name = bpod.session_name
+    # add sides_li (with each side for each trial chosen)
+    settings_obj.sides_li = sides_li
+    # add times list to settings_obj
+    settings_obj.times_punish_li = times_punish_li
+    # add insist mode li to settings_obj
+    settings_obj.insist_mode_li = insist_mode_li
+    # add rule switch li to settings_obj
+    settings_obj.rule_switch_li = active_rule_li
+    # save usersettings of session
+    print("\nsaved\n")
+    settings_obj.save_usersettings(session_name)
 
 
 tryer(rotary_encoder_module.close())()

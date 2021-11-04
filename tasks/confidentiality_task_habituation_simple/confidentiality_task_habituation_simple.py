@@ -92,7 +92,6 @@ if settings_obj.run_session:
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
             stimulus_game.stop_closed_loop_after()
-            still_show_event.set()
             print("end present stim")
         elif data == 9:
             print("wheel not stopping")
@@ -308,15 +307,15 @@ if settings_obj.run_session:
         closer.join()
         print("---------------------------------------------------")
 
-        #=========================================================================================================
-        print("finished")
-        # save session settings
-        session_name = bpod.session_name
-        settings_obj.times_li = times_punish_li
-        # add insist mode li to settings_obj
-        settings_obj.insist_mode_li = insist_mode_li
-        # save usersettings of session
-        settings_obj.save_usersettings(session_name)
+    #=========================================================================================================
+    print("finished")
+    # save session settings
+    session_name = bpod.session_name
+    settings_obj.times_li = times_punish_li
+    # add insist mode li to settings_obj
+    settings_obj.insist_mode_li = insist_mode_li
+    # save usersettings of session
+    settings_obj.save_usersettings(session_name)
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
