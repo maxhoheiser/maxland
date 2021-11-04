@@ -358,6 +358,15 @@ if settings_obj.run_session:
         closer.join()
         probability_obj.get_stim_side(bpod.session.current_trial)
         probability_obj.insist_mode_check()
+        # save session settings
+        session_name = bpod.session_name
+        # add sides_li & time_li to settings_obj
+        settings_obj.sides_li = sides_li
+        settings_obj.times_punish_li = times_punish_li
+        # add insist mode li to settings_obj
+        settings_obj.insist_mode_li = insist_mode_li
+        # save usersettings of session
+        settings_obj.save_usersettings(session_name)
         print("---------------------------------------------------")
 
         #=========================================================================================================
