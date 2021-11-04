@@ -234,13 +234,8 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        while self.run_closed_loop_after:
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
-            grating_left.draw()
-            grating_right.draw()
-            stim.draw()
-            self.win.flip()
+        still_show_event.wait()
+        self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()
         display_stim_event.clear()
@@ -317,12 +312,8 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        while self.run_closed_loop_after:
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
-            grating_left.draw()
-            grating_right.draw()
-            self.win.flip()
+        still_show_event.wait()
+        self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()
         display_stim_event.clear()
@@ -376,12 +367,8 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        while self.run_closed_loop_after:
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
-            grating_left.draw()
-            grating_right.draw()
-            self.win.flip()
+        still_show_event.wait()
+        self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()
         display_stim_event.clear()
@@ -425,10 +412,8 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        while self.run_closed_loop_after:
-            stim.draw()
-            self.win.flip()
-        # cleanup for next loop
+        still_show_event.wait()
+        self.win.flip()
         self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
@@ -486,11 +471,8 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        while self.run_closed_loop_after:
-            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
-            grating.draw()
-            stim.draw()
-            self.win.flip()
+        still_show_event.wait()
+        self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()
         display_stim_event.clear()
@@ -544,10 +526,8 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        while self.run_closed_loop_after:
-            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
-            grating.draw()
-            self.win.flip()
+        still_show_event.wait()
+        self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()
         display_stim_event.clear()

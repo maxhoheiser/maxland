@@ -94,6 +94,7 @@ if settings_obj.run_session:
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
             stimulus_game.stop_closed_loop_after()
+            still_show_event.set()
             print("end present stim")
         elif data == 9:
             print("wheel not stopping")
