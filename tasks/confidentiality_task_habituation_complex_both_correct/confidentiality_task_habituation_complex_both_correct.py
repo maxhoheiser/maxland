@@ -298,7 +298,7 @@ if settings_obj.run_session:
             # run stimulus game
             if settings_obj.stim_type == "three-stimuli":
                 print("three")
-                stimulus_game.run_game_3(display_stim_event, still_show_event,bpod,sma)
+                stimulus_game.run_game_2_complex_both(display_stim_event, still_show_event,bpod,sma)
             else:
                 print("\nNo correct stim type selected\n")
         except:

@@ -532,3 +532,58 @@ class Stimulus():
         self.reset_loop_flags()
         display_stim_event.clear()
         still_show_event.clear()
+
+    # Habituation Typ 2 complex both correct ==========================================
+    def run_game_habituation_2_complex_both(self, display_stim_event, still_show_event, bpod, sma):
+        # get right grating
+        grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
+        grating_or = self.settings.stimulus_correct["grating_ori"]
+        grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
+        grating_ps = self.settings.stimulus_correct["grating_speed"]
+
+        if self.correct_stim_side["right"]:
+            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[0])
+        elif self.correct_stim_side["left"]:
+            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[1])
+        # -----------------------------------------------------------------------------
+        # on soft code of state 1
+        # -----------------------------------------------------------------------------
+        # present initial stimulus
+        display_stim_event.wait()
+        while self.run_closed_loop_before:  # self.run_closed_loop_before:
+            # dram moving gratings
+            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.draw()
+            self.win.flip()
+        # -------------------------------------------------------------------------
+        # on soft code of state 2
+        # -------------------------------------------------------------------------
+        # reset rotary encoder
+        # open loop
+        self.rotary_encoder.rotary_encoder.enable_stream()
+        # open loop
+        pos = 0
+        stream = self.rotary_encoder.rotary_encoder.read_stream()
+        self.rotary_encoder.rotary_encoder.set_zero_position()
+        while self.run_open_loop:
+            # get rotary encoder change position
+            stream = self.rotary_encoder.rotary_encoder.read_stream()
+            # dram moving gratings
+            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
+            if len(stream) > 0:
+                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                pos = stream[-1][2]
+                # move stimulus with mouse
+                grating.pos += (change, 0)
+            grating.draw()
+            self.win.flip()
+        self.rotary_encoder.rotary_encoder.disable_stream()
+        # -------------------------------------------------------------------------
+        # on soft code of state 3 freez movement
+        # -------------------------------------------------------------------------
+        still_show_event.wait()
+        self.win.flip()
+        # cleanup for next loop
+        self.reset_loop_flags()
+        display_stim_event.clear()
+        still_show_event.clear()
