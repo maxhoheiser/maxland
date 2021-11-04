@@ -5,17 +5,16 @@ behavior/behavior 1/wd/
 *.pyc
 behavior/.DS_Store
 .DS_Store
-maxland_TRAINING01/*
-maxland_RECORDING01/*
+maxland_TRAINING/*
+maxland_RECORDING*
+maxland_TESTING*
 boards*
 experiments*
 tasks/iblrig/*
 tasks/_iblrig*
-users*
 subjects*
 pybpod-api.log
 app.log
 app.log
 _settings_obj.json
 
-maxland_TESTING03/*
