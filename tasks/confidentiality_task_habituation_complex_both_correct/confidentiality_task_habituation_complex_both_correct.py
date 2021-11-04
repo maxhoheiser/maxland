@@ -307,14 +307,14 @@ if settings_obj.run_session:
         closer.join()
         print("---------------------------------------------------")
 
-    #=========================================================================================================
-    print("finished")
-    # save session settings
-    session_name = bpod.session_name
-    # add sides_li & time_li to settings_obj
-    settings_obj.times_punish_li = times_punish_li
-    # save usersettings of session
-    settings_obj.save_usersettings(session_name)
+        #=========================================================================================================
+        print("finished")
+        # save session settings
+        session_name = bpod.session_name
+        # add sides_li & time_li to settings_obj
+        settings_obj.times_punish_li = times_punish_li
+        # save usersettings of session
+        settings_obj.save_usersettings(session_name)
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
