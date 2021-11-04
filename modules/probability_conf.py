@@ -52,22 +52,14 @@ class ProbabilityConstuctor():
             current_side (str): the side the stimulus is on
         """
         # get chosen side
-        try:
-            trial.states_durations["check_reward_left"]
-            if not np.isnan(trial.states_durations["check_reward_left"][0][0]):
-                current_side = "left"
-                print("current side: left")
-        except:
-            try:
-                trial.states_durations["check_reward_right"]
-                if not np.isnan(trial.states_durations["check_reward_right"][0][0]):
-                    current_side = "right"
-                    print("current side: right")
-            except:
-                current_side = "none"
-                print("current side: none")
-        except:
-            continue
+        if not np.isnan(trial.states_durations["check_reward_left"][0][0]):
+            current_side = "left"
+            print("current side: left")
+        elif not np.isnan(trial.states_durations["check_reward_right"][0][0]):
+            current_side = "right"
+            print("current side: right")
+        else:
+            current_side = "non"
         self.chosen_sides_li.append(current_side)
         # check if current trial side == correct side
         if current_side == "right" and self.stim_side_dict["right"] == True:
