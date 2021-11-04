@@ -359,17 +359,17 @@ if settings_obj.run_session:
         probability_obj.insist_mode_check()
         print("---------------------------------------------------")
 
-    #=========================================================================================================
-    print("finished")
-    # save session settings
-    session_name = bpod.session_name
-    # add sides_li & time_li to settings_obj
-    settings_obj.sides_li = sides_li
-    settings_obj.times_punish_li = times_punish_li
-    # add insist mode li to settings_obj
-    settings_obj.insist_mode_li = insist_mode_li
-    # save usersettings of session
-    settings_obj.save_usersettings(session_name)
+        #=========================================================================================================
+        print("finished")
+        # save session settings
+        session_name = bpod.session_name
+        # add sides_li & time_li to settings_obj
+        settings_obj.sides_li = sides_li
+        settings_obj.times_punish_li = times_punish_li
+        # add insist mode li to settings_obj
+        settings_obj.insist_mode_li = insist_mode_li
+        # save usersettings of session
+        settings_obj.save_usersettings(session_name)
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
