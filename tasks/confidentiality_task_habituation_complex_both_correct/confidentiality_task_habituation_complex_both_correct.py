@@ -216,27 +216,48 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        print("reward_left")
-        sma.add_state(
-            state_name="check_reward_left",
-            state_timer=0,
-            state_change_conditions={"Tup": "reward_left"},
-            output_actions=[]
-        )
-        sma.add_state(
-            state_name="reward_left",
-            state_timer=settings_obj.time_dict["time_reward_open"],
-            state_change_conditions={"Tup": "reward_left_waiting"},
-            output_actions=[("Valve1", 255)
-                            ]
-        )
-        sma.add_state(
-            state_name="reward_left_waiting",
-            state_timer=settings_obj.time_dict["time_reward_waiting"],
-            state_change_conditions={"Tup": "inter_trial"},
-            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-        )
-
+        if probability_obj.stim_side_dict["left"]:
+            print("reward_left")
+            sma.add_state(
+                state_name="check_reward_left",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_left"},
+                output_actions=[]
+            )
+            sma.add_state(
+                state_name="reward_left",
+                state_timer=settings_obj.time_dict["time_reward_open"],
+                state_change_conditions={"Tup": "reward_left_waiting"},
+                output_actions=[("Valve1", 255)
+                                ]
+            )
+            sma.add_state(
+                state_name="reward_left_waiting",
+                state_timer=settings_obj.time_dict["time_reward_waiting"],
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+        else:
+            print("noreward_left")
+            # no reward
+            sma.add_state(
+                    state_name="check_reward_left",
+                    state_timer=0,
+                    state_change_conditions={"Tup": "no_reward_left"},
+                    output_actions=[]
+                )
+            sma.add_state(
+                state_name="no_reward_left",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_left_waiting"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+            sma.add_state(
+                state_name="reward_left_waiting",
+                state_timer=punish_time,
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[]
+            )
         #=========================================================================================
         # reward right
         sma.add_state(
@@ -247,26 +268,48 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        print("reward_right")
-        sma.add_state(
-            state_name="check_reward_right",
-            state_timer=0,
-            state_change_conditions={"Tup": "reward_right"},
-            output_actions=[]
-        )
-        sma.add_state(
-            state_name="reward_right",
-            state_timer=settings_obj.time_dict["time_reward_open"],
-            state_change_conditions={"Tup": "reward_right_waiting"},
-            output_actions=[("Valve1", 255)
-                            ]
-        )
-        sma.add_state(
-            state_name="reward_right_waiting",
-            state_timer=settings_obj.time_dict["time_reward_waiting"],
-            state_change_conditions={"Tup": "inter_trial"},
-            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-        )
+        if probability_obj.stim_side_dict["right"]:
+            print("reward_right")
+            sma.add_state(
+                state_name="check_reward_right",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_right"},
+                output_actions=[]
+            )
+            sma.add_state(
+                state_name="reward_right",
+                state_timer=settings_obj.time_dict["time_reward_open"],
+                state_change_conditions={"Tup": "reward_right_waiting"},
+                output_actions=[("Valve1", 255)
+                                ]
+            )
+            sma.add_state(
+                state_name="reward_right_waiting",
+                state_timer=settings_obj.time_dict["time_reward_waiting"],
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+        else:
+            print("noreward_right")
+            # no reward
+            sma.add_state(
+                    state_name="check_reward_right",
+                    state_timer=0,
+                    state_change_conditions={"Tup": "no_reward_right"},
+                    output_actions=[]
+                )
+            sma.add_state(
+                state_name="no_reward_right",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_right_waiting"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+            sma.add_state(
+                state_name="reward_right_waiting",
+                state_timer=punish_time,
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[]
+            )
         
         # inter trial cleanup ===========================================================
         # inter trial time
@@ -295,12 +338,7 @@ if settings_obj.run_session:
         closer.start()
 
         try:
-            # run stimulus game
-            if settings_obj.stim_type == "three-stimuli":
-                print("three")
-                stimulus_game.run_game_3(display_stim_event, still_show_event,bpod,sma)
-            else:
-                print("\nNo correct stim type selected\n")
+            stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,bpod,sma)
         except:
             break
         

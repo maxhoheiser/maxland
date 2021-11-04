@@ -480,11 +480,20 @@ class Stimulus():
 
     # Habituation Typ 2 complex =======================================================
     def run_game_habituation_2_complex(self, display_stim_event, still_show_event, bpod, sma):
-        # get right grating
-        grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
-        grating_or = self.settings.stimulus_correct["grating_ori"]
-        grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
-        grating_ps = self.settings.stimulus_correct["grating_speed"]
+        # randomly get left or right grating
+        random_grating = bool(random.getrandbits(1))
+        if random_grating:
+            # get correct grating
+            grating_sf = self.get_grating_sf(self.settings.stimulus_correct["grating_sf"])
+            grating_or = self.settings.stimulus_correct["grating_ori"]
+            grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
+            grating_ps = self.settings.stimulus_correct["grating_speed"]
+        else: 
+            # get wrong grating
+            grating_sf = self.get_grating_sf(self.settings.stimulus_wrong["grating_sf"])
+            grating_or = self.settings.stimulus_wrong["grating_ori"]
+            grating_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
+            grating_ps = self.settings.stimulus_wrong["grating_speed"]        
 
         if self.correct_stim_side["right"]:
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[0])
@@ -526,7 +535,7 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        still_show_event.wait()
+        #still_show_event.wait()
         self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()
