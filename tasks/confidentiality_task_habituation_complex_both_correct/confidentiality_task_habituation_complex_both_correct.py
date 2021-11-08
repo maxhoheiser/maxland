@@ -12,7 +12,7 @@ In addition it uses three custom classes:
 """
 
 import threading
-import os, sys,inspect
+import os,sys,inspect
 import json
 import random
 import time
@@ -35,7 +35,6 @@ else:
 modules_dir = os.path.join(maxland_root, "modules")
 sys.path.insert(-1, modules_dir)
 
-
 # import custom modules
 from stimulus_conf import Stimulus
 from probability_conf import ProbabilityConstuctor
@@ -50,14 +49,15 @@ import usersettings
 # create settings object
 session_folder = os.getcwd()
 settings_folder = currentdir#os.path.join(currentdir.split('experiments')[0],"tasks","confidentiality_task_training_simple")
+global settings_obj
 settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
 
-# create bpod object 'COM6' '/dev/cu.usbmodem65305701' bpod '/dev/cu.usbmodem62917601'
+# create bpod object 'COM6' '/dev/cu.usbmodem62917601'
 bpod=Bpod()
-
-# create tkinter userinput dialoge window
+#bpod= Bpod('/dev/cu.usbmodem62917601') #TODO:
+#create tkinter userinput dialoge window
 window = UserInput(settings_obj)
-window.draw_window_bevore_conf(stage="habituation_simple")
+window.draw_window_bevore_conf(stage="habituation_complex")
 window.show_window()
 
 # create multiprocessing variabls
@@ -66,7 +66,8 @@ display_stim_event = threading.Event()
 still_show_event = threading.Event()
 display_stim_event.clear()
 still_show_event.clear()
-# set functions
+
+#settings_obj.run_session = True #TODO:
 
 # run session
 if settings_obj.run_session:
@@ -74,6 +75,7 @@ if settings_obj.run_session:
     # rotary encoder config
     # enable thresholds
     com_port = find_rotary_com_port()
+    #com_port = '/dev/cu.usbmodem65305701' #TODO:
     rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
@@ -96,32 +98,28 @@ if settings_obj.run_session:
             print("end present stim")
         elif data == 9:
             print("wheel not stopping")
-        #elif data == settings_obj.SC_START_LOGGING:
-        #    rotary_encoder_module.rotary_encoder.enable_logging()
-        #elif data == settings_obj.SC_END_LOGGING:
-        #    rotary_encoder_module.rotary_encoder.disable_logging()
-        #    print("disable logging")
 
     bpod.softcode_handler_function = softcode_handler
 
-    #probability constructor 
-    probability_obj = ProbabilityConstuctor(settings_obj)
+    #probability constructor
+    probability_obj = ProbabilityConstuctor(settings_obj)    
 
     #stimulus
     # failsave for stimulus file
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
-    # list of side for correct stimulus
     sides_li = []
-    # punish times list
+    # times
     times_punish_li = []
     # list of toples (bool insist mode active, insist mode side)
     insist_mode_li = []
     # active rule list
     active_rule_li = []
-    
+
+
     # create main state machine aka trial loop ====================================================================
     # state machine configs
     for trial in range(settings_obj.trial_number):
+        probability_obj.get_random_side()
         # get random punish time
         punish_time = round(random.uniform(
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
@@ -217,26 +215,49 @@ if settings_obj.run_session:
             output_actions=[("SoftCode", settings_obj.SC_STOP_OPEN_LOOP)] # stop open loop in py game
         )
 
-        sma.add_state(
-            state_name="check_reward_left",
-            state_timer=0,
-            state_change_conditions={"Tup": "reward_left"},
-            output_actions=[]
-        )
-        sma.add_state(
-            state_name="reward_left",
-            state_timer=settings_obj.time_dict["time_reward_open"],
-            state_change_conditions={"Tup": "reward_left_waiting"},
-            output_actions=[("Valve1", 255)
-                            ]
-        )
-        sma.add_state(
-            state_name="reward_left_waiting",
-            state_timer=settings_obj.time_dict["time_reward_waiting"],
-            state_change_conditions={"Tup": "inter_trial"},
-            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-        )
-
+        # check for reward: 
+        if probability_obj.stim_side_dict["left"]:
+            print("reward_left")
+            sma.add_state(
+                state_name="check_reward_left",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_left"},
+                output_actions=[]
+            )
+            sma.add_state(
+                state_name="reward_left",
+                state_timer=settings_obj.time_dict["time_reward_open"],
+                state_change_conditions={"Tup": "reward_left_waiting"},
+                output_actions=[("Valve1", 255)
+                                ]
+            )
+            sma.add_state(
+                state_name="reward_left_waiting",
+                state_timer=settings_obj.time_dict["time_reward_waiting"],
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+        else:
+            print("noreward_left")
+            # no reward
+            sma.add_state(
+                    state_name="check_reward_left",
+                    state_timer=0,
+                    state_change_conditions={"Tup": "no_reward_left"},
+                    output_actions=[]
+                )
+            sma.add_state(
+                state_name="no_reward_left",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_left_waiting"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+            sma.add_state(
+                state_name="reward_left_waiting",
+                state_timer=punish_time,
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[]
+            )
         #=========================================================================================
         # reward right
         sma.add_state(
@@ -247,26 +268,49 @@ if settings_obj.run_session:
         )
 
         # check for reward: 
-        sma.add_state(
-            state_name="check_reward_right",
-            state_timer=0,
-            state_change_conditions={"Tup": "reward_right"},
-            output_actions=[]
-        )
-        sma.add_state(
-            state_name="reward_right",
-            state_timer=settings_obj.time_dict["time_reward_open"],
-            state_change_conditions={"Tup": "reward_right_waiting"},
-            output_actions=[("Valve1", 255)
-                            ]
-        )
-        sma.add_state(
-            state_name="reward_right_waiting",
-            state_timer=settings_obj.time_dict["time_reward_waiting"],
-            state_change_conditions={"Tup": "inter_trial"},
-            output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
-        )
-
+        if probability_obj.stim_side_dict["right"]:
+            print("reward_right")
+            sma.add_state(
+                state_name="check_reward_right",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_right"},
+                output_actions=[]
+            )
+            sma.add_state(
+                state_name="reward_right",
+                state_timer=settings_obj.time_dict["time_reward_open"],
+                state_change_conditions={"Tup": "reward_right_waiting"},
+                output_actions=[("Valve1", 255)
+                                ]
+            )
+            sma.add_state(
+                state_name="reward_right_waiting",
+                state_timer=settings_obj.time_dict["time_reward_waiting"],
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+        else:
+            print("noreward_right")
+            # no reward
+            sma.add_state(
+                    state_name="check_reward_right",
+                    state_timer=0,
+                    state_change_conditions={"Tup": "no_reward_right"},
+                    output_actions=[]
+                )
+            sma.add_state(
+                state_name="no_reward_right",
+                state_timer=0,
+                state_change_conditions={"Tup": "reward_right_waiting"},
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)]
+            )
+            sma.add_state(
+                state_name="reward_right_waiting",
+                state_timer=punish_time,
+                state_change_conditions={"Tup": "inter_trial"},
+                output_actions=[]
+            )
+        
         # inter trial cleanup ===========================================================
         # inter trial time
         sma.add_state(
@@ -294,16 +338,10 @@ if settings_obj.run_session:
         closer.start()
 
         try:
-            # run stimulus game
-            if settings_obj.stim_type == "three-stimuli":
-                print("three")
-                stimulus_game.run_game_habituation_3_simple(display_stim_event, still_show_event,bpod,sma)
-            else:
-                print("\nNo correct stim type selected\n")
+            stimulus_game.run_game_habituation_2_complex(display_stim_event, still_show_event,bpod,sma)
         except:
             break
-
-
+        
         # post trial cleanup
         closer.join()
         print("---------------------------------------------------")
@@ -312,11 +350,12 @@ if settings_obj.run_session:
         print("finished")
         # save session settings
         session_name = bpod.session_name
-        settings_obj.times_li = times_punish_li
-        # add insist mode li to settings_obj
-        settings_obj.insist_mode_li = insist_mode_li
+        # add sides_li & time_li to settings_obj
+        settings_obj.times_punish_li = times_punish_li
         # save usersettings of session
         settings_obj.save_usersettings(session_name)
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
+
+

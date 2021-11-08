@@ -11,19 +11,19 @@ How to:
 #grating_SF = 0.25  # 4 cycles per degree visual angle
 #grating_ori = 0   # in degree
 
-STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0.0, "grating_size": 10.0, "grating_speed": 0.03}
+STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0.0, "grating_size": 40.0, "grating_speed": 0.03}
 
-STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90.0, "grating_size": 10.0, "grating_speed": 0.04}
+STIMULUS_WRONG = {"grating_sf": 0.005, "grating_ori": 90.0, "grating_size": 40.0, "grating_speed": 0.04}
 
 # trials
-TRIAL_NUMBER = 10
+TRIAL_NUMBER = 100
 
 # stimulus size and color - only for moving stimulus
 STIMULUS_RAD = 10 # pixel radius of stimulus
 STIMULUS_COL = [0, 255, 0]#color of stimulus
 
 BACKGROUND_COL = [0, 0, 0]#-1,-1,-1 for black
-STIMULUS_TYPE = "three-stimuli" #three-stimuli #two-stimuli #one-stimulus
+STIMULUS_TYPE = "two-stimuli" #three-stimuli #two-stimuli #one-stimulus
 
 #===============================================================
 # reward in ml
@@ -33,39 +33,40 @@ LAST_CALLIBRATION = "2020.06.10"
 
 # state machine settings =======================================
 # waiting time beginning of each trial
-TIME_START = 2.0
+TIME_START = 0.0
 # time the wheel has to be stopped
-TIME_WHEEL_STOPPING_CHECK = 3.0
+TIME_WHEEL_STOPPING_CHECK = 1.0
 # time wait if the wheel is not stopped bevore new trial starts
-TIME_WHEEL_STOPPING_PUNISH = 4.0
+TIME_WHEEL_STOPPING_PUNISH = 1.0
 # time stimulus is presented but not movable
-TIME_PRESENT_STIM = 5.0
+TIME_PRESENT_STIM = 0.0
 # time of open loop where wheel moves the stimulus
 TIME_OPEN_LOOP = 6.0
 # time wait if stimulus not moved far enough to position
-TIME_OPEN_LOOP_FAIL_PUNISH = 7.0
+TIME_OPEN_LOOP_FAIL_PUNISH = 0.0
 # time stimulus is presented at reached position but not movable anymore
-TIME_STIM_FREEZ = 8.0
+TIME_STIM_FREEZ = 0.0
 # time the animal has for the reard = valve open + time after
-REWARD_TIME =9.0
+REWARD_TIME =1.0
 # no reward time
-TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [10.0, 11.0]
+TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [0.0, 0.0]
 # time at end of each trial_num
-INTER_TRIAL_TIME = 12.0
+INTER_TRIAL_TIME = 0.0
 
 # Insist Mode =================================================
-RANGE_INSIST_TRIGGER = 11
-NUMBER_CORRECT_INSIST_DEACTIVATE = 11
-RANGE_INSIST_DEACTIVATE = 11
+RANGE_INSIST_TRIGGER = 5
+NUMBER_CORRECT_INSIST_DEACTIVATE = 5
+RANGE_INSIST_DEACTIVATE = 5
+
 
 # Rule Switching Mode =========================================
 RULE_SWITCH_INITIAL_WAIT = 9000 # wait for n trials bevore checking for rule switching
-RULE_SWITCH_RANGE = 10 # range of trials for checking for rule switching
-RULE_SWITCH_CORRECT = 8 # number of correct trials for rule switching
+RULE_SWITCH_RANGE = 10# range of trials for checking for rule switching
+RULE_SWITCH_CORRECT = 8# number of correct trials for rule switching
 
 # Fade away ===================================================
-FADE_START = 1950 # from center to left side where stimulus fade away begins
-FADE_END = 3000 # from center to left side where stimulus fade away ends
+FADE_START = 550 # from center to left side where stimulus fade away begins
+FADE_END = 800 # from center to left side where stimulus fade away ends
 
 # rotary Encoder ==============================================
 """ Construct thresholds like this:
@@ -83,8 +84,8 @@ ALL_THRESHOLDS = [
 ]
 # speed of movement
 STIM_END_POS = [
-    -1902,
-    1902
+    -1600,
+    1600
 ] # pixel
 """
 end of 1st screen from center = 960 px

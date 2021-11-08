@@ -11,11 +11,8 @@ In addition it uses three custom classes:
 
 """
 
-import usersettings
 import threading
-import os
-import sys
-import inspect
+import os, sys, inspect
 import json
 import random
 import time
@@ -27,7 +24,6 @@ from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
 
 
-# span subprocess
 # add module path to sys path
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 dir = (os.path.dirname(os.path.dirname(currentdir)))
@@ -88,12 +84,13 @@ if settings_obj.run_session:
             display_stim_event.set()
             print("present stimulus")
         elif data == settings_obj.SC_START_OPEN_LOOP:
-            stimulus_game.stop_closed_loop()
+            stimulus_game.stop_closed_loop_before()
             print("start open loop")
         elif data == settings_obj.SC_STOP_OPEN_LOOP:
             stimulus_game.stop_open_loop()
             print("stop open loop")
         elif data == settings_obj.SC_END_PRESENT_STIM:
+            stimulus_game.stop_closed_loop_after()
             still_show_event.set()
             print("end present stim")
         elif data == 9:
@@ -112,9 +109,14 @@ if settings_obj.run_session:
     # stimulus
     # failsave for stimulus file
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stim_side_dict)
+    # list of side for correct stimulus
     sides_li = []
-    # times
-    times_li = []
+    # punish times list
+    times_punish_li = []
+    # list of toples (bool insist mode active, insist mode side)
+    insist_mode_li = []
+    # active rule list
+    active_rule_li = []
 
     # create main state machine aka trial loop ====================================================================
     # state machine configs
@@ -122,12 +124,14 @@ if settings_obj.run_session:
         # create random stimulus side
         probability_obj.get_random_side()
         sides_li.append(probability_obj.stim_side_dict.copy())
+        insist_mode_li.append((probability_obj.insist_mode_active, probability_obj.insist_side))
+        active_rule_li.append(probability_obj.rule_active)
         # get random punish time
         punish_time = round(random.uniform(
             float(settings_obj.time_dict['time_range_noreward_punish'][0]),
             float(settings_obj.time_dict['time_range_noreward_punish'][1])
         ), 2)
-        times_li.append(punish_time)
+        times_punish_li.append(punish_time)
         # construct states
 
         sma = StateMachine(bpod)
@@ -230,15 +234,15 @@ if settings_obj.run_session:
                 state_name="reward_left",
                 state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_left_waiting"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
-                                ("Valve1", 255)
+                output_actions=[("Valve1", 255)
                                 ]
             )
             sma.add_state(
                 state_name="reward_left_waiting",
                 state_timer=settings_obj.time_dict["time_reward_waiting"],
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[]
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)
+                                ]
             )
         else:
             print("noreward_left")
@@ -284,15 +288,15 @@ if settings_obj.run_session:
                 state_name="reward_right",
                 state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_right_waiting"},
-                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM),
-                                ("Valve1", 255)
+                output_actions=[("Valve1", 255)
                                 ]
             )
             sma.add_state(
                 state_name="reward_right_waiting",
                 state_timer=settings_obj.time_dict["time_reward_waiting"],
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[]
+                output_actions=[("SoftCode", settings_obj.SC_END_PRESENT_STIM)
+                                ]
             )
         else:
             print("noreward_right")
@@ -360,7 +364,9 @@ if settings_obj.run_session:
             break
         # post trial cleanup
         closer.join()
-        probability_obj.insist_mode_check(bpod.session.current_trial)
+        probability_obj.get_stim_side(bpod.session.current_trial)
+        probability_obj.insist_mode_check()
+        probability_obj.rule_switch_check(trial)
         
         print("---------------------------------------------------\n")
         #try:
@@ -369,36 +375,30 @@ if settings_obj.run_session:
         #except:
         #    continue
 
-    # =========================================================================================================
-    print("finished")
+        # =========================================================================================================
+        print("finished")
 
-    # user input after session
-    #window = UserInput(settings_obj)
-    #window.draw_window_after()
-    #window.show_window()
+        # user input after session
+        #window = UserInput(settings_obj)
+        #window.draw_window_after()
+        #window.show_window()
 
-    # save session settings
-    session_name = bpod.session_name
-    # add sides_li & time_li to settings_obj
-    settings_obj.sides_li = sides_li
-    settings_obj.times_li = times_li
-    # save usersettings of session
-    settings_obj.save_usersettings(session_name)
-    # save wheel movement of session
-    # rotary_encoder_module.rotary_encoder.disable_logging()
-    # append wheel postition
-    #log = rotary_encoder_module.get_logging()
-    # print(log)
-    # settings_obj.update_wheel_log(rotary_encoder_module.get_logging())
-    # append stimulus postition
-    # settings_obj.update_stim_log(stimulus_game.stimulus_posititon)
-    # settings_obj.save_wheel_movement(session_name)
-    # save stimulus postition of session
-    # settings_obj.save_stimulus_postition(session_name)
+        # save session settings
+        session_name = bpod.session_name
+        # add sides_li (with each side for each trial chosen)
+        settings_obj.sides_li = sides_li
+        # add times list to settings_obj
+        settings_obj.times_punish_li = times_punish_li
+        # add insist mode li to settings_obj
+        settings_obj.insist_mode_li = insist_mode_li
+        # add rule switch li to settings_obj
+        settings_obj.rule_switch_li = active_rule_li
+        # save usersettings of session
+        print("\nsaved\n")
+        settings_obj.save_usersettings(session_name)
 
-    # push session to alyx
-
-    # print(len(rotary_encoder_module.rotary_encoder.get_logged_data()))
 
 tryer(rotary_encoder_module.close())()
 #bpod.close()
+settings_obj.save_usersettings(session_name)
+

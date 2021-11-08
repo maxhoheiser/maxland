@@ -21,7 +21,7 @@ from math import tan
 
 # Monitor parameters
 MON_DISTANCE = 16  # Distance between subject's eyes and monitor
-MON_WIDTH = #35.79  # Width of your monitor in cm
+MON_WIDTH = 35.79  # Width of your monitor in cm
 MON_SIZE = [6144,1536]#[1792, 1120]  # Pixel-dimensions of your monitor
 SAVE_FOLDER = 'templateData'  # Log is saved to this folder. The folder is created if it does not exist.
 
@@ -67,6 +67,7 @@ grating_deg = visual.GratingStim(
     tex='sin',  # texture used
     ori=grating_ori,
     mask='raisedCos',
+    opacity=1.0,
     pos=(-30, 0)
 )
 
@@ -83,6 +84,7 @@ grating_pix = visual.GratingStim(
     tex='sin',  # texture used
     ori=grating_ori,
     mask='raisedCos',
+    opacity=1.0,
     pos=(30, 0)
 )
 
@@ -95,10 +97,11 @@ while t < 5:
     t = trialClock.getTime()
     grating_deg.setPhase(1.5, '+')  # temporal phase. Increment (+) the phase by 0.015 of a cycle
     grating_deg.setPhase(1.5*t)
-    grating_pix.setPhase(1.5, '+')  # temporal phase. Increment (+) the phase by 0.015 of a cycle
-    grating_pix.setPhase(1.5*t)
+    #grating_pix.setPhase(1.5, '+')  # temporal phase. Increment (+) the phase by 0.015 of a cycle
+    #grating_pix.setPhase(1.5*t)
+    grating_deg.opacity=0.2
     grating_deg.draw()
-    grating_pix.draw()
+    #grating_pix.draw()
     win.flip()
     # win.update() it produce the same that win.flip()
     # win.getMovieFrame(buffer='front') # values,back, none
@@ -108,6 +111,5 @@ while t < 5:
 #win.saveMovieFrames(fileName = filename, clearFrames = 'True')
 
 #win.saveMovieFrames(fileName = 'drif90_025.mp4')
-
 win.close()
 
