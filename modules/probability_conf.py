@@ -12,8 +12,8 @@ class ProbabilityConstuctor():
         self.settings = settings
         # initialize random sides
         self.stim_side_dict = dict()
-        self.correct_choice = []
-        self.current_coice = False
+        self.choice = []
+        self.current_choice = False
         # insist mode tracking
         self.chosen_sides_li = []
         self.insist_mode_chosen_side_li = []
@@ -62,14 +62,14 @@ class ProbabilityConstuctor():
         self.chosen_sides_li.append(current_side)
         # check if current trial side == correct side
         if current_side == "right" and self.stim_side_dict["right"] == True:
-            self.correct_choice.append(True)
-            self.current_coice = True
+            self.choice.append(True)
+            self.current_choice = True
         elif current_side == "left" and self.stim_side_dict["left"] == True:
-            self.correct_choice.append(True)
-            self.current_coice = True
+            self.choice.append(True)
+            self.current_choice = True
         else:
-            self.correct_choice.append(False)
-            self.current_coice = False
+            self.choice.append(False)
+            self.current_choice = False
         return current_side
 
     def insist_mode_check(self):
@@ -117,21 +117,19 @@ class ProbabilityConstuctor():
 
     def rule_switch_check(self,current_trial_num):
         if current_trial_num >= self.rule_switch_initial_wait: # wait initial trials bevore checking for rule switch
-            rule_switch_range = self.correct_choice[self.rule_switch_initial_wait:] # only check for rule switch after initial wait
-            if len(rule_switch_range) > self.rule_switch_range: #> not >= because trial counter in main states loop starts from 1 not 0
+            rule_switch_range = self.choice[self.rule_switch_initial_wait:] # only check for rule switch after initial wait
+            if len(rule_switch_range) >= self.rule_switch_range: #> not >= because trial counter in main states loop starts from 1 not 0
                 slice = rule_switch_range[-self.rule_switch_range:]
-            else:
-                slice = rule_switch_range
-            correct_chosen = sum(slice) # get number of correct choices
-            # check if rule switch
-            if self.rule_switch:
-                if correct_chosen >= self.rule_switch_correct:
-                    self.rule_active = "RU1" # switch to rule 1
-                    self.rule_switch = False # deactivate rule switch
-                    print("\n--------------------------------\n")
-                    print("\n switch to rule RU1\n")
-                    print("\n--------------------------------\n")
-                    # invert stimulus configuration
-                    bk = self.settings.stimulus_correct.copy()
-                    self.settings.stimulus_correct = self.settings.stimulus_wrong.copy()
-                    self.settings.stimulus_wrong = bk
+                correct_chosen = sum(slice) # get number of correct choices
+                # check if rule switch
+                if self.rule_switch:
+                    if correct_chosen >= self.rule_switch_correct:
+                        self.rule_active = "RU1" # switch to rule 1
+                        self.rule_switch = False # deactivate rule switch
+                        print("\n--------------------------------\n")
+                        print("\n switch to rule RU1\n")
+                        print("\n--------------------------------\n")
+                        # invert stimulus configuration
+                        bk = self.settings.stimulus_correct.copy()
+                        self.settings.stimulus_correct = self.settings.stimulus_wrong.copy()
+                        self.settings.stimulus_wrong = bk
