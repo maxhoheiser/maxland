@@ -54,9 +54,9 @@ TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [0.0, 0.0]
 INTER_TRIAL_TIME = 0.5
 
 # Insist Mode =================================================
-RANGE_INSIST_TRIGGER = 5
+RANGE_INSIST_TRIGGER = 
 NUMBER_CORRECT_INSIST_DEACTIVATE = 3
-RANGE_INSIST_DEACTIVATE = 3
+RANGE_INSIST_DEACTIVATE = 35
 
 
 # Rule Switching Mode =========================================
