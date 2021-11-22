@@ -1,6 +1,5 @@
 
 import random
-from tasks.confidentiality_task_training_simple.usersettings import RULE_SWITCH_RANGE
 import numpy as np
 
 
