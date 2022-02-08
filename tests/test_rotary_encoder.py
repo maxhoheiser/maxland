@@ -41,7 +41,7 @@ for trial in range(trials):
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
 
-     sma = StateMachine(bpod)
+    sma = StateMachine(bpod)
     # start state to define block of trial
     sma.add_state(
         state_name="start",
