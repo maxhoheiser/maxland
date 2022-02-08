@@ -1,10 +1,29 @@
+# Editors
+.vscode/
+.idea/
 
-examples/stimulus/__pycache__/
-behavior/behavior 1/wd/
+# Mac/OSX
+*.DS_Store
+
+# Windows
+Thumbs.db
+
+# Distribution / packaging
+.Python
+build/
+dist/
+.eggs/
 *.pyc
-*.pyc
-behavior/.DS_Store
-.DS_Store
+
+# Logs
+pip-log.txt
+pip-delete-this-directory.txt
+*__pycache__*/
+*pybpod-api.log
+*app.log
+
+
+# PyBpod files
 maxland_TRAINING/*
 maxland_RECORDING*
 maxland_TESTING*
@@ -13,8 +32,5 @@ experiments*
 tasks/iblrig/*
 tasks/_iblrig*
 subjects*
-pybpod-api.log
-app.log
-app.log
 _settings_obj.json
 
