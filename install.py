@@ -48,7 +48,7 @@ def create_maxland_env():
     maxland_env = get_maxland_env_path()
     if maxland_env:
         print(
-            "Found pre-existing environment in {}".format(maxland_env),
+            f"Found pre-existing environment in {maxland_env}",
             "\nDo you want to reinstall the environment? (y/n):",
         )
         user_input = input()
@@ -56,10 +56,10 @@ def create_maxland_env():
             remove_maxland_env()
             install_maxland_env()
             return
-        elif user_input != "n" and user_input != "y":
+        if user_input not in ("n", "y"):
             print("Please answer 'y' or 'n'")
             return create_maxland_env()
-        elif user_input == "n":
+        if user_input == "n":
             return
     else:
         install_maxland_env()
@@ -117,11 +117,12 @@ def create_project_folder():
         user_input = input()
         if user_input == "n":
             return
-        elif user_input == "y":
+        if user_input == "y":
             os.system(
                 "conda activate maxland && cd scripts && python populate_project.py"
             )
-        elif user_input != "n" and user_input != "y":
+            return
+        if user_input not in ("y", "n"):
             print("\n Please select either y of n")
             return create_project_folder()
     else:
@@ -147,11 +148,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        # check_pre_dependencies()
-        # create_maxland_env()
-        # install_dependencies()
+        check_pre_dependencies()
+        create_maxland_env()
+        install_dependencies()
         create_project_folder()
         create_desctop_shortcut()
         print("\n\nINFO: maxland installed, you should be good to go!")
-    except IOError as msg:
+    except OSError as msg:
         print(msg, "\n\nSOMETHING IS WRONG!")
