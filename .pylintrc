@@ -43,11 +43,6 @@ suggestion-mode=yes
 # active Python interpreter and may run arbitrary code.
 unsafe-load-any-extension=no
 
-# A comma-separated list of package or module names from where C extensions may
-# be loaded. Extensions are loading into the active Python interpreter and may
-# run arbitrary code
-extension-pkg-whitelist=
-
 
 [MESSAGES CONTROL]
 # Only show warnings with the listed confidence levels. Leave empty to show
@@ -264,19 +259,12 @@ const-naming-style=UPPER_CASE
 # style.
 #const-rgx=
 
-# Minimum line length for functions/classes that require docstrings, shorter
-# ones are exempt.
-docstring-min-length=-1
-
 # Naming style matching correct function names.
 function-naming-style=snake_case
 
 # Regular expression matching correct function names. Overrides function-
 # naming-style.
 function-rgx=[a-z_][a-z0-9_]{2,30}$
-
-# Naming hint for function names
-function-name-hint=[a-z_][a-z0-9_]{2,30}$
 
 # Naming hint for function names
 function-name-hint=[a-z_][a-z0-9_]{2,30}$
@@ -317,10 +305,6 @@ module-naming-style=snake_case
 # the name regexes allow several styles.
 name-group=
 
-# Regular expression which should only match function or class names that do
-# not require a docstring.
-no-docstring-rgx=^_
-
 # List of decorators that produce properties, such as abc.abstractproperty. Add
 # to this list to register other decorators that produce valid properties.
 # These decorators are taken in consideration only for invalid-name.
@@ -331,9 +315,6 @@ variable-naming-style=snake_case
 
 # Regular expression matching correct variable names. Overrides variable-
 # naming-style.
-variable-rgx=[a-z_][a-z0-9_]{2,30}$
-
-# Regular expression matching correct variable names
 variable-rgx=[a-z_][a-z0-9_]{2,30}$
 
 # Naming hint for variable names
@@ -504,27 +485,6 @@ single-line-if-stmt=no
 string-quote=double
 triple-quote=single
 docstring-quote=double
-
-
-[VARIABLES]
-# Tells whether we should check for unused import in __init__ files.
-init-import=no
-
-# A regular expression matching the name of dummy variables (i.e. expectedly
-# not used).
-dummy-variables-rgx=(_+[a-zA-Z0-9]*?$)|dummy
-
-# List of additional names supposed to be defined in builtins. Remember that
-# you should avoid to define new builtins when possible.
-additional-builtins=
-
-# List of strings which can identify a callback function by name. A callback
-# name must start or end with one of those strings.
-callbacks=cb_,_cb
-
-# List of qualified module names which can have objects that can redefine
-# builtins.
-redefining-builtins-modules=six.moves,future.builtins
 
 
 
