@@ -501,6 +501,10 @@ single-line-class-stmt=no
 # else.
 single-line-if-stmt=no
 
+string-quote=double
+triple-quote=single
+docstring-quote=double
+
 
 [VARIABLES]
 # Tells whether we should check for unused import in __init__ files.
