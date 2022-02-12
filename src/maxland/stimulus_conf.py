@@ -1,10 +1,14 @@
-from psychopy import visual, core, monitors, tools  # import some libraries from PsychoPy
-from math import tan as tan
 import random
 import time
+from math import tan as tan
+
+from psychopy import core
+from psychopy import monitors
+from psychopy import tools
+from psychopy import visual
 
 
-class Stimulus():
+class Stimulus:
     def __init__(self, settings, rotary_encoder, correct_stim_side):
         """[summary]
 
@@ -19,16 +23,21 @@ class Stimulus():
         self.FPS = settings.FPS
         self.mon_width = settings.MON_WIDTH
         self.mon_dist = settings.MON_DIST
-        self.screen_size = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)  # (1024,1280)#
+        self.screen_size = (
+            settings.SCREEN_WIDTH,
+            settings.SCREEN_HEIGHT,
+        )  # (1024,1280)#
         # stimulus
         self.rotary_encoder = rotary_encoder
         self.correct_stim_side = correct_stim_side
-        #self.gain = self.get_gain()
-        self.gain_left, self.gain_right = [round(abs(y/x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
-        self.gain = self.gain_left #TODO:
+        # self.gain = self.get_gain()
+        self.gain_left, self.gain_right = (
+            round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos
+        )
+        self.gain = self.gain_left  # TODO:
         # monitor configuration
         # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
-        self.monitor = monitors.Monitor('testMonitor', width=self.mon_width, distance=self.mon_dist)
+        self.monitor = monitors.Monitor("testMonitor", width=self.mon_width, distance=self.mon_dist)
         self.monitor.setSizePix(self.screen_size)
         # create window
         # create a window
@@ -38,28 +47,32 @@ class Stimulus():
             screen=1,
             monitor=self.monitor,
             units="pix",
-            winType='pyglet', allowGUI=False, allowStencil=False,
-            color=self.settings.bg_color, colorSpace='rgb',
-            blendMode='avg', useFBO=True,
+            winType="pyglet",
+            allowGUI=False,
+            allowStencil=False,
+            color=self.settings.bg_color,
+            colorSpace="rgb",
+            blendMode="avg",
+            useFBO=True,
         )
         self.win.winHandle.maximize()  # fix black bar bottom
         self.win.flip()
         # get frame rate of monitor
         expInfo = {}
-        expInfo['frameRate'] = self.win.getActualFrameRate()
-        if expInfo['frameRate'] != None:
-            frameDur = 1.0 / round(expInfo['frameRate'])
+        expInfo["frameRate"] = self.win.getActualFrameRate()
+        if expInfo["frameRate"] != None:
+            frameDur = 1.0 / round(expInfo["frameRate"])
         else:
             frameDur = 1.0 / 60.0  # could not measure, so guess
         # moving grating loops
-        self.run_closed_loop_before = True #closed loop before
+        self.run_closed_loop_before = True  # closed loop before
         self.run_open_loop = True
-        self.run_closed_loop_after = True #closed loop after
+        self.run_closed_loop_after = True  # closed loop after
         # fade change
         self.fade_start = abs(self.settings.fade_start)
         self.fade_end = abs(self.settings.fade_end)
-        self.fade_range = self.fade_end-self.fade_start
-        #self.fade_factor = self.get_fade_factor()
+        self.fade_range = self.fade_end - self.fade_start
+        # self.fade_factor = self.get_fade_factor()
 
     # helper functions ===============================================================
     def keep_on_scrren(self, position_x):
@@ -74,17 +87,15 @@ class Stimulus():
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
 
     def get_grating_size(self, deg):
-        """calculate gratin size in pixel based on visual angle
-        """
-        return tools.monitorunittools.deg2pix(deg,self.monitor)
-    
+        """calculate gratin size in pixel based on visual angle"""
+        return tools.monitorunittools.deg2pix(deg, self.monitor)
+
     def get_grating_sf(self, sf):
-        """calculate spatial frequency given in visual angle in pixel
-        """
-        return sf #tools.monitorunittools.pix2deg(sf,self.monitor)
+        """calculate spatial frequency given in visual angle in pixel"""
+        return sf  # tools.monitorunittools.pix2deg(sf,self.monitor)
 
     def get_gain(self):
-        clicks = 1024/365 * abs(self.settings.thresholds[0])  # each full rotation = 1024 clicks
+        clicks = 1024 / 365 * abs(self.settings.thresholds[0])  # each full rotation = 1024 clicks
         gain = abs(self.settings.stim_end_pos[0]) / clicks
         return round(gain, 2)
 
@@ -103,10 +114,10 @@ class Stimulus():
 
     def stop_open_loop(self):
         self.run_open_loop = False
-    
+
     def stop_closed_loop_after(self):
         self.run_closed_loop_after = False
-    
+
     def reset_loop_flags(self):
         self.run_closed_loop_before = True
         self.run_open_loop = True
@@ -116,30 +127,32 @@ class Stimulus():
     def gen_grating(self, grating_sf, grating_or, grating_size, pos):
         grating = visual.GratingStim(
             win=self.win,
-            tex='sin',  # texture used
+            tex="sin",  # texture used
             pos=(pos, 0),
             units="pix",  # "deg",#'deg', # size in degrees for correct stim size
             size=grating_size,
             sf=grating_sf,
             ori=grating_or,
             contrast=1,  # unchanged contrast (from 1 to -1)
-            mask='raisedCos',
-            opacity = 1.0 # ranging 1.0 (opaque) to 0.0 (transparent)
+            mask="raisedCos",
+            opacity=1.0,  # ranging 1.0 (opaque) to 0.0 (transparent)
         )
         return grating
 
     def gen_stim(self):
         circle = visual.Circle(
             win=self.win,
-            name='cicle',
-            radius=self.get_grating_size(self.settings.stimulus_rad)/2, # convet from vis angle to pixel and fomr diameter to radius
-            units='pix',
+            name="cicle",
+            radius=self.get_grating_size(self.settings.stimulus_rad)
+            / 2,  # convet from vis angle to pixel and fomr diameter to radius
+            units="pix",
             edges=128,
             fillColor=self.settings.stimulus_col,
             pos=(0, 0),
             opacity=1.0,
         )
         return circle
+
     """
     def get_fade_factor(self):
         ""
@@ -152,13 +165,12 @@ class Stimulus():
         return fade_factor
     """
 
-    def get_opacity(self,pos):
-        #delta = abs(pos) - self.fade_start
-        opacity = ( (self.fade_end-abs(pos)) / self.fade_range )
-        #if opacity < 0:
+    def get_opacity(self, pos):
+        # delta = abs(pos) - self.fade_start
+        opacity = (self.fade_end - abs(pos)) / self.fade_range
+        # if opacity < 0:
         #    opacity = 0
-        return round(opacity,1)
-
+        return round(opacity, 1)
 
     # Main psychpy loop ==============================================================
     # Stimulus Type 3 (main) = fixed gratings + moving circle
@@ -196,8 +208,8 @@ class Stimulus():
         display_stim_event.wait()
         while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
+            grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, "+")
             grating_left.draw()
             grating_right.draw()
             stim.draw()
@@ -212,19 +224,21 @@ class Stimulus():
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         self.rotary_encoder.rotary_encoder.set_zero_position()
-        #stim.draw
-        #self.win.flip()
+        # stim.draw
+        # self.win.flip()
         time.sleep(0.01)
         while self.run_open_loop:
             # dram moving gratings
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
+            grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, "+")
             grating_left.draw()
             grating_right.draw()
             if len(stream) > 0:
-                change  = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -273,8 +287,8 @@ class Stimulus():
         display_stim_event.wait()
         while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
+            grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, "+")
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
@@ -291,20 +305,22 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
-            grating_left.setPhase(left_ps, '+')  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, '+')
+            grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_ps, "+")
             if len(stream) > 0:
-                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating_left.pos += (change, 0)
                 grating_right.pos += (change, 0)
                 # update opacity (fade away)
-                print(grating_left.pos[0],self.get_opacity(grating_left.pos[0]))
+                print(grating_left.pos[0], self.get_opacity(grating_left.pos[0]))
                 if grating_left.pos[0] < -self.fade_start:
-                    grating_left.opacity=self.get_opacity(grating_left.pos[0])
+                    grating_left.opacity = self.get_opacity(grating_left.pos[0])
                 if grating_right.pos[0] > self.fade_start:
-                    grating_right.opacity=self.get_opacity(grating_right.pos[0])
+                    grating_right.opacity = self.get_opacity(grating_right.pos[0])
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
@@ -338,7 +354,7 @@ class Stimulus():
         display_stim_event.wait()
         while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
-            grating.setPhase(stim_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.setPhase(stim_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             self.win.flip()
         # -------------------------------------------------------------------------
@@ -355,10 +371,12 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
-            grating.setPhase(stim_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.setPhase(stim_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             if len(stream) > 0:
-                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating.pos += (change, 0)
@@ -402,7 +420,9 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream) > 0:
-                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -432,7 +452,7 @@ class Stimulus():
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[0])
         # generate gratings and stimuli
         stim = self.gen_stim()
-        stim.draw() #TODO: bugfix but now always all three stims are shown immediately
+        stim.draw()  # TODO: bugfix but now always all three stims are shown immediately
         # -----------------------------------------------------------------------------
         # on soft code of state 1
         # -----------------------------------------------------------------------------
@@ -440,7 +460,7 @@ class Stimulus():
         display_stim_event.wait()
         while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
-            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.setPhase(grating_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             # stim.draw()
             self.win.flip()
@@ -458,10 +478,12 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
-            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.setPhase(grating_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             if len(stream) > 0:
-                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -488,12 +510,12 @@ class Stimulus():
             grating_or = self.settings.stimulus_correct["grating_ori"]
             grating_size = self.get_grating_size(self.settings.stimulus_correct["grating_size"])
             grating_ps = self.settings.stimulus_correct["grating_speed"]
-        else: 
+        else:
             # get wrong grating
             grating_sf = self.get_grating_sf(self.settings.stimulus_wrong["grating_sf"])
             grating_or = self.settings.stimulus_wrong["grating_ori"]
             grating_size = self.get_grating_size(self.settings.stimulus_wrong["grating_size"])
-            grating_ps = self.settings.stimulus_wrong["grating_speed"]        
+            grating_ps = self.settings.stimulus_wrong["grating_speed"]
 
         if self.correct_stim_side["right"]:
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stim_end_pos[0])
@@ -506,7 +528,7 @@ class Stimulus():
         display_stim_event.wait()
         while self.run_closed_loop_before:  # self.run_closed_loop_before:
             # dram moving gratings
-            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.setPhase(grating_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             self.win.flip()
         # -------------------------------------------------------------------------
@@ -523,9 +545,11 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             # dram moving gratings
-            grating.setPhase(grating_ps, '+')  # advance phase by 0.05 of a cycle
+            grating.setPhase(grating_ps, "+")  # advance phase by 0.05 of a cycle
             if len(stream) > 0:
-                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating.pos += (change, 0)
@@ -535,7 +559,7 @@ class Stimulus():
         # -------------------------------------------------------------------------
         # on soft code of state 3 freez movement
         # -------------------------------------------------------------------------
-        #still_show_event.wait()
+        # still_show_event.wait()
         self.win.flip()
         # cleanup for next loop
         self.reset_loop_flags()

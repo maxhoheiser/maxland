@@ -14,6 +14,7 @@ build/
 dist/
 .eggs/
 *.pyc
+*.egg*
 
 # Logs
 pip-log.txt
@@ -21,6 +22,7 @@ pip-delete-this-directory.txt
 *__pycache__*/
 *pybpod-api.log
 *app.log
+*.log
 
 
 # PyBpod files
@@ -33,4 +35,3 @@ tasks/iblrig/*
 tasks/_iblrig*
 subjects*
 _settings_obj.json
-

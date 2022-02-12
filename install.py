@@ -77,9 +77,7 @@ def check_pre_dependencies():
         os.system("pip -V")
         print("pip... OK")
         # update conda and packages
-        os.system(
-            "conda activate maxland && conda update -y -n base -c defaults conda && conda update -y --all"
-        )
+        os.system("conda activate maxland && conda update -y -n base -c defaults conda && conda update -y --all")
     except Exception as err:
         print(
             err,
@@ -91,11 +89,7 @@ def check_pre_dependencies():
 
 def install_dependencies():
     print("\n\nINFO: Installing required python packages")
-    # install python packages
-    os.system("conda activate maxland && pip install -r requirements.txt -U")
     os.system("conda activate maxland && pip install -e .")
-    # install custom scripts and modules
-    os.system("conda activate maxland && python setup.py install clean --all")
     # clean up build
     shutil.rmtree(root_path / "Maxland.egg-info")
     shutil.rmtree(root_path / "dist")
@@ -118,9 +112,7 @@ def create_project_folder():
         if user_input == "n":
             return
         if user_input == "y":
-            os.system(
-                "conda activate maxland && cd scripts && python populate_project.py"
-            )
+            os.system("conda activate maxland && cd scripts && python populate_project.py")
             return
         if user_input not in ("y", "n"):
             print("\n Please select either y of n")
