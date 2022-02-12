@@ -16,7 +16,6 @@ toml==0.10.2
 typing_extensions==4.0.1
 virtualenv==20.13.1
 wrapt==1.13.3
-
 aenum==3.1.8
 anyio==3.5.0
 AnyQt==0.0.13
@@ -135,7 +134,7 @@ phylib==2.4.1
 pickleshare==0.7.5
 Pillow==9.0.1
 pkg-about==1.0.4
-platformdirs==2.5.0
+platformdirs==2.4.1
 pluggy==1.0.0
 proglog==0.1.9
 prometheus-client==0.13.1
@@ -354,7 +353,7 @@ toolz==0.11.2
 tornado==6.1
 tqdm==4.62.3
 traitlets==5.1.1
-typing_extensions==4.1.0
+typing_extensions==4.0.1
 ujson==5.1.0
 urllib3==1.26.8
 visvis==1.13.0
