@@ -22,6 +22,7 @@ pip-delete-this-directory.txt
 *__pycache__*/
 *pybpod-api.log
 *app.log
+*.log
 
 
 # PyBpod files
