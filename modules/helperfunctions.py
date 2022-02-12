@@ -1,26 +1,35 @@
-# helper functions for pybpod
 from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
 
 
-def tryer(fn):
+def try_run_function(function_to_run):
     def wrapper():
         try:
-            fn
+            function_to_run
         except:
             pass
+
     return wrapper
 
-def closer_fn(stimulus_game, bpod, sma, display_stim_event, still_show_event, rotary_encoder_module):
+
+def post_session_cleanup(
+    stimulus_game,
+    bpod,
+    sma,
+    display_stim_event,
+    still_show_event,
+    rotary_encoder_module,
+):
     if not bpod.run_state_machine(sma):
         still_show_event.set()
         display_stim_event.set()
-        tryer(stimulus_game.win.close())()
-        tryer(stimulus_game.close())()
-        tryer(rotary_encoder_module.close())()
+        try_run_function(stimulus_game.win.close())()
+        try_run_function(stimulus_game.close())()
+        try_run_function(rotary_encoder_module.close())()
         print("\nCLOSED\n")
 
-def find_rotary_com_port():
-    for port in range(10):
+
+def find_rotaryencoder_com_port():
+    for port in range(20):
         com_port = f"COM{port}"
         try:
             ro = RotaryEncoderModule(com_port)

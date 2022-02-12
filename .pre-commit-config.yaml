@@ -1,0 +1,42 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: debug-statements
+  - repo: https://github.com/psf/black
+    rev: 22.1.0
+    hooks:
+      - id: black
+      - id: black-jupyter
+        args:
+          - --safe
+          - --line-length=120
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.31.0
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py36-plus
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v2.7.1
+    hooks:
+      - id: reorder-python-imports
+        args:
+          - --application-directories=.:sro
+          - --py36-plus
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.931
+    hooks:
+      - id: mypy
+        files: ^src/
+  - repo: https://github.com/pycqa/pylint
+    rev: v2.12.2
+    hooks:
+      - id: pylint
+        args:
+          - --fail-under=7.5
+          - --rcfile=./.pylintrc

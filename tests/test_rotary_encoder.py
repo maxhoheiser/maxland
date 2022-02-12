@@ -1,21 +1,37 @@
-import threading
-import os,sys,inspect
+import inspect
 import json
+import os
 import random
+import sys
+import threading
 import time
 
-
-# import pybpod modules
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
 from pybpodgui_api.models.session import Session
+
+# import pybpod modules
+
+# add module path to sys path
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+dir = os.path.dirname(os.path.dirname(currentdir))
+if os.path.isdir(os.path.join(dir, "modules")):
+    maxland_root = dir
+else:
+    maxland_root = os.path.dirname(dir)
+modules_dir = os.path.join(maxland_root, "modules")
+sys.path.insert(-1, modules_dir)
+
+# import custom modules
+from rotaryencoder import BpodRotaryEncoder
+from helperfunctions import find_rotaryencoder_com_port, try_run_function
 
 trials = 10
 
 # create settings object
 settings_obj = object
 settings_obj.RESET_ROTARY_ENCODER = 1
-settings_obj.thresholds = [-90,90,-1,1]
+settings_obj.thresholds = [-90, 90, -1, 1]
 settings_obj.WHEEL_DIAMETER = 6.3
 settings_obj.RESET_ROTARY_ENCODER = 1
 settings_obj.THRESH_LEFT = "RotaryEncoder1_4"
@@ -25,18 +41,15 @@ settings_obj.STIMULUS_LEFT = "RotaryEncoder1_2"
 settings_obj.STIMULUS_RIGHT = "RotaryEncoder1_1"
 settings_obj.THRESH_RIGHT = "RotaryEncoder1_3"
 
-# import custom modules
-from ../modules/rotaryencoder import BpodRotaryEncoder
-from ../modules/helperfunctions import find_rotary_com_port, tryer
 
-# Main test for Mpod state machine test 
-bpod=Bpod()
+# Main test for Mpod state machine test
+bpod = Bpod()
 
 # state machine configs
 for trial in range(trials):
 
-    com_port = find_rotary_com_port()
-    #com_port = '/dev/cu.usbmodem65305701' #TODO:
+    com_port = find_rotaryencoder_com_port()
+    # com_port = '/dev/cu.usbmodem65305701' #TODO:
     rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
     rotary_encoder_module.load_message()
     rotary_encoder_module.configure()
@@ -47,7 +60,7 @@ for trial in range(trials):
         state_name="start",
         state_timer=0,
         state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
-        output_actions=[]
+        output_actions=[],
     )
 
     # reset rotary encoder bevore checking for wheel not stoping
@@ -55,7 +68,9 @@ for trial in range(trials):
         state_name="reset_rotary_encoder_wheel_stopping_check",
         state_timer=0,
         state_change_conditions={"Tup": "open_loop"},
-        output_actions=[("Serial1", settings_obj.RESET_ROTARY_ENCODER)], # activate white light while waiting
+        output_actions=[
+            ("Serial1", settings_obj.RESET_ROTARY_ENCODER)
+        ],  # activate white light while waiting
     )
 
     # open loop detection
@@ -66,8 +81,8 @@ for trial in range(trials):
             "Tup": "stop_open_loop_fail",
             settings_obj.STIMULUS_LEFT: "stop_open_loop_left",
             settings_obj.STIMULUS_RIGHT: "stop_open_loop_right",
-            },
-        output_actions=[], # softcode to start open loop
+        },
+        output_actions=[],  # softcode to start open loop
     )
 
     # stop open loop fail
@@ -75,28 +90,28 @@ for trial in range(trials):
         state_name="stop_open_loop_fail",
         state_timer=0,
         state_change_conditions={"Tup": "end"},
-        output_actions=[] # stop open loop in py game
+        output_actions=[],  # stop open loop in py game
     )
     # reward left
     sma.add_state(
         state_name="stop_open_loop_left",
         state_timer=0,
         state_change_conditions={"Tup": "end"},
-        output_actions=[] # stop open loop in py game
+        output_actions=[],  # stop open loop in py game
     )
     # reward right
     sma.add_state(
         state_name="stop_open_loop_right",
         state_timer=0,
         state_change_conditions={"Tup": "end"},
-        output_actions=[] # stop open loop in py game
+        output_actions=[],  # stop open loop in py game
     )
 
     # end state
     sma.add_state(
         state_name="END",
         state_timer=0,
-        state_change_conditions={"Tup":"exit"},
+        state_change_conditions={"Tup": "exit"},
         output_actions=[],
     )
 
@@ -104,8 +119,7 @@ for trial in range(trials):
     bpod.send_state_machine(sma)
     if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         break
-    print("Current trial info: {0}".format(bpod.session.current_trial))
+    print(f"Current trial info: {bpod.session.current_trial}")
 
-    
 
-tryer(rotary_encoder_module.close())()
+try_run_function(rotary_encoder_module.close())()
