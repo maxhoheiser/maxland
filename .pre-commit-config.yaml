@@ -40,3 +40,4 @@ repos:
         args:
           - --fail-under=7.5
           - --rcfile=./.pylintrc
+          - --disable=C0114
