@@ -1,8 +1,7 @@
-
 import random
 
 
-class ProbabilityConstuctor():
+class ProbabilityConstuctor:
     def __init__(self, settings):
         """object to calculate and handle probability for all events with given usersettings in session e.g. reward left and reward right probability
 
@@ -49,8 +48,8 @@ class ProbabilityConstuctor():
             list_rand (list): list of boolean values with gamble probability distribution
         """
         list_rand = []
-        number_true = int(trial_num*probability)
-        number_false = int(trial_num*(1-probability))
+        number_true = int(trial_num * probability)
+        number_false = int(trial_num * (1 - probability))
         for _ in range(trial_num):
             if _ < number_true:
                 list_rand.append(True)
@@ -72,15 +71,18 @@ class ProbabilityConstuctor():
         Returns:
             [type]: [description]
         """
-        gamble_reward_list = self.probability_builder((block["prob_reward_gamble_block"]/100), block["block_trial_num"])
-        save_reward_list = self.probability_builder((block["prob_reward_save_block"]/100), block["block_trial_num"])
+        gamble_reward_list = self.probability_builder(
+            (block["prob_reward_gamble_block"] / 100), block["block_trial_num"]
+        )
+        save_reward_list = self.probability_builder((block["prob_reward_save_block"] / 100), block["block_trial_num"])
         block_list = []
         for trial in range(block["block_trial_num"]):
-            trial_dict = {"gamble_left": gamble_left,
-                          "gamble_reward": gamble_reward_list[trial],
-                          "safe_reward": save_reward_list[trial],
-                          "block": block_num,
-                          }
+            trial_dict = {
+                "gamble_left": gamble_left,
+                "gamble_reward": gamble_reward_list[trial],
+                "safe_reward": save_reward_list[trial],
+                "block": block_num,
+            }
             block_list.append(trial_dict)
         block["block_rewards"] = block_list
         return block_list

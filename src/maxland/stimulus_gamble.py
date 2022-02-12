@@ -1,10 +1,12 @@
-
-from psychopy import visual, core, monitors  # import some libraries from PsychoPy
-from math import tan as tan
 import random
+from math import tan as tan
+
+from psychopy import core
+from psychopy import monitors
+from psychopy import visual
 
 
-class Stimulus():
+class Stimulus:
     def __init__(self, settings, rotary_encoder):
         """[summary]
 
@@ -18,15 +20,20 @@ class Stimulus():
         self.FPS = settings.FPS
         self.mon_width = settings.MON_WIDTH
         self.mon_dist = settings.MON_DIST
-        self.screen_size = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)  # (1024,1280)#
+        self.screen_size = (
+            settings.SCREEN_WIDTH,
+            settings.SCREEN_HEIGHT,
+        )  # (1024,1280)#
         # stimulus
         self.rotary_encoder = rotary_encoder
-        #self.gain = self.get_gain()
-        self.gain_left, self.gain_right = [round(abs(y/x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos]
+        # self.gain = self.get_gain()
+        self.gain_left, self.gain_right = (
+            round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos
+        )
         self.gain = self.gain_left
         # monitor configuration
         # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
-        self.monitor = monitors.Monitor('testMonitor', width=self.mon_width, distance=self.mon_dist)
+        self.monitor = monitors.Monitor("testMonitor", width=self.mon_width, distance=self.mon_dist)
         self.monitor.setSizePix(self.screen_size)
         # create window
         # create a window
@@ -36,17 +43,21 @@ class Stimulus():
             screen=1,
             monitor=self.monitor,
             units="pix",
-            winType='pyglet', allowGUI=False, allowStencil=False,
-            color=self.settings.bg_color, colorSpace='rgb',
-            blendMode='avg', useFBO=True,
+            winType="pyglet",
+            allowGUI=False,
+            allowStencil=False,
+            color=self.settings.bg_color,
+            colorSpace="rgb",
+            blendMode="avg",
+            useFBO=True,
         )
         self.win.winHandle.maximize()  # fix black bar bottom
         self.win.flip()
         # get frame rate of monitor
         expInfo = {}
-        expInfo['frameRate'] = self.win.getActualFrameRate()
-        if expInfo['frameRate'] != None:
-            frameDur = 1.0 / round(expInfo['frameRate'])
+        expInfo["frameRate"] = self.win.getActualFrameRate()
+        if expInfo["frameRate"] != None:
+            frameDur = 1.0 / round(expInfo["frameRate"])
         else:
             frameDur = 1.0 / 60.0  # could not measure, so guess
 
@@ -65,10 +76,9 @@ class Stimulus():
         return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
 
     def get_gratings_size(self, grating_size):
-        """calculate gratin size in pixel based on visual angle
-        """
-        x = self.mon_dist*tan(grating_size/2)  # half width of stim in size
-        return (x/self.mon_width)*self.screen_size[0]
+        """calculate gratin size in pixel based on visual angle"""
+        x = self.mon_dist * tan(grating_size / 2)  # half width of stim in size
+        return (x / self.mon_width) * self.screen_size[0]
 
     """
     def get_gain(self):
@@ -94,9 +104,9 @@ class Stimulus():
     def gen_stim(self):
         circle = visual.Circle(
             win=self.win,
-            name='cicle',
+            name="cicle",
             radius=self.settings.stimulus_rad,
-            units='pix',
+            units="pix",
             edges=128,
             fillColor=self.settings.stimulus_col,
             pos=(0, 0),
@@ -130,7 +140,9 @@ class Stimulus():
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream) > 0:
-                change = (pos - stream[-1][2])*self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (
+                    pos - stream[-1][2]
+                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)

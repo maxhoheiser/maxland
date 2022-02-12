@@ -11,7 +11,6 @@ repos:
     rev: 22.1.0
     hooks:
       - id: black
-      - id: black-jupyter
         args:
           - --safe
           - --line-length=120
@@ -38,6 +37,6 @@ repos:
     hooks:
       - id: pylint
         args:
-          - --fail-under=7.5
+          - --fail-under=3
           - --rcfile=./.pylintrc
           - --disable=C0114

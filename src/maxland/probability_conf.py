@@ -1,9 +1,9 @@
-
 import random
+
 import numpy as np
 
 
-class ProbabilityConstuctor():
+class ProbabilityConstuctor:
     def __init__(self, settings):
         """object to calculate and handle stimulus sides
         Args:
@@ -18,17 +18,22 @@ class ProbabilityConstuctor():
         self.chosen_sides_li = []
         self.insist_mode_chosen_side_li = []
         self.insist_range_trigger = settings.insist_range_trigger  # range to check for same side
-        self.insist_range_deactivate = settings.insist_range_deactivate  # range in which number of correct choices have to occure to deactivate insit mode
-        self.insist_correct_deactivate = settings.insist_correct_deactivate  # number of correct choice to deactivate insist mode
+        self.insist_range_deactivate = (
+            settings.insist_range_deactivate
+        )  # range in which number of correct choices have to occure to deactivate insit mode
+        self.insist_correct_deactivate = (
+            settings.insist_correct_deactivate
+        )  # number of correct choice to deactivate insist mode
         self.insist_mode_active = False
         self.insist_side = None
         # rule switching
-        self.rule_switch_initial_wait = settings.rule_switch_initial_wait # trials to wait bevore checking for rule switch
+        self.rule_switch_initial_wait = (
+            settings.rule_switch_initial_wait
+        )  # trials to wait bevore checking for rule switch
         self.rule_switch_range = settings.rule_switch_range  # range in which the rule switch is activated
         self.rule_switch_correct = settings.rule_switch_correct  # number of correct choices to switch rule
         self.rule_active = "RU0"  # id of active rule switch RU1 active
-        self.rule_switch = True # flag to check if rule switch is active - deactivate after first rule switch
-
+        self.rule_switch = True  # flag to check if rule switch is active - deactivate after first rule switch
 
     def get_random_side(self):
         # check insist mode
@@ -41,7 +46,7 @@ class ProbabilityConstuctor():
             random_right = bool(random.getrandbits(1))
         # asign sides to dict
         self.stim_side_dict["right"] = random_right
-        self.stim_side_dict["left"] = not(random_right)
+        self.stim_side_dict["left"] = not (random_right)
 
     def get_stim_side(self, trial):
         """
@@ -76,21 +81,21 @@ class ProbabilityConstuctor():
         # check for insist mode activate
         if not self.insist_mode_active:
             if len(self.chosen_sides_li) >= self.insist_range_trigger:
-                slice = self.chosen_sides_li[-self.insist_range_trigger:]
+                slice = self.chosen_sides_li[-self.insist_range_trigger :]
             else:
                 slice = self.chosen_sides_li
             left_num_chosen = sum(map(lambda x: x == "left", slice))
             right_num_chosen = sum(map(lambda x: x == "right", slice))
             if left_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
-                self.chosen_sides_li = [] #TODO: if not wanted remove this
+                self.chosen_sides_li = []  # TODO: if not wanted remove this
                 self.insist_side = "right"
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist right")
                 print("\n--------------------------------")
             if right_num_chosen >= self.insist_range_trigger:
                 self.insist_mode_active = True
-                self.chosen_sides_li = [] #TODO: if not wanted remove this
+                self.chosen_sides_li = []  # TODO: if not wanted remove this
                 self.insist_side = "left"
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist left")
@@ -102,7 +107,7 @@ class ProbabilityConstuctor():
             print(self.insist_mode_chosen_side_li)
             # get insist mode slice
             if len(self.insist_mode_chosen_side_li) >= self.insist_range_deactivate:
-                slice = self.insist_mode_chosen_side_li[-self.insist_range_deactivate:]
+                slice = self.insist_mode_chosen_side_li[-self.insist_range_deactivate :]
             else:
                 slice = self.insist_mode_chosen_side_li
             # check range if correct
@@ -115,17 +120,21 @@ class ProbabilityConstuctor():
                 print("INSIST MODE DEACTIVATED")
                 print("\n--------------------------------")
 
-    def rule_switch_check(self,current_trial_num):
-        if current_trial_num >= self.rule_switch_initial_wait: # wait initial trials bevore checking for rule switch
-            rule_switch_range = self.choice[self.rule_switch_initial_wait:] # only check for rule switch after initial wait
-            if len(rule_switch_range) >= self.rule_switch_range: #> not >= because trial counter in main states loop starts from 1 not 0
-                slice = rule_switch_range[-self.rule_switch_range:]
-                correct_chosen = sum(slice) # get number of correct choices
+    def rule_switch_check(self, current_trial_num):
+        if current_trial_num >= self.rule_switch_initial_wait:  # wait initial trials bevore checking for rule switch
+            rule_switch_range = self.choice[
+                self.rule_switch_initial_wait :
+            ]  # only check for rule switch after initial wait
+            if (
+                len(rule_switch_range) >= self.rule_switch_range
+            ):  # > not >= because trial counter in main states loop starts from 1 not 0
+                slice = rule_switch_range[-self.rule_switch_range :]
+                correct_chosen = sum(slice)  # get number of correct choices
                 # check if rule switch
                 if self.rule_switch:
                     if correct_chosen >= self.rule_switch_correct:
-                        self.rule_active = "RU1" # switch to rule 1
-                        self.rule_switch = False # deactivate rule switch
+                        self.rule_active = "RU1"  # switch to rule 1
+                        self.rule_switch = False  # deactivate rule switch
                         print("\n--------------------------------\n")
                         print("\n switch to rule RU1\n")
                         print("\n--------------------------------\n")
