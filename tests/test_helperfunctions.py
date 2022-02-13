@@ -85,12 +85,3 @@ class HelperFunctionsPostSessionCleanupTest(unittest.TestCase):
             self.stimulus_game,
             self.rotary_encoder_module,
         )
-
-
-# test run fn1, fn2, fn3
-# test run fail fn1 but run fn2 and fn3
-# test run fn1 and fail fn2 but run fn3
-
-
-if __name__ == "__main__":
-    unittest.main()
