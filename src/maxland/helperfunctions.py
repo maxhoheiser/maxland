@@ -5,6 +5,7 @@ def try_run_function(function_to_run):
     def wrapper():
         try:
             function_to_run
+            return function_to_run
         except:
             pass
 
@@ -12,11 +13,11 @@ def try_run_function(function_to_run):
 
 
 def post_session_cleanup(
-    stimulus_game,
     bpod,
     sma,
     display_stim_event,
     still_show_event,
+    stimulus_game,
     rotary_encoder_module,
 ):
     if not bpod.run_state_machine(sma):
