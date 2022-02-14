@@ -48,9 +48,9 @@ class TrialParameterHandler:
 
             self.reward = self.usersettings.REWARD
             # insist mode
-            self.insist_range_trigger = self.usersettings.RANGE_INSIST_TRIGGER
-            self.insist_correct_deactivate = self.usersettings.NUMBER_CORRECT_INSIST_DEACTIVATE
-            self.insist_range_deactivate = self.usersettings.RANGE_INSIST_DEACTIVATE
+            self.insist_range_trigger = self.usersettings.INSIST_RANGE_TRIGGER
+            self.insist_correct_deactivate = self.usersettings.INSIST_CORRECT_DEACTIVATE
+            self.insist_range_deactivate = self.usersettings.INSIST_RANGE_DEACTIVATE
             # rule switching
             self.rule_switch_initial_trials_wait = self.usersettings.RULE_SWITCH_INITIAL_WAIT
             self.rule_switch_trial_check_range = self.usersettings.RULE_SWITCH_RANGE
@@ -62,7 +62,7 @@ class TrialParameterHandler:
         self.time_dict = self.create_time_dictionary()
 
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
-        self.rotaryencoder_thresholds = self.usersettings.ALL_THRESHOLDS
+        self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
         self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POS
 
         # animal variables
@@ -133,7 +133,7 @@ class TrialParameterHandler:
             if self.insist_range_deactivate < self.insist_correct_deactivate:
                 self.insist_range_deactivate = self.insist_correct_deactivate
 
-    def min_inter_trial_time(self):
+    def min_TIME_INTER_TRIAL(self):
         """for the stimulus pygame to run smoothly there has to be a minimum
         time of 1 second between the end of the open loop
         and the change of the flag which quits the pygame and resets it
@@ -246,7 +246,7 @@ class TrialParameterHandler:
             "time_open_loop_fail_punish": self.usersettings.TIME_OPEN_LOOP_FAIL_PUNISH,
             "time_stimulus_freeze": self.usersettings.TIME_STIMULUS_FREEZE,
             "time_reward": self.usersettings.TIME_REWARD,
-            "time_inter_trial": self.usersettings.INTER_TRIAL_TIME,
+            "time_inter_trial": self.usersettings.TIME_INTER_TRIAL,
         }
 
         if self.task == "gamble":
@@ -274,146 +274,78 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'task="gamble"\n'
-                '"""specify custom settings for session in this file:\n\n'
-                "How to:\n"
-                "\tedit values for capital variables\n"
-                "\tdo not change capital variable names\n\n"
-                '"""\n\n'
-                "GAMBLE_SIDE = " + json.dumps(self.gamble_side) + "\n\n"
-                "# Blocks ========================================================\n"
-                '"""Construct a Block like this:\n'
-                "\r{\n"
-                "\tTRIAL_NUM_BLOCK: [int, int], #(50 - 80) #will chose a random length in between\n"
-                "\tPROB_REWARD_GAMBLE_BLOCK: int,  #(0-100)\n"
-                "\tprob_reward_save_block: int  #(0-100)\n"
-                "},\n"
-                '"""\n\n'
-                "BLOCKS = " + json.dumps(self.probability_blocks, indent=4) + "\n\n"
-                "#========================================================\n"
-                "# reward\n"
-                # "# big reward in ml\nBIG_REWARD = "+repr(self.big_reward)+"\n"
-                "# big reward in ml\nBIG_REWARD = " + repr(self.big_reward) + "\n"
-                "# small reward in ml\nSMALL_REWARD = " + repr(self.small_reward) + "\n\n"
+                'TASK="gamble"\n\n'
+                "GAMBLE_SIDE = " + json.dumps(self.gamble_side) + "\n"
+                "BLOCKS = " + json.dumps(self.probability_blocks) + "\n\n"
+                "# reward in seconds\n"
+                "BIG_REWARD = " + repr(self.big_reward) + "\n"
+                "SMALL_REWARD = " + repr(self.small_reward) + "\n\n"
                 "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
-                "# state machine settings ======================================\n"
-                "# waiting time beginning of each trial\n"
+                "# trial times\n"
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
-                "# time the wheel has to be stopped\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
-                "# time wait if the wheel is not stopped before new trial starts\n"
                 "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
-                "# time stimulus is presented but not movable\n"
                 "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
-                "# time of open loop where wheel moves the stimulus\n"
                 "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
-                "# time wait if stimulus not moved far enough to position\n"
                 "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
-                "# time stimulus is presented at reached position but not movable anymore\n"
                 "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
-                "# time the animal has for the reward = valve open + time after\n"
                 "TIME_REWARD = " + repr(self.time_dict["time_reward"]) + "\n"
-                "# no reward time\n"
                 "TIME_NO_REWARD = " + repr(self.time_dict["time_no_reward"]) + "\n"
-                "# time at end of each trial_num\n"
-                "INTER_TRIAL_TIME = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
+                "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RAD = " + json.dumps(self.stimulus_rad) + " # pixel radius of stimulus\n"
                 "STIMULUS_COL = " + json.dumps(self.stimulus_col) + " #color of stimulus\n\n"
-                "BACKGROUND_COL = " + json.dumps(self.bg_color) + " #-1,-1,-1 for black\n"
-                "# rotary Encoder ==============================================\n"
-                '""" Construct thresholds like this:\n'
-                "[\n\t-90, 90, # stimulus position in degrees of wheel movement\n"
-                "\t-1, 1    # wheel not stoping threshold in degrees of wheel movement\n]\n"
-                '"""\n'
-                "# thresholds for event signaling between rotary encoder and bpod\n"
-                "ALL_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds, indent=4) + "\n"
-                "# speed of movement\nSTIMULUS_END_POS = "
-                + json.dumps(self.rotaryencoder_stimulus_end_pos, indent=4)
-                + " # pixel\n"
-                '"""\nend of 1st Screen from center = 960 px\nend of 2nd Screen from center = 960 + 1920px\n"""\n\n'
+                "BACKGROUND_COL = " + json.dumps(self.bg_color) + "\n"
+                "# thresholds\n"
+                "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
+                "STIMULUS_END_POS = " + json.dumps(self.rotaryencoder_stimulus_end_pos) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
-                "# Animal ===================================================\n"
-                "# animal weight in grams\nANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n"
+                "# animal weight in grams\n"
+                "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n"
             )
 
     def update_userinput_file_conf(self):
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                "task = 'conf'\n\n"
-                '"""specify custom settings for session in this file:\n\n'
-                "How to:\n"
-                "\tedit values for capital variables\n"
-                '\tdo not change capital variable names\n\n"""\n'
-                "# stimulus ====================================================\n"
-                "#grating_SF = 0.25  # 4 cycles per degree visual angle\n"
-                "#grating_ori = 0   # in degree\n\n"
-                "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n\n"
+                'TASK="conf"\n\n'
+                "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n"
+                "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
+                "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
                 "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
-                "# trials\n"
-                "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n\n"
+                "# reward in seconds\n"
+                "REWARD = " + json.dumps(self.reward) + "\n"
+                "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
+                "# trial times\n"
+                "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
+                "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
+                "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
+                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
+                "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
+                "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
+                "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
+                "TIME_REWARD = " + repr(self.time_dict["time_reward"]) + "\n"
+                "TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
+                "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
+                "# insist mode\n"
+                "INSIST_RANGE_TRIGGER = " + json.dumps(self.insist_range_trigger) + "\n"
+                "INSIST_CORRECT_DEACTIVATE = " + json.dumps(self.insist_range_deactivate) + "\n"
+                "INSIST_RANGE_DEACTIVATE = " + json.dumps(self.insist_correct_deactivate) + "\n\n"
+                "# rule switching\n"
+                "RULE_SWITCH_INITIAL_WAIT = " + json.dumps(self.rule_switch_initial_trials_wait) + "\n"
+                "RULE_SWITCH_RANGE = " + json.dumps(self.rule_switch_trial_check_range) + "\n"
+                "RULE_SWITCH_CORRECT = " + json.dumps(self.rule_switch_trials_correct_trigger_switch) + "\n\n"
+                "# fade away \n"
+                "FADE_START = " + repr(self.fade_start) + "\n"
+                "FADE_END = " + repr(self.fade_end) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RAD = " + json.dumps(self.stimulus_rad) + " # pixel radius of stimulus\n"
-                "STIMULUS_COL = " + json.dumps(self.stimulus_col) + "#color of stimulus\n\n"
-                "BACKGROUND_COL = " + json.dumps(self.bg_color) + "#-1,-1,-1 for black\n"
-                "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
-                "\n#===============================================================\n"
-                "# reward in ml\n"
-                "REWARD = " + json.dumps(self.reward) + "\n\n"
-                "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
-                "# state machine settings =======================================\n"
-                "# waiting time beginning of each trial\n"
-                "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
-                "# time the wheel has to be stopped\n"
-                "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
-                "# time wait if the wheel is not stopped before new trial starts\n"
-                "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
-                "# time stimulus is presented but not movable\n"
-                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
-                "# time of open loop where wheel moves the stimulus\n"
-                "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
-                "# time wait if stimulus not moved far enough to position\n"
-                "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
-                "# time stimulus is presented at reached position but not movable anymore\n"
-                "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
-                "# time the animal has for the reward = valve open + time after\n"
-                "TIME_REWARD =" + repr(self.time_dict["time_reward"]) + "\n"
-                "# no reward time\n"
-                "TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = " + repr(self.time_dict["time_range_no_reward_punish"]) + "\n"
-                "# time at end of each trial_num\n"
-                "INTER_TRIAL_TIME = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
-                "# Insist Mode =================================================\n"
-                "RANGE_INSIST_TRIGGER = " + json.dumps(self.insist_range_trigger) + "\n"
-                "NUMBER_CORRECT_INSIST_DEACTIVATE = " + json.dumps(self.insist_range_deactivate) + "\n"
-                "RANGE_INSIST_DEACTIVATE = " + json.dumps(self.insist_correct_deactivate) + "\n\n\n"
-                "# Rule Switching Mode =========================================\n"
-                "RULE_SWITCH_INITIAL_WAIT = "
-                + json.dumps(self.rule_switch_initial_trials_wait)
-                + " # wait for n trials before checking for rule switching\n"
-                "RULE_SWITCH_RANGE = "
-                + json.dumps(self.rule_switch_trial_check_range)
-                + "# range of trials for checking for rule switching\n"
-                "RULE_SWITCH_CORRECT = "
-                + json.dumps(self.rule_switch_trials_correct_trigger_switch)
-                + "# number of correct trials for rule switching\n\n"
-                "# Fade away ===================================================\n"
-                "FADE_START = "
-                + repr(self.fade_start)
-                + " # from center to left side where stimulus fade away begins\n"
-                "FADE_END = " + repr(self.fade_end) + " # from center to left side where stimulus fade away ends\n\n"
-                "# rotary Encoder ==============================================\n"
-                '""" Construct thresholds like this:\n'
-                "[\n\t-90, 90, # stimulus position in degrees of wheel movement\n"
-                "\t-1, 1    # wheel not stoping threshold in degrees of wheel movement\n]\n"
-                '"""\n'
-                "# thresholds for event signaling between rotary encoder and bpod\n"
-                "ALL_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds, indent=4) + "\n"
-                "# speed of movement\nSTIMULUS_END_POS = "
-                + json.dumps(self.rotaryencoder_stimulus_end_pos, indent=4)
-                + " # pixel\n"
-                '"""\nend of 1st screen from center = 960 px\nend of 2nd screen from center = 960 + 1920px\n"""\n\n'
+                "STIMULUS_COL = " + json.dumps(self.stimulus_col) + " #color of stimulus\n\n"
+                "BACKGROUND_COL = " + json.dumps(self.bg_color) + "\n\n"
+                "# thresholds\n"
+                "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
+                "STIMULUS_END_POS = " + json.dumps(self.rotaryencoder_stimulus_end_pos) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
-                "# Animal ===================================================\n"
-                "# animal weight in grams\nANIMAL_WEIGHT = " + json.dumps(self.animal_weight) + "\n"
+                "# animal weight in grams\n"
+                "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n"
             )
