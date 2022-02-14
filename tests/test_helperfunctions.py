@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import maxland.helperfunctions as hf
 
 
-class HelperFunctionsTryRunFunctionTest(unittest.TestCase):
+class TestHelperFunctionsTryRunFunction(unittest.TestCase):
     def test_try_run_function_succeed(self):
         def test_function():
             return 1 + 1
@@ -25,7 +25,7 @@ class HelperFunctionsTryRunFunctionTest(unittest.TestCase):
         self.assertRaises(Exception, wrapper_return)
 
 
-class HelperFunctionsPostSessionCleanupTest(unittest.TestCase):
+class TestHelperFunctionsPostSessionCleanup(unittest.TestCase):
     def setUp(self):
         self.bpod = MagicMock()
         self.sma = MagicMock()
