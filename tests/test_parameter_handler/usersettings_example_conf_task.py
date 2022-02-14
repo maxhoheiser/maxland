@@ -1,15 +1,13 @@
-TASK = "gamble"
+TASK = "conf"
 
-GAMBLE_SIDE = "Left"
-BLOCKS = [
-    {"trial_range_block": [1, 2], "prob_reward_gamble_block": 10.0, "prob_reward_save_block": 20.0},
-    {"trial_range_block": [3, 4], "prob_reward_gamble_block": 30.0, "prob_reward_save_block": 40.0},
-    {"trial_range_block": [5, 6], "prob_reward_gamble_block": 50.0, "prob_reward_save_block": 50.0},
-]
+TRIAL_NUMBER = 30
+STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
+STIMULUS_CORRECT = {"grating_sf": 0.01, "grating_ori": 0.1, "grating_size": 40.0, "grating_speed": 0.04}
+STIMULUS_WRONG = {"grating_sf": 0.04, "grating_ori": 90.0, "grating_size": 40.0, "grating_speed": 0.01}
+
 
 # reward in seconds
-BIG_REWARD = 0.11
-SMALL_REWARD = 0.12
+REWARD = 0.12
 LAST_CALLIBRATION = "2020.06.10"
 
 # trial times
@@ -21,8 +19,22 @@ TIME_OPEN_LOOP = 10.0
 TIME_OPEN_LOOP_FAIL_PUNISH = 0.0
 TIME_STIMULUS_FREEZE = 2.0
 TIME_REWARD = 1.0
-TIME_NO_REWARD = 1.0
+TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = [0.0, 0.0]
 TIME_INTER_TRIAL = 1.5
+
+# insist mode
+INSIST_RANGE_TRIGGER = 5
+INSIST_CORRECT_DEACTIVATE = 3
+INSIST_RANGE_DEACTIVATE = 35
+
+# rule switching
+RULE_SWITCH_INITIAL_WAIT = 10
+RULE_SWITCH_RANGE = 10
+RULE_SWITCH_CORRECT = 8
+
+# fade away
+FADE_START = 1950
+FADE_END = 3000
 
 # stimulus size and color - only for moving stimulus
 STIMULUS_RAD = 45  # pixel radius of stimulus
