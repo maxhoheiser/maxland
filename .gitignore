@@ -24,6 +24,8 @@ pip-delete-this-directory.txt
 *app.log
 *.log
 
+# Test packages
+*.tox/
 
 # PyBpod files
 maxland_TRAINING/*
