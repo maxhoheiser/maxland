@@ -4,6 +4,12 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [master, develop]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Log level"
+        required: true
+        default: "warning"
 
 jobs:
   test:
