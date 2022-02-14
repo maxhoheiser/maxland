@@ -2,7 +2,7 @@ import csv
 import json
 import os
 
-import system_constants
+import maxland.system_constants as system_constants
 
 
 class TrialParameterHandler:
