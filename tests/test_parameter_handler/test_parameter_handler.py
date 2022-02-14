@@ -1,3 +1,4 @@
+import filecmp
 import importlib.util
 import os
 import shutil
@@ -40,8 +41,8 @@ class TestTrialParameterHandlerGambleTask(unittest.TestCase):
         create_folder(self.settings_folder_path)
         create_folder(self.session_folder_path)
 
-        import_file = os.path.join(execution_folder_path, "usersettings_example_gamble_task.py")
-        spec = importlib.util.spec_from_file_location("usersettings_example_gamble_task", import_file)
+        self.import_file = os.path.join(execution_folder_path, "usersettings_example_gamble_task.py")
+        spec = importlib.util.spec_from_file_location("usersettings_example_gamble_task", self.import_file)
         self.usersettings_example_import = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.usersettings_example_import)
 
@@ -71,6 +72,15 @@ class TestTrialParameterHandlerGambleTask(unittest.TestCase):
 
         self.assertEqual(usersettings_object_after.big_reward, NEW_BIG_REWARD)
         self.assertEqual(usersettings_object_after.small_reward, NEW_SMALL_REWARD)
+
+    def test_save_complete_usersettings_to_fule(self):
+        usersettings_object_before = TrialParameterHandler(
+            self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
+        )
+        usersettings_object_before.update_userinput_file_gamble()
+        saved_file = os.path.join(self.settings_folder_path, "usersettings.py")
+
+        self.assertFalse(filecmp.cmp(self.import_file, saved_file))
 
 
 class TestTrialParameterHandlerConfTask(unittest.TestCase):

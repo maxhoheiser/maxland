@@ -301,7 +301,7 @@ class TrialParameterHandler:
                 "STIMULUS_END_POS = " + json.dumps(self.rotaryencoder_stimulus_end_pos) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
-                "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n"
+                "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
             )
 
     def update_userinput_file_conf(self):
@@ -347,5 +347,5 @@ class TrialParameterHandler:
                 "STIMULUS_END_POS = " + json.dumps(self.rotaryencoder_stimulus_end_pos) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
-                "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n"
+                "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
             )
