@@ -24,7 +24,7 @@ for trial in range(trials):
         state_name="end_state",
         state_timer=10,
         # last state always next state to exit
-        state_change_conditions=[{"BNC1High": "exit"},{"BNC2High":"exit"}],
+        state_change_conditions=[{"BNC1High": "exit"}, {"BNC2High": "exit"}],
         output_actions=[("BNC1", 1)],
     )
 
@@ -36,6 +36,6 @@ for trial in range(trials):
     if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         break
     # print some infos about the trial
-    print("Current trial info: {0}".format(bpod.session.current_trial))
+    print(f"Current trial info: {bpod.session.current_trial}")
 
 bpod.close()

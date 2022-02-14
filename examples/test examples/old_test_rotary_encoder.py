@@ -22,9 +22,10 @@ else:
 modules_dir = os.path.join(maxland_root, "modules")
 sys.path.insert(-1, modules_dir)
 
+from helperfunctions import find_rotaryencoder_com_port, try_run_function
+
 # import custom modules
 from rotaryencoder import BpodRotaryEncoder
-from helperfunctions import find_rotaryencoder_com_port, try_run_function
 
 trials = 10
 
@@ -68,9 +69,7 @@ for trial in range(trials):
         state_name="reset_rotary_encoder_wheel_stopping_check",
         state_timer=0,
         state_change_conditions={"Tup": "open_loop"},
-        output_actions=[
-            ("Serial1", settings_obj.RESET_ROTARY_ENCODER)
-        ],  # activate white light while waiting
+        output_actions=[("Serial1", settings_obj.RESET_ROTARY_ENCODER)],  # activate white light while waiting
     )
 
     # open loop detection

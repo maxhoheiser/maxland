@@ -26,7 +26,7 @@ for trial in range(trials):
         state_change_conditions={"Tup": "state_03"},
         output_actions=[("BNC1", 1), ("BNC2", 0)],
     )
-    
+
     # test output signal 01
     sma.add_state(
         state_name="state_03",
@@ -34,14 +34,13 @@ for trial in range(trials):
         state_change_conditions={"Tup": "state_04"},
         output_actions=[("BNC1", 0), ("BNC2", 1)],
     )
-        # test output signal 11
+    # test output signal 11
     sma.add_state(
         state_name="state_04",
         state_timer=1,
         state_change_conditions={"Tup": "exit"},
         output_actions=[("BNC1", 1), ("BNC2", 1)],
     )
-
 
     # Send state machine description to Bpod device
     # as soone as the state machine object is transmitted the states are run
@@ -51,6 +50,6 @@ for trial in range(trials):
     if not bpod.run_state_machine(sma):  # Locks until state machine 'exit' is reached
         break
     # print some infos about the trial
-    print("Current trial info: {0}".format(bpod.session.current_trial))
+    print(f"Current trial info: {bpod.session.current_trial}")
 
 bpod.close()
