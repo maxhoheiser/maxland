@@ -1,6 +1,6 @@
 import random
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_conf import ProbabilityConstructor
@@ -51,6 +51,9 @@ USERSETTINGS = Dotdict(
     }
 )
 
+INITIAL_RULE = "RU0"
+SWITCHED_RULE = "RU1"
+
 
 class TestProbabilityConstructorConfidentialityTask(unittest.TestCase):
     def setUp(self):
@@ -95,3 +98,72 @@ class TestProbabilityConstructorConfidentialityTask(unittest.TestCase):
 
         self.assertEqual(probability_constructor.stimulus_sides["right"], False)
         self.assertEqual(probability_constructor.stimulus_sides["left"], True)
+
+    # test insist mode
+    def test_not_activate_insist(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.chosen_sides_li = ["right", "left", "left", "right"]
+        probability_constructor.settings.insist_range_trigger = 4
+
+        probability_constructor.insist_mode_check()
+
+        self.assertEqual(probability_constructor.insist_mode_active, False)
+
+    def test_not_activate_insist_slice(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.chosen_sides_li = ["left", "left", "left", "left", "left", "left", "right", "right"]
+        probability_constructor.settings.insist_range_trigger = 5
+
+        probability_constructor.insist_mode_check()
+
+        self.assertEqual(probability_constructor.insist_mode_active, False)
+
+    def test_activate_insist_left(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.chosen_sides_li = ["right", "left", "right", "right", "right"]
+        probability_constructor.settings.insist_range_trigger = 3
+
+        probability_constructor.insist_mode_check()
+
+        self.assertEqual(probability_constructor.insist_mode_active, True)
+        self.assertEqual(probability_constructor.insist_side, "left")
+
+    def test_activate_insist_right(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.chosen_sides_li = ["left", "right", "left", "left", "left"]
+        probability_constructor.settings.insist_range_trigger = 3
+
+        probability_constructor.insist_mode_check()
+
+        self.assertEqual(probability_constructor.insist_mode_active, True)
+        self.assertEqual(probability_constructor.insist_side, "right")
+
+    def test_deactivate_insist(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.insist_mode_active = True
+        probability_constructor.insist_mode_chosen_side_li = ["left", "right", "left"]
+        probability_constructor.chosen_sides_li = ["left"]
+        probability_constructor.insist_side = "left"
+        probability_constructor.settings.insist_correct_deactivate = 3
+        probability_constructor.settings.insist_range_deactivate = 4
+
+        probability_constructor.insist_mode_check()
+
+        self.assertEqual(probability_constructor.insist_mode_active, False)
+        self.assertEqual(probability_constructor.insist_side, None)
+        self.assertEqual(probability_constructor.insist_mode_chosen_side_li, [])
+
+    def test_not_deactivate_insist(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.insist_mode_active = True
+        probability_constructor.insist_mode_chosen_side_li = ["left", "right", "left"]
+        probability_constructor.chosen_sides_li = ["right"]
+        probability_constructor.insist_side = "left"
+        probability_constructor.settings.insist_correct_deactivate = 3
+        probability_constructor.settings.insist_range_deactivate = 4
+
+        probability_constructor.insist_mode_check()
+
+        self.assertEqual(probability_constructor.insist_mode_active, True)
+        self.assertEqual(probability_constructor.insist_side, "left")
+        self.assertEqual(probability_constructor.insist_mode_chosen_side_li, ["left", "right", "left", "right"])
