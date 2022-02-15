@@ -167,3 +167,82 @@ class TestProbabilityConstructorConfidentialityTask(unittest.TestCase):
         self.assertEqual(probability_constructor.insist_mode_active, True)
         self.assertEqual(probability_constructor.insist_side, "left")
         self.assertEqual(probability_constructor.insist_mode_chosen_side_li, ["left", "right", "left", "right"])
+
+    # test rule switching
+    def test_rule_switching_initial_trials_wait_not_switch(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 2
+        probability_constructor.settings.rule_switch_trial_check_range = 4
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
+        current_trial_num = 4
+        probability_constructor.trials_correct_side_chosen = [False, True, True, True]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+
+        self.assertEqual(probability_constructor.active_rule, INITIAL_RULE)
+
+    def test_rule_switching_initial_trials_wait_switch(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 1
+        probability_constructor.settings.rule_switch_trial_check_range = 3
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
+        current_trial_num = 4
+        probability_constructor.trials_correct_side_chosen = [False, True, True, True]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+
+        self.assertEqual(probability_constructor.active_rule, SWITCHED_RULE)
+        self.assertEqual(probability_constructor.settings.stimulus_correct_side, USERSETTINGS.STIMULUS_WRONG)
+        self.assertEqual(probability_constructor.settings.stimulus_wrong_side, USERSETTINGS.STIMULUS_CORRECT)
+
+    def test_rule_switching(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 2
+        probability_constructor.settings.rule_switch_trial_check_range = 10
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 6
+        current_trial_num = 10
+        probability_constructor.trials_correct_side_chosen = [
+            False,
+            True,
+            True,
+            True,
+            False,
+            False,
+            True,
+            True,
+            False,
+            True,
+            True,
+            False,
+        ]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+
+        self.assertEqual(probability_constructor.active_rule, SWITCHED_RULE)
+        self.assertEqual(probability_constructor.settings.stimulus_correct_side, USERSETTINGS.STIMULUS_WRONG)
+        self.assertEqual(probability_constructor.settings.stimulus_wrong_side, USERSETTINGS.STIMULUS_CORRECT)
+
+    def test_rule_not_switching(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 2
+        probability_constructor.settings.rule_switch_trial_check_range = 10
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 7
+        current_trial_num = 10
+        probability_constructor.trials_correct_side_chosen = [
+            False,
+            True,
+            True,
+            True,
+            False,
+            False,
+            True,
+            True,
+            False,
+            True,
+            True,
+            False,
+        ]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+
+        self.assertEqual(probability_constructor.active_rule, INITIAL_RULE)
