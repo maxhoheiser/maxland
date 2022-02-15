@@ -38,3 +38,5 @@ repos:
           - --fail-under=6
           - --rcfile=./.pylintrc
           - --disable=C0114
+          - --disable=C0115
+          - --disable=C0116

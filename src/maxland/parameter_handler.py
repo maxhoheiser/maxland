@@ -30,8 +30,8 @@ class TrialParameterHandler:
         # specific for gamble task
         if self.task == "gamble":
             self.gamble_side = self.usersettings.GAMBLE_SIDE
-            self.gamble_side_left = self.get_is_gamble_side_left()
-            self.probability_blocks = self.usersettings.BLOCKS
+            self.is_gamble_side_left = self.get_is_gamble_side_left()
+            self.blocks = self.usersettings.BLOCKS
             self.big_reward = self.usersettings.BIG_REWARD  # reward amount in ml
             self.small_reward = self.usersettings.SMALL_REWARD  # reward amount in ml
             self.manual_reward = None
@@ -124,7 +124,7 @@ class TrialParameterHandler:
             self.time_dict["time_small_reward_open"] = self.get_valve_open_time(self.small_reward)
             self.update_reward_time()
             self.update_waiting_times()
-            self.gamble_side_left = self.get_is_gamble_side_left()
+            self.is_gamble_side_left = self.get_is_gamble_side_left()
         if self.task == "conf":
             self.time_dict["time_reward_open"] = self.get_valve_open_time(self.reward)
             self.update_reward_time()
@@ -276,7 +276,7 @@ class TrialParameterHandler:
             f.write(
                 'TASK="gamble"\n\n'
                 "GAMBLE_SIDE = " + json.dumps(self.gamble_side) + "\n"
-                "BLOCKS = " + json.dumps(self.probability_blocks) + "\n\n"
+                "BLOCKS = " + json.dumps(self.blocks) + "\n\n"
                 "# reward in seconds\n"
                 "BIG_REWARD = " + repr(self.big_reward) + "\n"
                 "SMALL_REWARD = " + repr(self.small_reward) + "\n\n"
