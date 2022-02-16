@@ -47,7 +47,7 @@ USERSETTINGS = Dotdict(
 )
 
 
-class TestProbabilityConstructorConfidentialityTask(unittest.TestCase):
+class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def setUp(self):
         self.parameter_handler = TrialParameterHandler(USERSETTINGS, "", "")
         random.seed(666)
