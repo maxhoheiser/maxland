@@ -1,48 +1,48 @@
 import numpy as np
 from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
 
+WRAP_POINT = 0
+
 
 class BpodRotaryEncoder:
-    def __init__(self, com_port, settings, bpod):
-        """helper class to deal with rotary encoder module, set thresholds, set and reset position aswell as read prosition
+    """helper class to deal with rotary encoder module, set thresholds, set and reset position as well as read prosition
+    Args:
+        com_port (str): com port (usb) where rotary encoder module is connected to
+        settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
+    """
 
-        Args:
-            com_port (str): com port (usb) where rotary encoder module is connected to
-            settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
-        """
-        # rotary encoder settings
+    def __init__(self, com_port, settings, bpod):
         self.com_port = com_port
         self.rotary_encoder = RotaryEncoderModule(self.com_port)
         self.bpod = bpod
-        self.reset = settings.RESET_ROTARY_ENCODER
-        self.WRAP_POINT = 0
-
-        # set thresholds
+        self.reset = settings.reset_rotary_encoder
+        self.wrap_point = WRAP_POINT
         self.all_thresholds = settings.thresholds
-        self.enable_thresholds = [(True if x != 0 else False) for x in self.all_thresholds]
-        while len(self.enable_thresholds) < 8:
-            self.enable_thresholds.append(False)
-        self.events = [f"RotaryEncoder1_{x}" for x in list(range(1, len(self.all_thresholds) + 1))]
+        self.enabled_thresholds = self.get_enabled_thresholds(self.all_thresholds)
+        self.events = self.get_events(self.all_thresholds)
+        self.set_bit_message()
+        self.set_configuration()
 
-    def get_events(self):
-        return self.events
+    def get_enabled_thresholds(self, all_thresholds):
+        enable_thresholds = [(True if x != 0 else False) for x in all_thresholds]
+        while len(enable_thresholds) < 8:
+            enable_thresholds.append(False)
+        return enable_thresholds
 
-    def load_message(self):
-        """load reset messag to rotary encoder so bpod can reset rotary encoder position
+    def get_events(self, thresholds):
+        events = [f"RotaryEncoder1_{x}" for x in list(range(1, len(thresholds) + 1))]
+        return events
 
-        Args:
-            bpod (Bpod object):
-        """
+    def set_bit_message(self):
         rotary_encoder = [x for x in self.bpod.modules if x.name == "RotaryEncoder1"][0]
         self.bpod.load_serial_message(rotary_encoder, self.reset, [ord("Z"), ord("E")])
 
-    def configure(self):
-        """loads rotary enoder module with thresholds"""
+    def set_configuration(self):
+        """loads rotary encoder module with thresholds"""
         self.rotary_encoder.set_thresholds(self.all_thresholds)
-        self.rotary_encoder.enable_thresholds(self.enable_thresholds)
-
+        self.rotary_encoder.enable_thresholds(self.enabled_thresholds)
         self.rotary_encoder.enable_evt_transmission()
-        self.set_wrap_point(self.WRAP_POINT)
+        self.set_wrap_point(self.wrap_point)
 
     def close(self):
         self.rotary_encoder.close()
@@ -61,7 +61,6 @@ class BpodRotaryEncoder:
         if len(position) != 0:
             return position[0][2]
 
-    # log postition
     def enable_logging(self):
         self.rotary_encoder.enable_logging()
 
@@ -75,13 +74,10 @@ class BpodRotaryEncoder:
         self.rotary_encoder.set_zero_position()
 
     def set_wrap_point(self, wrap_point):
-        """set the point at which the position is automatically set back to 0 => one half rotation
-
-        Args:
-            wrap_point (int): one half rotation wehre set to zero again
-
-        Returns:
-            [type]: [description]
+        """
+        set the point at which the position is automatically set back to 0 => one half rotation
+        Args: wrap_point (int): one half rotation wehre set to zero again
+        Returns: [type]: [description]
         """
         array = np.array([np.uint8(wrap_point)])
         self.rotary_encoder.arcom.write_array([ord("W")] + array)
