@@ -83,14 +83,12 @@ if settings_obj.run_session:
             state_change_conditions={"Tup": "start"},
             output_actions=[("SoftCode", settings_obj.soft_code_start_logging)],
         )
-
         sma.add_state(
             state_name="start",
             state_timer=settings_obj.time_dict["time_start"],
             state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
             output_actions=[],
         )
-
         sma.add_state(
             state_name="reset_rotary_encoder_wheel_stopping_check",
             state_timer=0,
@@ -98,7 +96,6 @@ if settings_obj.run_session:
             # activate white light while waiting
             output_actions=[("Serial1", settings_obj.bit_message_reset_rotary_encoder)],
         )
-
         sma.add_state(
             state_name="wheel_stopping_check",
             state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
@@ -109,14 +106,12 @@ if settings_obj.run_session:
             },
             output_actions=[],
         )
-
         sma.add_state(
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings_obj.time_dict["time_wheel_stopping_punish"],
             state_change_conditions={"Tup": "start"},
             output_actions=[("SoftCode", settings_obj.soft_code_wheel_not_stopping)],
         )
-
         sma.add_state(
             state_name="present_stim",
             state_timer=settings_obj.time_dict["time_stimulus_presentation"],
@@ -131,7 +126,6 @@ if settings_obj.run_session:
             state_change_conditions={"Tup": "open_loop"},
             output_actions=[("Serial1", settings_obj.bit_message_reset_rotary_encoder)],
         )
-
         sma.add_state(
             state_name="open_loop",
             state_timer=settings_obj.time_dict["time_open_loop"],
@@ -142,14 +136,12 @@ if settings_obj.run_session:
             },
             output_actions=[("SoftCode", settings_obj.soft_code_start_open_loop)],
         )
-
         sma.add_state(
             state_name="stop_open_loop_fail",
             state_timer=0,
             state_change_conditions={"Tup": "open_loop_fail_punish"},
             output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop)],
         )
-
         sma.add_state(
             state_name="open_loop_fail_punish",
             state_timer=settings_obj.time_dict["time_open_loop_fail_punish"],
@@ -169,14 +161,12 @@ if settings_obj.run_session:
             if probability_dict["gamble_reward"]:
                 # big reward
                 print("Gamble_reward_left")
-
                 sma.add_state(
                     state_name="check_reward_left",
                     state_timer=0,
                     state_change_conditions={"Tup": "big_reward_left"},
                     output_actions=[],
                 )
-
                 sma.add_state(
                     state_name="big_reward_left",
                     state_timer=settings_obj.time_dict["time_big_reward_open"],
@@ -186,7 +176,6 @@ if settings_obj.run_session:
                         ("Valve1", 255),
                     ],
                 )
-
                 sma.add_state(
                     state_name="reward_left_waiting",
                     state_timer=settings_obj.time_dict["time_big_reward_waiting"],
@@ -197,21 +186,18 @@ if settings_obj.run_session:
             else:
                 # no reward
                 print("Gamble_No_Reward_left")
-
                 sma.add_state(
                     state_name="check_reward_left",
                     state_timer=0,
                     state_change_conditions={"Tup": "no_reward_left"},
                     output_actions=[],
                 )
-
                 sma.add_state(
                     state_name="no_reward_left",
                     state_timer=0,
                     state_change_conditions={"Tup": "reward_left_waiting"},
                     output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
                 )
-
                 sma.add_state(
                     state_name="reward_left_waiting",
                     state_timer=settings_obj.time_dict["time_reward"],
@@ -222,14 +208,12 @@ if settings_obj.run_session:
         if probability_dict["safe_reward"]:
             # small reward
             print("safereward_gambleleft")
-
             sma.add_state(
                 state_name="check_reward_left",
                 state_timer=0,
                 state_change_conditions={"Tup": "small_reward_left"},
                 output_actions=[],
             )
-
             sma.add_state(
                 state_name="small_reward_left",
                 state_timer=settings_obj.time_dict["time_small_reward_open"],
@@ -239,7 +223,6 @@ if settings_obj.run_session:
                     ("Valve1", 255),
                 ],
             )
-
             sma.add_state(
                 state_name="reward_left_waiting",
                 state_timer=settings_obj.time_dict["time_small_reward_waiting"],
@@ -257,14 +240,12 @@ if settings_obj.run_session:
                 state_change_conditions={"Tup": "no_reward_left"},
                 output_actions=[],
             )
-
             sma.add_state(
                 state_name="no_reward_left",
                 state_timer=0,
                 state_change_conditions={"Tup": "reward_left_waiting"},
                 output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
             )
-
             sma.add_state(
                 state_name="reward_left_waiting",
                 state_timer=settings_obj.time_dict["time_reward"],
@@ -285,14 +266,12 @@ if settings_obj.run_session:
             if probability_dict["gamble_reward"]:
                 # big reward
                 print("Gamble_Reward_right")
-
                 sma.add_state(
                     state_name="check_reward_right",
                     state_timer=0,
                     state_change_conditions={"Tup": "big_reward_right"},
                     output_actions=[],
                 )
-
                 sma.add_state(
                     state_name="big_reward_right",
                     state_timer=settings_obj.time_dict["time_big_reward_open"],
@@ -302,7 +281,6 @@ if settings_obj.run_session:
                         ("Valve1", 255),
                     ],
                 )
-
                 sma.add_state(
                     state_name="reward_right_waiting",
                     state_timer=settings_obj.time_dict["time_big_reward_waiting"],
@@ -313,21 +291,18 @@ if settings_obj.run_session:
             else:
                 # no reward
                 print("gamble_No_Reward_right")
-
                 sma.add_state(
                     state_name="check_reward_right",
                     state_timer=0,
                     state_change_conditions={"Tup": "no_reward_right"},
                     output_actions=[],
                 )
-
                 sma.add_state(
                     state_name="no_reward_right",
                     state_timer=0,
                     state_change_conditions={"Tup": "reward_right_waiting"},
                     output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
                 )
-
                 sma.add_state(
                     state_name="reward_right_waiting",
                     state_timer=settings_obj.time_dict["time_reward"],
@@ -338,14 +313,12 @@ if settings_obj.run_session:
         if probability_dict["safe_reward"]:
             # small reward
             print("safe_reward_right")
-
             sma.add_state(
                 state_name="check_reward_right",
                 state_timer=0,
                 state_change_conditions={"Tup": "small_reward_right"},
                 output_actions=[],
             )
-
             sma.add_state(
                 state_name="small_reward_right",
                 state_timer=settings_obj.time_dict["time_small_reward_open"],
@@ -355,7 +328,6 @@ if settings_obj.run_session:
                     ("Valve1", 255),
                 ],
             )
-
             sma.add_state(
                 state_name="reward_right_waiting",
                 state_timer=settings_obj.time_dict["time_small_reward_waiting"],
@@ -366,21 +338,18 @@ if settings_obj.run_session:
         else:
             # no reward
             print("safe_No_reward_right")
-
             sma.add_state(
                 state_name="check_reward_right",
                 state_timer=0,
                 state_change_conditions={"Tup": "no_reward_right"},
                 output_actions=[],
             )
-
             sma.add_state(
                 state_name="no_reward_right",
                 state_timer=0,
                 state_change_conditions={"Tup": "reward_right_waiting"},
                 output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
             )
-
             sma.add_state(
                 state_name="reward_right_waiting",
                 state_timer=settings_obj.time_dict["time_reward"],
