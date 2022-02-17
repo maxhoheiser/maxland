@@ -81,9 +81,11 @@ class TrialParameterHandler:
         self.soft_code_wheel_not_stopping = system_constants.SOFT_CODE_WHEEL_NOT_STOPPING
         # rotary encoder
         self.wheel_diameter = system_constants.WHEEL_DIAMETER
-        self.reset_rotary_encoder = system_constants.RESET_ROTARY_ENCODER
-        self.thresh_left = system_constants.THRESH_LEFT
-        self.thresh_right = system_constants.THRESH_RIGHT
+        self.bit_message_reset_rotary_encoder = system_constants.BIT_MESSAGE_RESET_ROTARY_ENCODER
+        self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
+        self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POS
+        self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
+        self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
         self.stimulus_left = system_constants.STIMULUS_LEFT
         self.stimulus_right = system_constants.STIMULUS_RIGHT
         self.wheel_position = []
