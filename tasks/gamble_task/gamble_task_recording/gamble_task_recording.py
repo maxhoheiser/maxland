@@ -39,16 +39,16 @@ else:
 modules_dir = os.path.join(maxland_root, "modules")
 sys.path.insert(-1, modules_dir)
 
-# import custom modules
-from parameter_handler import TrialParameterHandler
-from rotaryencoder import BpodRotaryEncoder
-from probability_gamble import ProbabilityConstuctor
-from stimulus_gamble import Stimulus
-from userinput import UserInput
-from helperfunctions import *
-
 # import usersettings
 import usersettings
+from helperfunctions import *
+
+# import custom modules
+from parameter_handler import TrialParameterHandler
+from probability_gamble import ProbabilityConstuctor
+from rotaryencoder import BpodRotaryEncoder
+from stimulus_gamble import Stimulus
+from userinput import UserInput
 
 # create settings object
 session_folder = os.getcwd()
@@ -142,9 +142,7 @@ if settings_obj.run_session:
         sma.add_state(
             state_name="sync_state_1",
             state_timer=0,
-            state_change_conditions={
-                "Tup": "reset_rotary_encoder_wheel_stopping_check"
-            },
+            state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
             output_actions=[("BNC1", 0), ("BNC2", 0)],
         )
         # reset rotary encoder bevore checking for wheel not stoping
@@ -178,9 +176,7 @@ if settings_obj.run_session:
         sma.add_state(
             state_name="wheel_stopping_check_failed_reset",
             state_timer=0,
-            state_change_conditions={
-                "Tup": "reset_rotary_encoder_wheel_stopping_check"
-            },
+            state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
             output_actions=[("BNC1", 0), ("BNC2", 0), ("SoftCode", 9)],
         )
 
@@ -542,9 +538,7 @@ if settings_obj.run_session:
 
         try:
             # run stimulus game
-            stimulus_game.run_game(
-                display_stim_event, start_open_loop_event, still_show_event, bpod, sma
-            )
+            stimulus_game.run_game(display_stim_event, start_open_loop_event, still_show_event, bpod, sma)
         except:
             break
 

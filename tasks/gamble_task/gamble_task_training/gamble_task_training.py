@@ -38,16 +38,16 @@ else:
 modules_dir = os.path.join(maxland_root, "modules")
 sys.path.insert(-1, modules_dir)
 
-# import custom modules
-from parameter_handler import TrialParameterHandler
-from rotaryencoder import BpodRotaryEncoder
-from probability_gamble import ProbabilityConstuctor
-from stimulus_gamble import Stimulus
-from userinput import UserInput
-from helperfunctions import *
-
 # import usersettings
 import usersettings
+from helperfunctions import *
+
+# import custom modules
+from parameter_handler import TrialParameterHandler
+from probability_gamble import ProbabilityConstuctor
+from rotaryencoder import BpodRotaryEncoder
+from stimulus_gamble import Stimulus
+from userinput import UserInput
 
 # create settings object
 session_folder = os.getcwd()
@@ -138,9 +138,7 @@ if settings_obj.run_session:
         sma.add_state(
             state_name="start",
             state_timer=settings_obj.time_dict["time_start"],
-            state_change_conditions={
-                "Tup": "reset_rotary_encoder_wheel_stopping_check"
-            },
+            state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
             output_actions=[("SoftCode", settings_obj.SC_START_LOGGING)],
         )
         # reset rotary encoder bevore checking for wheel not stoping
@@ -456,9 +454,7 @@ if settings_obj.run_session:
 
         try:
             # run stimulus game
-            stimulus_game.run_game(
-                display_stim_event, start_open_loop_event, still_show_event, bpod, sma
-            )
+            stimulus_game.run_game(display_stim_event, start_open_loop_event, still_show_event, bpod, sma)
         except:
             break
         # post trial cleanup
