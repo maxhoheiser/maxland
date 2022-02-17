@@ -86,8 +86,8 @@ class TrialParameterHandler:
         self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POS
         self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
         self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
-        self.stimulus_left = system_constants.STIMULUS_LEFT
-        self.stimulus_right = system_constants.STIMULUS_RIGHT
+        self.stimulus_threshold_left = system_constants.STIMULUS_THRESHOLD_LEFT
+        self.stimulus_threshold_right = system_constants.STIMULUS_THRESHOLD_RIGHT
         self.wheel_position = []
         # stimulus
         self.fps = system_constants.FPS
