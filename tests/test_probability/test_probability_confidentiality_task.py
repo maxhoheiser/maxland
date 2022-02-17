@@ -55,7 +55,7 @@ INITIAL_RULE = "RU0"
 SWITCHED_RULE = "RU1"
 
 
-class TestProbabilityConstructorConfidentialityTask(unittest.TestCase):
+class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def setUp(self):
         self.parameter_handler = TrialParameterHandler(USERSETTINGS, "", "")
         random.seed(666)
