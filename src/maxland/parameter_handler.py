@@ -35,6 +35,7 @@ class TrialParameterHandler:
             self.big_reward = self.usersettings.BIG_REWARD  # reward amount in ml
             self.small_reward = self.usersettings.SMALL_REWARD  # reward amount in ml
             self.manual_reward = None
+            self.probability_list = []
 
         # specific for confidentiality task
         if self.task == "conf":
@@ -77,6 +78,7 @@ class TrialParameterHandler:
         self.soft_code_start_logging = system_constants.SOFT_CODE_START_LOGGING
         self.soft_code_end_logging = system_constants.SOFT_CODE_END_LOGGING
         self.soft_code_stop_close_loop = system_constants.SOFT_CODE_STOP_CLOSE_LOOP
+        self.soft_code_wheel_not_stopping = system_constants.SOFT_CODE_WHEEL_NOT_STOPPING
         # rotary encoder
         self.wheel_diameter = system_constants.WHEEL_DIAMETER
         self.reset_rotary_encoder = system_constants.RESET_ROTARY_ENCODER

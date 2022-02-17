@@ -14,8 +14,7 @@ class ProbabilityConstructor:
         self.set_block_trial_number_from_range()
         self.trial_number = self.get_total_trial_count()
         self.probability_list = self.get_probability_list()
-        settings.probability_list = self.probability_list
-        settings.trial_number = self.trial_number
+        self.update_settings()
 
     def set_block_trial_number_from_range(self):
         for block in self.settings.blocks:
@@ -65,3 +64,7 @@ class ProbabilityConstructor:
             all_trials_of_block.append(trial_dict)
         block["block_rewards"] = all_trials_of_block
         return all_trials_of_block
+
+    def update_settings(self):
+        self.settings.probability_list = self.probability_list
+        self.settings.trial_number = self.trial_number
