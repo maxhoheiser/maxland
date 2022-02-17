@@ -116,7 +116,7 @@ if settings_obj.run_session:
             state_name="present_stim",
             state_timer=settings_obj.time_dict["time_stimulus_presentation"],
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
-            output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
+            output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus)],
         )
 
         # reset rotary encoder before open loop starts
