@@ -225,7 +225,7 @@ class TrialParameterHandler:
             json.dump(self.stimulus_position, f, indent=4)
 
     def get_is_gamble_side_left(self):
-        if self.gamble_side == "Left":
+        if self.gamble_side == "left":
             return True
         else:
             return False
