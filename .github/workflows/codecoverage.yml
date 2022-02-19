@@ -1,0 +1,35 @@
+name: CodeCov
+on:
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [master, develop]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: "Log level"
+        required: true
+        default: "warning"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      OS: ubuntu-latest
+      PYTHON: "3.8"
+
+    steps:
+      - uses: checkout@v2
+        with:
+          fetch-depth: "2"
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: 3.8
+      - name: Generate Report
+        run: |
+          pip install coverage
+          coverage run -m unittest discover
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
