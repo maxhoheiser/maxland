@@ -32,6 +32,6 @@ jobs:
           pip install coverage
           coverage run -m unittest discover
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: actions/codecov-action@v2
         with:
           fail_ci_if_error: true
