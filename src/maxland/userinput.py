@@ -76,16 +76,16 @@ class UserInput:
             self.settings.reward = float(self.var_reward.get())
 
             self.settings.stimulus_correct_side = {
-                "grating_sf": float(self.var_stim_correct_sf.get()),
+                "grating_sf": float(self.var_stim_correct_frequency.get()),
                 "grating_ori": float(self.var_stim_correct_or.get()),
                 "grating_size": float(self.var_stim_correct_size.get()),
-                "grating_speed": float(self.var_stim_correct_speed.get()),
+                "grating_speed": float(self.var_stim_correct_phase_speed.get()),
             }
             self.settings.stimulus_wrong_side = {
-                "grating_sf": float(self.var_stim_wrong_sf.get()),
+                "grating_sf": float(self.var_stim_wrong_frequency.get()),
                 "grating_ori": float(self.var_stim_wrong_or.get()),
                 "grating_size": float(self.var_stim_wrong_size.get()),
-                "grating_speed": float(self.var_stim_wrong_speed.get()),
+                "grating_speed": float(self.var_stim_wrong_phase_speed.get()),
             }
             self.settings.stimulus_type = self.var_drp_stim.get()
 
@@ -593,12 +593,14 @@ class UserInput:
         lbl_stim_correct = tk.Label(frame_5_0, text="CORRECT", font=self.fontStyleRegular)
         lbl_stim_correct.grid(row=0, column=0, pady=[8, 0], columnspan=4)
         # frequency
-        lbl_stim_correct_sf = tk.Label(frame_5_0, text="Spatial Frequency:", font=self.fontStyleRegular)
-        lbl_stim_correct_sf.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
+        lbl_stim_correct_frequency = tk.Label(frame_5_0, text="Spatial Frequency:", font=self.fontStyleRegular)
+        lbl_stim_correct_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_correct_sf = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_sf"])
-        self.etr_stim_correct_sf = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_sf, width=4)
-        self.etr_stim_correct_sf.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
+        self.var_stim_correct_frequency = tk.StringVar(
+            frame_5_0, value=self.settings.stimulus_correct_side["grating_sf"]
+        )
+        self.etr_stim_correct_frequency = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_frequency, width=4)
+        self.etr_stim_correct_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
         lbl_stim_correct_or = tk.Label(frame_5_0, text="Orientation:", font=self.fontStyleRegular)
         lbl_stim_correct_or.grid(row=1, column=2, padx=(10, 2), pady=0, sticky="E")
@@ -619,10 +621,10 @@ class UserInput:
         lbl_stim_correct_speed = tk.Label(frame_5_0, text="Phase Speed:", font=self.fontStyleRegular)
         lbl_stim_correct_speed.grid(row=2, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_correct_speed = tk.StringVar(
+        self.var_stim_correct_phase_speed = tk.StringVar(
             frame_5_0, value=self.settings.stimulus_correct_side["grating_speed"]
         )
-        self.etr_stim_correct_speed = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_speed, width=4)
+        self.etr_stim_correct_speed = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_phase_speed, width=4)
         self.etr_stim_correct_speed.grid(row=2, column=3, padx=(0, 10), pady=10, sticky="W")
 
         # frame_5_1 wrong ================
@@ -631,12 +633,12 @@ class UserInput:
         lbl_stim_wrong = tk.Label(frame_5_1, text="WRONG", font=self.fontStyleRegular)
         lbl_stim_wrong.grid(row=0, column=0, pady=[8, 0], columnspan=4)
         # frequency
-        lbl_stim_wrong_sf = tk.Label(frame_5_1, text="Spatial Frequency:", font=self.fontStyleRegular)
-        lbl_stim_wrong_sf.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
+        lbl_stim_wrong_frequency = tk.Label(frame_5_1, text="Spatial Frequency:", font=self.fontStyleRegular)
+        lbl_stim_wrong_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_wrong_sf = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_sf"])
-        self.etr_stim_wrong_sf = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_sf, width=4)
-        self.etr_stim_wrong_sf.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
+        self.var_stim_wrong_frequency = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_sf"])
+        self.etr_stim_wrong_frequency = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_frequency, width=4)
+        self.etr_stim_wrong_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
         lbl_stim_wrong_or = tk.Label(frame_5_1, text="Orientation:", font=self.fontStyleRegular)
         lbl_stim_wrong_or.grid(row=1, column=2, padx=(10, 2), pady=0, sticky="E")
@@ -657,8 +659,10 @@ class UserInput:
         lbl_stim_wrong_speed = tk.Label(frame_5_1, text="Phase Speed:", font=self.fontStyleRegular)
         lbl_stim_wrong_speed.grid(row=2, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_wrong_speed = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_speed"])
-        self.etr_stim_wrong_speed = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_speed, width=4)
+        self.var_stim_wrong_phase_speed = tk.StringVar(
+            frame_5_1, value=self.settings.stimulus_wrong_side["grating_speed"]
+        )
+        self.etr_stim_wrong_speed = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_phase_speed, width=4)
         self.etr_stim_wrong_speed.grid(row=2, column=3, padx=(0, 10), pady=10, sticky="W")
 
         # variable stimulus variables
