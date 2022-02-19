@@ -43,7 +43,7 @@ BACKGROUND_COL = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]
-STIMULUS_END_POS = [-2048, 2048]  # pixel
+STIMULUS_END_POSITION = [-2048, 2048]  # pixel
 
 LIFE_PLOT = False
 # animal weight in grams

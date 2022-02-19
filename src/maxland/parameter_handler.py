@@ -25,7 +25,7 @@ class TrialParameterHandler:
         # stimulus
         self.stimulus_rad = self.usersettings.STIMULUS_RAD
         self.stimulus_col = self.usersettings.STIMULUS_COL
-        self.bg_color = self.usersettings.BACKGROUND_COL
+        self.background_color = self.usersettings.BACKGROUND_COL
 
         # specific for gamble task
         if self.task == "gamble":
@@ -63,7 +63,7 @@ class TrialParameterHandler:
 
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
-        self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POS
+        self.rotaryencoder_stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
 
         # animal variables
         self.animal_weight = self.usersettings.ANIMAL_WEIGHT
@@ -133,7 +133,7 @@ class TrialParameterHandler:
             if self.insist_range_deactivate < self.insist_correct_deactivate:
                 self.insist_range_deactivate = self.insist_correct_deactivate
 
-    def min_TIME_INTER_TRIAL(self):
+    def set_min_time_inter_trial(self):
         """for the stimulus pygame to run smoothly there has to be a minimum
         time of 1 second between the end of the open loop
         and the change of the flag which quits the pygame and resets it
@@ -295,10 +295,10 @@ class TrialParameterHandler:
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RAD = " + json.dumps(self.stimulus_rad) + " # pixel radius of stimulus\n"
                 "STIMULUS_COL = " + json.dumps(self.stimulus_col) + " #color of stimulus\n\n"
-                "BACKGROUND_COL = " + json.dumps(self.bg_color) + "\n"
+                "BACKGROUND_COL = " + json.dumps(self.background_color) + "\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
-                "STIMULUS_END_POS = " + json.dumps(self.rotaryencoder_stimulus_end_pos) + " # pixel\n\n"
+                "STIMULUS_END_POSITION = " + json.dumps(self.rotaryencoder_stimulus_end_position) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
@@ -341,10 +341,10 @@ class TrialParameterHandler:
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RAD = " + json.dumps(self.stimulus_rad) + " # pixel radius of stimulus\n"
                 "STIMULUS_COL = " + json.dumps(self.stimulus_col) + " #color of stimulus\n\n"
-                "BACKGROUND_COL = " + json.dumps(self.bg_color) + "\n\n"
+                "BACKGROUND_COL = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
-                "STIMULUS_END_POS = " + json.dumps(self.rotaryencoder_stimulus_end_pos) + " # pixel\n\n"
+                "STIMULUS_END_POSITION = " + json.dumps(self.rotaryencoder_stimulus_end_position) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
