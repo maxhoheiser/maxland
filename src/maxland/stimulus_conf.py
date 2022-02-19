@@ -1,11 +1,7 @@
 import random
 import time
-from math import tan as tan
 
-from psychopy import core
-from psychopy import monitors
-from psychopy import tools
-from psychopy import visual
+from psychopy import core, monitors, tools, visual
 
 
 class Stimulus:
@@ -31,9 +27,7 @@ class Stimulus:
         self.rotary_encoder = rotary_encoder
         self.correct_stim_side = correct_stim_side
         # self.gain = self.get_gain()
-        self.gain_left, self.gain_right = (
-            round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos
-        )
+        self.gain_left, self.gain_right = (round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos)
         self.gain = self.gain_left  # TODO:
         # monitor configuration
         # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
@@ -60,10 +54,10 @@ class Stimulus:
         # get frame rate of monitor
         expInfo = {}
         expInfo["frameRate"] = self.win.getActualFrameRate()
-        if expInfo["frameRate"] != None:
-            frameDur = 1.0 / round(expInfo["frameRate"])
-        else:
-            frameDur = 1.0 / 60.0  # could not measure, so guess
+        # if expInfo["frameRate"] != None:
+        #     frameDur = 1.0 / round(expInfo["frameRate"])
+        # else:
+        #     frameDur = 1.0 / 60.0  # could not measure, so guess
         # moving grating loops
         self.run_closed_loop_before = True  # closed loop before
         self.run_open_loop = True
@@ -143,8 +137,7 @@ class Stimulus:
         circle = visual.Circle(
             win=self.win,
             name="cicle",
-            radius=self.get_grating_size(self.settings.stimulus_rad)
-            / 2,  # convet from vis angle to pixel and fomr diameter to radius
+            radius=self.get_grating_size(self.settings.stimulus_rad) / 2,  # convet from vis angle to pixel and fomr diameter to radius
             units="pix",
             edges=128,
             fillColor=self.settings.stimulus_col,
@@ -236,9 +229,8 @@ class Stimulus:
             grating_left.draw()
             grating_right.draw()
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil ->
+                # if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -308,9 +300,8 @@ class Stimulus:
             grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
             grating_right.setPhase(right_ps, "+")
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
+                # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating_left.pos += (change, 0)
@@ -374,9 +365,8 @@ class Stimulus:
             grating.setPhase(stim_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
+                # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating.pos += (change, 0)
@@ -420,9 +410,8 @@ class Stimulus:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
+                # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -481,9 +470,8 @@ class Stimulus:
             grating.setPhase(grating_ps, "+")  # advance phase by 0.05 of a cycle
             grating.draw()
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
+                # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)
@@ -547,9 +535,8 @@ class Stimulus:
             # dram moving gratings
             grating.setPhase(grating_ps, "+")  # advance phase by 0.05 of a cycle
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
+                # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 grating.pos += (change, 0)

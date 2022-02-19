@@ -6,7 +6,8 @@ def try_run_function(function_to_run):
         try:
             function_to_run
             return function_to_run
-        except:
+        except Exception as e:
+            print(f"{function_to_run} failed with error: {e}")
             pass
 
     return wrapper
@@ -35,7 +36,8 @@ def find_rotaryencoder_com_port():
         try:
             ro = RotaryEncoderModule(com_port)
             ro.close()
-        except:
+        except Exception as e:
+            print(f"{com_port} failed with error: {e}")
             pass
         else:
             return com_port
