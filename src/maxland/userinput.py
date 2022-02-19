@@ -157,6 +157,18 @@ class UserInput:
         except ValueError:
             return False
 
+    def draw_window_before(self):
+        if self.task == "gamble":
+            self.draw_window_before_gamble()
+        if self.task == "conf":
+            self.draw_window_before_conf()
+
+    def draw_window_after(self):
+        if self.task == "gamble":
+            self.draw_window_after_gamble()
+        if self.task == "conf":
+            pass
+
     # Gamble Task Specific Settings =======================================================
     def stimulus_file_dialog_button(self):
         stim_file = filedialog.askopenfilename(
@@ -326,7 +338,7 @@ class UserInput:
             frame_5_0,
             0,
             self.fontStyleRegular,
-            "Start wait Time",
+            "Start wait",
             self.settings.time_dict["time_start"],
             "time before the trial starts",
         )
@@ -335,25 +347,25 @@ class UserInput:
             frame_5_0,
             1,
             self.fontStyleRegular,
-            "Stopping check",
+            "Wheel topping check window",
             self.settings.time_dict["time_wheel_stopping_check"],
-            "time the wheel has to be stopped",
+            "time window the wheel has to be stopped",
         )
         # row 2
         self.time_wheel_stopping_punish = self.Time(
             frame_5_0,
             2,
             self.fontStyleRegular,
-            "Not stpping punish",
+            "Wheel not stopping punish",
             self.settings.time_dict["time_wheel_stopping_punish"],
-            "time wait if the wheel is not stopped before new trial starts",
+            "time to wait before new trial starts, if the wheel is not stopped",
         )
         # row 3
         self.time_stimulus_presentation = self.Time(
             frame_5_0,
             3,
             self.fontStyleRegular,
-            "Stim Presentation",
+            "Stimulus presentation",
             self.settings.time_dict["time_stimulus_presentation"],
             "time stimulus is presented but not movable",
         )
@@ -362,7 +374,7 @@ class UserInput:
             frame_5_0,
             4,
             self.fontStyleRegular,
-            "Open Loop",
+            "Open loop",
             self.settings.time_dict["time_open_loop"],
             "time of open loop where wheel moves the stimulus",
         )
@@ -371,7 +383,7 @@ class UserInput:
             frame_5_0,
             5,
             self.fontStyleRegular,
-            "Open Loop Fail",
+            "Open loop fail punish",
             self.settings.time_dict["time_open_loop_fail_punish"],
             "time wait if stimulus not moved far enough to position",
         )
@@ -380,8 +392,8 @@ class UserInput:
             frame_5_0,
             6,
             self.fontStyleRegular,
-            "Stim Freez",
-            self.settings.time_dict["time_stimulus_freezee"],
+            "Stimulus freeze",
+            self.settings.time_dict["time_stimulus_freeze"],
             "time stimulus is presented at reached position but not movable anymore",
         )
         # row 7
@@ -389,7 +401,7 @@ class UserInput:
             frame_5_0,
             7,
             self.fontStyleRegular,
-            "Reward Time",
+            "Reward time",
             self.settings.time_dict["time_reward"],
             "time the animal has for the reward = valve open + time after",
         )
@@ -398,7 +410,7 @@ class UserInput:
             frame_5_0,
             8,
             self.fontStyleRegular,
-            "Trial End",
+            "Inter trial",
             self.settings.time_dict["time_inter_trial"],
             "time at end of each Trial",
         )
@@ -408,7 +420,7 @@ class UserInput:
         btn_cancel = tk.Button(self.root, text="Cancel", command=self.on_cancel, width=20)
         btn_cancel.pack(side=tk.RIGHT)
 
-    def draw_window_after(self):
+    def draw_window_after_gamble(self):
         """tkinter window to get user input after session, variables and default values are read from settings object"""
         tk.Label(self.root, text="Gamble Task Report", font=self.fontStyleBold).pack()
 
