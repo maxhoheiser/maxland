@@ -55,7 +55,7 @@ class UserInput:
         ]
         try:
             self.settings.animal_weight = float(self.var_animal_weight.get())
-        except:
+        except ValueError:
             pass
 
         self.settings.life_plot = bool(self.var_liveplot.get())  # plot live or not
@@ -120,15 +120,7 @@ class UserInput:
         if self.window_size[1] > screen_size[1]:
             self.window_size[1] = screen_size[1]
             window_offset[1] = 0
-        return (
-            str(self.window_size[0])
-            + "x"
-            + str(self.window_size[1])
-            + "+"
-            + str(window_offset[0])
-            + "+"
-            + str(window_offset[1])
-        )
+        return str(self.window_size[0]) + "x" + str(self.window_size[1]) + "+" + str(window_offset[0]) + "+" + str(window_offset[1])
 
     def on_confirm(self):
         self.update_settings()
@@ -193,9 +185,7 @@ class UserInput:
 
     def draw_window_before_gamble(self):
         tk.Label(self.root, text="Gamble Task Settings", font=self.fontStyleBold).pack()
-        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2
-        )
+        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2)
         frame_1 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_1.pack(fill=tk.BOTH, padx=self.padx, pady=(2, 10))
 
@@ -220,9 +210,7 @@ class UserInput:
         self.btn_liveplot.grid(row=0, column=5, sticky="W", padx=20)
 
         # frame blocks
-        tk.Label(self.root, text="BLOCKS", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(10, 2)
-        )
+        tk.Label(self.root, text="BLOCKS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(10, 2))
         frame_2 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_2.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -233,9 +221,7 @@ class UserInput:
         self.blocks = [blk0, blk1, blk2]
 
         # frame rewards
-        tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_3.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -256,9 +242,7 @@ class UserInput:
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
         # frame stimulus
-        tk.Label(self.root, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_4 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_4.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -293,18 +277,14 @@ class UserInput:
         lbl_stimulus_position = tk.Label(frame_4_1, text="Stim end pos [px]:", font=self.fontStyleRegular)
         lbl_stimulus_position.grid(row=1, column=0, padx=(10, 5), pady=8)
 
-        self.var_stimulus_end_pos_left = tk.StringVar(
-            frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[0]
-        )
+        self.var_stimulus_end_pos_left = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[0])
         self.etr_stimulus_end_pos_left = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_left, width=6)
         self.etr_stimulus_end_pos_left.grid(row=1, column=1, padx=(0, 2), pady=8, sticky="W")
 
         lbl_stim_til = tk.Label(frame_4_1, text="to", font=self.fontStyleRegular)
         lbl_stim_til.grid(row=1, column=2, pady=8, sticky="W")
 
-        self.var_stimulus_end_pos_right = tk.StringVar(
-            frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[1]
-        )
+        self.var_stimulus_end_pos_right = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[1])
         self.etr_stimulus_end_pos_right = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_right, width=6)
         self.etr_stimulus_end_pos_right.grid(row=1, column=3, padx=(2, 10), pady=8, sticky="W")
 
@@ -324,9 +304,7 @@ class UserInput:
         self.etr_rotary_thresh_right.grid(row=1, column=7, padx=(2, 10), pady=8, sticky="W")
 
         # frame time
-        tk.Label(self.root, text="TIME", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="TIME", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_5 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_5.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -425,9 +403,7 @@ class UserInput:
         tk.Label(self.root, text="Gamble Task Report", font=self.fontStyleBold).pack()
 
         # frame essential input
-        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2
-        )
+        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2)
         frame_1 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_1.pack(fill=tk.BOTH, padx=self.padx, pady=(2, 10))
 
@@ -439,9 +415,7 @@ class UserInput:
         self.etr_animal_weight_after.grid(row=0, column=4, pady=8)
 
         # frame manual rewards
-        tk.Label(self.root, text="MANUAL REWARD", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="MANUAL REWARD", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_3.pack(fill=tk.BOTH, padx=self.padx, pady=2)
         lbl_reward = tk.Label(frame_3, text="Manual administered reward [ml]:", font=self.fontStyleRegular)
@@ -452,9 +426,7 @@ class UserInput:
         self.etr_reward_manual.grid(row=0, column=1, pady=8)
 
         # frame time
-        tk.Label(self.root, text="NOTES", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="NOTES", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
 
         scrollbar = tk.Scrollbar(self.root)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -481,9 +453,7 @@ class UserInput:
         tk.Label(self.root, text="Confidentiality Task Settings", font=self.fontStyleBold).pack()
 
         # frame essential input
-        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2
-        )
+        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2)
         frame_1 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_1.pack(fill=tk.BOTH, padx=self.padx, pady=(2, 10))
 
@@ -503,9 +473,7 @@ class UserInput:
         self.btn_liveplot.grid(row=0, column=5, sticky="W", padx=20)
 
         # frame trials
-        tk.Label(self.root, text="TRIAL", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(10, 2)
-        )
+        tk.Label(self.root, text="TRIAL", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(10, 2))
         frame_2 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_2.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -517,9 +485,7 @@ class UserInput:
         self.etr_trial_num = tk.Entry(frame_2, textvariable=self.var_trial_num, width=10)
         self.etr_trial_num.grid(row=0, column=1, pady=8)
 
-        tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(10, 2)
-        )
+        tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(10, 2))
         frame_3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_3.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -537,9 +503,7 @@ class UserInput:
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
         # frame stimulus
-        tk.Label(self.root, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_4 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_4.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -555,16 +519,12 @@ class UserInput:
 
         lbl_stimulus_position = tk.Label(frame_4_1, text="Stim end pos [px]:", font=self.fontStyleRegular)
         lbl_stimulus_position.grid(row=0, column=2, padx=(10, 2), pady=8)
-        self.var_stimulus_end_pos_left = tk.StringVar(
-            frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[0]
-        )
+        self.var_stimulus_end_pos_left = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[0])
         self.etr_stimulus_end_pos_left = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_left, width=4)
         self.etr_stimulus_end_pos_left.grid(row=0, column=3, padx=(0, 2), pady=8, sticky="W")
         lbl_stim_til = tk.Label(frame_4_1, text="to", font=self.fontStyleRegular)
         lbl_stim_til.grid(row=0, column=4, pady=8, sticky="W")
-        self.var_stimulus_end_pos_right = tk.StringVar(
-            frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[1]
-        )
+        self.var_stimulus_end_pos_right = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[1])
         self.etr_stimulus_end_pos_right = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_right, width=4)
         self.etr_stimulus_end_pos_right.grid(row=0, column=5, padx=(2, 10), pady=8, sticky="W")
 
@@ -596,9 +556,7 @@ class UserInput:
         lbl_stim_correct_frequency = tk.Label(frame_5_0, text="Spatial Frequency:", font=self.fontStyleRegular)
         lbl_stim_correct_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_correct_frequency = tk.StringVar(
-            frame_5_0, value=self.settings.stimulus_correct_side["grating_sf"]
-        )
+        self.var_stim_correct_frequency = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_sf"])
         self.etr_stim_correct_frequency = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_frequency, width=4)
         self.etr_stim_correct_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
@@ -621,9 +579,7 @@ class UserInput:
         lbl_stim_correct_speed = tk.Label(frame_5_0, text="Phase Speed:", font=self.fontStyleRegular)
         lbl_stim_correct_speed.grid(row=2, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_correct_phase_speed = tk.StringVar(
-            frame_5_0, value=self.settings.stimulus_correct_side["grating_speed"]
-        )
+        self.var_stim_correct_phase_speed = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_speed"])
         self.etr_stim_correct_speed = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_phase_speed, width=4)
         self.etr_stim_correct_speed.grid(row=2, column=3, padx=(0, 10), pady=10, sticky="W")
 
@@ -659,9 +615,7 @@ class UserInput:
         lbl_stim_wrong_speed = tk.Label(frame_5_1, text="Phase Speed:", font=self.fontStyleRegular)
         lbl_stim_wrong_speed.grid(row=2, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_wrong_phase_speed = tk.StringVar(
-            frame_5_1, value=self.settings.stimulus_wrong_side["grating_speed"]
-        )
+        self.var_stim_wrong_phase_speed = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_speed"])
         self.etr_stim_wrong_speed = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_phase_speed, width=4)
         self.etr_stim_wrong_speed.grid(row=2, column=3, padx=(0, 10), pady=10, sticky="W")
 
@@ -712,9 +666,7 @@ class UserInput:
         self.etr_stim_col.grid(row=0, column=6, padx=(0, 2), pady=8, sticky="W")
 
         # frame insist mode
-        tk.Label(self.root, text="INSIST MODE", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="INSIST MODE", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_7 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_7.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
@@ -742,9 +694,7 @@ class UserInput:
         self.etr_insist_range_deact.grid(row=0, column=6, padx=(0, 0), pady=8, sticky="E")
 
         # frame time
-        tk.Label(self.root, text="TIME [seconds]", font=self.fontStyleBox, fg="gray66").pack(
-            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
-        )
+        tk.Label(self.root, text="TIME [seconds]", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
         frame_7 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
         frame_7.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 

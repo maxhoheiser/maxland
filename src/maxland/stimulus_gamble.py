@@ -1,9 +1,6 @@
-import random
 from math import tan as tan
 
-from psychopy import core
-from psychopy import monitors
-from psychopy import visual
+from psychopy import core, monitors, visual
 
 
 class Stimulus:
@@ -27,9 +24,7 @@ class Stimulus:
         # stimulus
         self.rotary_encoder = rotary_encoder
         # self.gain = self.get_gain()
-        self.gain_left, self.gain_right = (
-            round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos
-        )
+        self.gain_left, self.gain_right = (round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos)
         self.gain = self.gain_left
         # monitor configuration
         # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
@@ -56,10 +51,10 @@ class Stimulus:
         # get frame rate of monitor
         expInfo = {}
         expInfo["frameRate"] = self.win.getActualFrameRate()
-        if expInfo["frameRate"] != None:
-            frameDur = 1.0 / round(expInfo["frameRate"])
-        else:
-            frameDur = 1.0 / 60.0  # could not measure, so guess
+        # if expInfo["frameRate"] is not None:
+        #     frameDur = 1.0 / round(expInfo["frameRate"])
+        # else:
+        #     frameDur = 1.0 / 60.0  # could not measure, so guess
 
         self.run_open_loop = True
 
@@ -140,9 +135,8 @@ class Stimulus:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream) > 0:
-                change = (
-                    pos - stream[-1][2]
-                ) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain) # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
+                # if ceil -> if very fast rotation still threshold, but stimulus not therer
                 pos = stream[-1][2]
                 # move stimulus with mouse
                 stim.pos += (change, 0)

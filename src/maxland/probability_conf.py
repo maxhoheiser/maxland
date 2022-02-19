@@ -54,10 +54,10 @@ class ProbabilityConstructor:
             current_side = "non"
         self.chosen_sides_li.append(current_side)
         # check if current trial side == correct side
-        if current_side == "right" and self.stimulus_sides["right"] == True:
+        if current_side == "right" and self.stimulus_sides["right"]:
             self.trials_correct_side_chosen.append(True)
             self.current_trial_correct_side_chosen = True
-        elif current_side == "left" and self.stimulus_sides["left"] == True:
+        elif current_side == "left" and self.stimulus_sides["left"]:
             self.trials_correct_side_chosen.append(True)
             self.current_trial_correct_side_chosen = True
         else:

@@ -3,7 +3,8 @@ import random
 
 class ProbabilityConstructor:
     """
-    Module to calculate and handle probability for all events with given usersettings in session e.g. reward left and reward right probability
+    Module to calculate and handle probability for all events with given usersettings in session e.g.
+    reward left and reward right probability
     Args:
         settings (TrialParameterHandler object): the object for all the session parameters from TrialParameterHandler
     """
@@ -32,9 +33,7 @@ class ProbabilityConstructor:
         probability_list = []
         block_number = 0
         for block in self.settings.blocks:
-            probability_list.extend(
-                self.get_all_trials_of_blocks(block, self.settings.is_gamble_side_left, block_number)
-            )
+            probability_list.extend(self.get_all_trials_of_blocks(block, self.settings.is_gamble_side_left, block_number))
             block_number += 1
         return probability_list
 
@@ -53,12 +52,8 @@ class ProbabilityConstructor:
         return rewarded_not_rewarded_trials
 
     def get_all_trials_of_blocks(self, block, is_gamble_left, block_number):
-        gamble_reward_list = self.get_rewarded_not_rewarded_trials(
-            (block["prob_reward_gamble_block"] / 100), block["block_trial_number"]
-        )
-        save_reward_list = self.get_rewarded_not_rewarded_trials(
-            (block["prob_reward_save_block"] / 100), block["block_trial_number"]
-        )
+        gamble_reward_list = self.get_rewarded_not_rewarded_trials((block["prob_reward_gamble_block"] / 100), block["block_trial_number"])
+        save_reward_list = self.get_rewarded_not_rewarded_trials((block["prob_reward_save_block"] / 100), block["block_trial_number"])
         all_trials_of_block = []
         for trial in range(block["block_trial_number"]):
             trial_dict = {
