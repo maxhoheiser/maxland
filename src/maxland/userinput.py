@@ -59,7 +59,7 @@ class UserInput:
             pass
 
         self.settings.life_plot = bool(self.var_liveplot.get())  # plot live or not
-        self.settings.background_coloror = list(map(int, self.var_background_color.get().split(",")))
+        self.settings.background_color = list(map(int, self.var_background_color.get().split(",")))
 
         self.settings.stimulus_radius = int(self.var_stim_rad.get())
         self.settings.stimulus_color = list(map(int, self.var_stim_col.get().split(",")))
