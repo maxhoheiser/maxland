@@ -37,9 +37,9 @@ FADE_START = 1950
 FADE_END = 3000
 
 # stimulus size and color - only for moving stimulus
-STIMULUS_RAD = 45  # pixel radius of stimulus
-STIMULUS_COL = [0, 255, 0]  # color of stimulus
-BACKGROUND_COL = [0, 0, 0]
+STIMULUS_RADIUS = 45  # pixel radius of stimulus
+STIMULUS_COLOR = [0, 255, 0]  # color of stimulus
+BACKGROUND_COLOR = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]

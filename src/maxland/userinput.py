@@ -61,8 +61,8 @@ class UserInput:
         self.settings.life_plot = bool(self.var_liveplot.get())  # plot live or not
         self.settings.background_coloror = list(map(int, self.var_background_color.get().split(",")))
 
-        self.settings.stimulus_rad = int(self.var_stim_rad.get())
-        self.settings.stimulus_col = list(map(int, self.var_stim_col.get().split(",")))
+        self.settings.stimulus_radius = int(self.var_stim_rad.get())
+        self.settings.stimulus_color = list(map(int, self.var_stim_col.get().split(",")))
 
         if self.task == "gamble":
             self.settings.gamble_side = self.var_gamble_side.get()
@@ -276,13 +276,13 @@ class UserInput:
 
         lbl_stim_rad = tk.Label(frame_4_0, text="Stim size radius [pix]:", font=self.fontStyleRegular)
         lbl_stim_rad.grid(row=0, column=2, padx=(10, 2), pady=8)
-        self.var_stim_rad = tk.StringVar(frame_4_0, value=self.settings.stimulus_rad)
+        self.var_stim_rad = tk.StringVar(frame_4_0, value=self.settings.stimulus_radius)
         self.etr_stim_rad = tk.Entry(frame_4_0, textvariable=self.var_stim_rad, width=4)
         self.etr_stim_rad.grid(row=0, column=3, padx=(0, 2), pady=8, sticky="W")
 
         lbl_stim_col = tk.Label(frame_4_0, text="Stim color [RGB]:", font=self.fontStyleRegular)
         lbl_stim_col.grid(row=0, column=4, padx=(10, 2), pady=8)
-        self.var_stim_col = tk.StringVar(frame_4_0, value=(",".join(map(str, self.settings.stimulus_col))))
+        self.var_stim_col = tk.StringVar(frame_4_0, value=(",".join(map(str, self.settings.stimulus_color))))
         self.etr_stim_col = tk.Entry(frame_4_0, textvariable=self.var_stim_col, width=9)
         self.etr_stim_col.grid(row=0, column=5, padx=(0, 2), pady=8, sticky="W")
 
@@ -695,7 +695,7 @@ class UserInput:
         lbl_stim_rad = tk.Label(frame_6, text="Stim size [deg]:", font=self.fontStyleRegular)
         lbl_stim_rad.grid(row=0, column=3, padx=(10, 2), pady=8)
 
-        self.var_stim_rad = tk.StringVar(frame_6, value=self.settings.stimulus_rad)
+        self.var_stim_rad = tk.StringVar(frame_6, value=self.settings.stimulus_radius)
         self.etr_stim_rad = tk.Entry(frame_6, textvariable=self.var_stim_rad, width=4)
         self.etr_stim_rad.grid(row=0, column=4, padx=(0, 2), pady=8, sticky="W")
 
@@ -703,7 +703,7 @@ class UserInput:
         lbl_stim_col = tk.Label(frame_6, text="Stim color [RGB]:", font=self.fontStyleRegular)
         lbl_stim_col.grid(row=0, column=5, padx=(10, 2), pady=8)
 
-        self.var_stim_col = tk.StringVar(frame_6, value=(",".join(map(str, self.settings.stimulus_col))))
+        self.var_stim_col = tk.StringVar(frame_6, value=(",".join(map(str, self.settings.stimulus_color))))
         self.etr_stim_col = tk.Entry(frame_6, textvariable=self.var_stim_col, width=9)
         self.etr_stim_col.grid(row=0, column=6, padx=(0, 2), pady=8, sticky="W")
 
@@ -826,7 +826,7 @@ class UserInput:
             8,
             self.fontStyleRegular,
             "No Reward Punish Time",
-            self.settings.time_dict["time_range_noreward_punish"],
+            self.settings.time_dict["time_range_no_reward_punish"],
             "time the animal has for the reward = valve open + time after",
         )
         # row 9

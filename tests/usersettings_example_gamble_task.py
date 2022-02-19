@@ -1,6 +1,6 @@
 TASK = "gamble"
 
-GAMBLE_SIDE = "Left"
+GAMBLE_SIDE = "left"
 BLOCKS = [
     {"trial_range_block": [4, 7], "prob_reward_gamble_block": 10.0, "prob_reward_save_block": 20.0},
     {"trial_range_block": [3, 5], "prob_reward_gamble_block": 30.0, "prob_reward_save_block": 40.0},
@@ -25,9 +25,9 @@ TIME_NO_REWARD = 1.0
 TIME_INTER_TRIAL = 1.5
 
 # stimulus size and color - only for moving stimulus
-STIMULUS_RAD = 45  # pixel radius of stimulus
-STIMULUS_COL = [0, 255, 0]  # color of stimulus
-BACKGROUND_COL = [0, 0, 0]
+STIMULUS_RADIUS = 45  # pixel radius of stimulus
+STIMULUS_COLOR = [0, 255, 0]  # color of stimulus
+BACKGROUND_COLOR = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]
