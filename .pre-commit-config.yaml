@@ -35,7 +35,7 @@ repos:
     hooks:
       - id: pylint
         args:
-          - --fail-under=3
+          - --fail-under=6
           - --rcfile=./.pylintrc
           - --disable=C0114
           - --disable=C0115
