@@ -1,37 +1,39 @@
 from math import tan as tan
+from threading import Event
+from typing import Dict
 
 from psychopy import core, monitors, visual
 
+from maxland.parameter_handler import TrialParameterHandler
+from maxland.rotaryencoder import BpodRotaryEncoder
+
 
 class Stimulus:
-    def __init__(self, settings, rotary_encoder):
-        """[summary]
+    """
+    Create the stimulus via pygame and pyglet with psychopy
+    Args:
+        settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
+        rotary_encoder (RotaryEncoder object): object handeling rotary encoder module
+    """
 
-        Args:
-            settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
-            rotary_encoder (RotaryEncoder object): object handeling rotary encoder module
-        """
+    def __init__(self, settings: TrialParameterHandler, rotary_encoder: BpodRotaryEncoder):
         self.settings = settings
-
-        # set gain
-        self.FPS = settings.FPS
-        self.mon_width = settings.MON_WIDTH
-        self.mon_dist = settings.MON_DIST
+        self.FPS = settings.fps
+        self.monitor_width = settings.monitor_width
+        self.monitor_distance = settings.monitor_distance
         self.screen_size = (
-            settings.SCREEN_WIDTH,
-            settings.SCREEN_HEIGHT,
-        )  # (1024,1280)#
-        # stimulus
+            settings.screen_width,
+            settings.screen_height,
+        )
         self.rotary_encoder = rotary_encoder
-        # self.gain = self.get_gain()
-        self.gain_left, self.gain_right = (round(abs(y / x), 2) for x in settings.thresholds[0:1] for y in settings.stim_end_pos)
+
+        self.gain_left = self.get_gain(settings.rotaryencoder_thresholds[0], settings.rotaryencoder_stimulus_end_position[0])
+        self.gain_right = self.get_gain(settings.rotaryencoder_thresholds[1], settings.rotaryencoder_stimulus_end_position[1])
         self.gain = self.gain_left
-        # monitor configuration
-        # Create monitor object from the variables above. This is needed to control size of stimuli in degrees.
-        self.monitor = monitors.Monitor("testMonitor", width=self.mon_width, distance=self.mon_dist)
+
+        self.monitor = monitors.Monitor("testMonitor", width=self.monitor_width, distance=self.monitor_distance)
         self.monitor.setSizePix(self.screen_size)
-        # create window
-        # create a window
+
         self.win = visual.Window(
             size=(self.screen_size),
             fullscr=True,
@@ -41,46 +43,30 @@ class Stimulus:
             winType="pyglet",
             allowGUI=False,
             allowStencil=False,
-            color=self.settings.bg_color,
+            color=self.settings.background_color,
             colorSpace="rgb",
             blendMode="avg",
             useFBO=True,
         )
-        self.win.winHandle.maximize()  # fix black bar bottom
+        self.win.winHandle.maximize()
         self.win.flip()
-        # get frame rate of monitor
+
         expInfo = {}
         expInfo["frameRate"] = self.win.getActualFrameRate()
-        # if expInfo["frameRate"] is not None:
-        #     frameDur = 1.0 / round(expInfo["frameRate"])
-        # else:
-        #     frameDur = 1.0 / 60.0  # could not measure, so guess
+
+        self.stimulus_radius = settings.stimulus_radius
+        self.stimulus_color = settings.stimulus_color
 
         self.run_open_loop = True
 
-    # helper functions ===============================================================
-    def keep_on_scrren(self, position_x):
-        """keep the stimulus postition in user defined boundaries
+    # helper functions
+    def get_gratings_size_in_pixels(self, grating_size):
+        stim_half_width = self.monitor_distance * tan(grating_size / 2)
+        return (stim_half_width / self.monitor_width) * self.screen_size[0]
 
-        Args:
-            position_x (int): current stimulus screen positition in pixel
-
-        Returns:
-            int: updated stimulus position
-        """
-        return max(min(self.stim_end_pos_right, position_x), self.stim_end_pos_left)
-
-    def get_gratings_size(self, grating_size):
-        """calculate gratin size in pixel based on visual angle"""
-        x = self.mon_dist * tan(grating_size / 2)  # half width of stim in size
-        return (x / self.mon_width) * self.screen_size[0]
-
-    """
-    def get_gain(self):
-        clicks = 1024/365 * abs(self.settings.thresholds[0]) #each full rotation = 1024 clicks
-        gain = abs(self.settings.stim_end_pos[0]) / clicks
-        return round(gain,2)
-    """
+    def get_gain(self, threshold, stim_end_pos):
+        gain = abs(stim_end_pos / threshold)
+        return round(gain, 2)
 
     def ceil(self, num):
         if num > 30:
@@ -88,69 +74,61 @@ class Stimulus:
         else:
             return num
 
-    def close(self):
+    def on_close(self):
         self.win.close()
         core.quit()
 
     def stop_open_loop(self):
         self.run_open_loop = False
 
-    # stimulus functions =============================================================
-    def gen_stim(self):
+    # stimulus functions
+    def get_stimulus(self):
         circle = visual.Circle(
             win=self.win,
-            name="cicle",
-            radius=self.settings.stimulus_rad,
+            name="circle",
+            radius=self.stimulus_radius,
             units="pix",
             edges=128,
-            fillColor=self.settings.stimulus_col,
+            fillColor=self.stimulus_color,
             pos=(0, 0),
         )
         return circle
 
-    # Main psychpy loop ==============================================================
-    def run_game(self, display_stim_event, start_open_loop_event, still_show_event, bpod, sma):
+    # psychpy loop
+    EventFlags = Dict[str, Event]
+
+    def run_game(self, event_flags: EventFlags):
+        event_display_stimulus = event_flags["event_display_stimulus"]
+        event_start_open_loop = event_flags["event_start_open_loop"]
+        event_still_show_stimulus = event_flags["event_still_show_stimulus"]
         # get right grating
-        stim = self.gen_stim()
-        stim.draw()
-        # -----------------------------------------------------------------------------
+        stimulus = self.get_stimulus()
+        stimulus.draw()
         # on soft code of state 1
-        # -----------------------------------------------------------------------------
         # present initial stimulus
-        display_stim_event.wait()
+        event_display_stimulus.wait()
         self.win.flip()
-        # -------------------------------------------------------------------------
         # on soft code of state 2
-        # -------------------------------------------------------------------------
-        start_open_loop_event.wait()
-        # reset rotary encoder
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
-        # self.rotary_encoder.rotary_encoder.enable_stream()
+        event_start_open_loop.wait()
         # open loop
         print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
-        # self.rotary_encoder.rotary_encoder.set_zero_position()
         while self.run_open_loop:
             # get rotary encoder change position
             stream = self.rotary_encoder.rotary_encoder.read_stream()
             if len(stream) > 0:
-                change = (pos - stream[-1][2]) * self.gain  # self.ceil((pos - stream[-1][2])*self.gain)
-                # if ceil -> if very fast rotation still threshold, but stimulus not therer
+                change = (pos - stream[-1][2]) * self.gain
                 pos = stream[-1][2]
-                # move stimulus with mouse
-                stim.pos += (change, 0)
-            stim.draw()
+                stimulus.pos += (change, 0)
+            stimulus.draw()
             self.win.flip()
-        # -------------------------------------------------------------------------
-        # on soft code of state 3 freez movement
-        # -------------------------------------------------------------------------
-        still_show_event.wait()
+        # on soft code of state 3 freeze movement
+        event_still_show_stimulus.wait()
         print("end")
         self.win.flip()
         # cleanup for next loop
-        self.run_closed_loop = True
         self.run_open_loop = True
-        display_stim_event.clear()
-        start_open_loop_event.clear()
-        still_show_event.clear()
+        event_display_stimulus.clear()
+        event_start_open_loop.clear()
+        event_still_show_stimulus.clear()

@@ -7,9 +7,7 @@ from pathlib import Path
 
 from maxland.parameter_handler import TrialParameterHandler
 
-USERSETTINGS_EXAMPLE_GAMBLE_TASK = os.path.join(
-    Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_gamble_task.py"
-)
+USERSETTINGS_EXAMPLE_GAMBLE_TASK = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_gamble_task.py")
 NEW_BIG_REWARD = 10.15
 NEW_SMALL_REWARD = 11.16
 
@@ -41,9 +39,7 @@ class TestTrialParameterHandlerGambleTask(unittest.TestCase):
         create_folder(self.settings_folder_path)
         create_folder(self.session_folder_path)
 
-        spec = importlib.util.spec_from_file_location(
-            "usersettings_example_gamble_task", USERSETTINGS_EXAMPLE_GAMBLE_TASK
-        )
+        spec = importlib.util.spec_from_file_location("usersettings_example_gamble_task", USERSETTINGS_EXAMPLE_GAMBLE_TASK)
         self.usersettings_example_import = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.usersettings_example_import)
 
@@ -52,9 +48,7 @@ class TestTrialParameterHandlerGambleTask(unittest.TestCase):
         self.usersettings_example_import = None
 
     def test_create_trialparameterhandler_from_usersettings(self):
-        usersettings_object = TrialParameterHandler(
-            self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
-        )
+        TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
 
     def test_save_usersettings_to_file(self):
         usersettings_object_before = TrialParameterHandler(

@@ -1,6 +1,5 @@
 import importlib.util
 import os
-import time
 import unittest
 from pathlib import Path
 
