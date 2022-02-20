@@ -40,9 +40,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         create_folder(self.settings_folder_path)
         create_folder(self.session_folder_path)
 
-        spec = importlib.util.spec_from_file_location(
-            "usersettings_example_conf_task", USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK
-        )
+        spec = importlib.util.spec_from_file_location("usersettings_example_conf_task", USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK)
         self.usersettings_example_import = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.usersettings_example_import)
 
@@ -51,9 +49,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         self.usersettings_example_import = None
 
     def test_create_trialparameterhandler_from_usersettings(self):
-        usersettings_object = TrialParameterHandler(
-            self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
-        )
+        TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
 
     def test_save_usersettings_to_file(self):
         usersettings_object_before = TrialParameterHandler(
