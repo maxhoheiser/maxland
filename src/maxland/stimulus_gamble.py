@@ -65,8 +65,7 @@ class Stimulus:
         return (stim_half_width / self.monitor_width) * self.screen_size[0]
 
     def get_gain(self, threshold, stim_end_pos):
-        clicks = 1024 / 365 * abs(threshold)  # each full rotation = 1024 clicks
-        gain = abs(stim_end_pos) / clicks
+        gain = abs(stim_end_pos / threshold)
         return round(gain, 2)
 
     def ceil(self, num):
