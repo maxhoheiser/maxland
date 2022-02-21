@@ -1,5 +1,6 @@
 import importlib.util
 import os
+import threading
 import time
 import unittest
 from pathlib import Path
@@ -14,8 +15,8 @@ USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "
 TEST_DISPLAY = {
     "monitor_width": 2560,
     "monitor_distance": 30,
-    "screen_width": 2560,
-    "screen_height": 1440,
+    "screen_width": 1024,
+    "screen_height": 780,
 }
 
 
@@ -38,7 +39,7 @@ class TestStimulusGambleTask(unittest.TestCase):
 
     def test_load_stimulus_gamble(self):
         rotary_encoder = MagicMock()
-        rotary_encoder.rotary_encoder.read_stream.return_value = None
+        rotary_encoder.rotary_encoder.read_stream.return_value = []
 
         game = Stimulus(self.parameter_handler, rotary_encoder)
         time.sleep(1)
@@ -46,7 +47,7 @@ class TestStimulusGambleTask(unittest.TestCase):
 
     def test_run_game(self):
         rotary_encoder = MagicMock()
-        rotary_encoder.rotary_encoder.read_stream.return_value = None
+        rotary_encoder.rotary_encoder.read_stream.return_value = [["a", "b", 10]]
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
@@ -56,7 +57,16 @@ class TestStimulusGambleTask(unittest.TestCase):
             "event_still_show_stimulus": event_flag,
         }
 
+        def thread_function(game):
+            time.sleep(2)
+            game.stop_open_loop()
+
         game = Stimulus(self.parameter_handler, rotary_encoder)
+
+        th = threading.Thread(target=thread_function, args=(game,))
+        th.start()
+
         game.run_game(event_flags)
-        time.sleep(15)
+        time.sleep(5)
+        th.join()
         game.on_close()
