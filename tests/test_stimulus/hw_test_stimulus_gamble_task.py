@@ -63,10 +63,10 @@ class TestStimulusGambleTask(unittest.TestCase):
 
         game = Stimulus(self.parameter_handler, rotary_encoder)
 
-        th = threading.Thread(target=thread_function, args=(game,))
-        th.start()
+        thread = threading.Thread(target=thread_function, args=(game,))
+        thread.start()
 
         game.run_game(event_flags)
-        time.sleep(5)
-        th.join()
+
+        thread.join()
         game.on_close()
