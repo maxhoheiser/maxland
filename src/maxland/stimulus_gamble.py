@@ -2,7 +2,7 @@ from math import tan as tan
 from threading import Event
 from typing import Dict
 
-from psychopy import core, monitors, visual
+from psychopy import monitors, visual
 
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.rotaryencoder import BpodRotaryEncoder
@@ -37,7 +37,7 @@ class Stimulus:
         self.win = visual.Window(
             size=(self.screen_size),
             fullscr=True,
-            screen=1,
+            screen=2,
             monitor=self.monitor,
             units="pix",
             winType="pyglet",
@@ -76,7 +76,7 @@ class Stimulus:
 
     def on_close(self):
         self.win.close()
-        core.quit()
+        # core.quit()
 
     def stop_open_loop(self):
         self.run_open_loop = False
@@ -111,7 +111,6 @@ class Stimulus:
         # on soft code of state 2
         event_start_open_loop.wait()
         # open loop
-        print("open loop")
         pos = 0
         stream = self.rotary_encoder.rotary_encoder.read_stream()
         while self.run_open_loop:
