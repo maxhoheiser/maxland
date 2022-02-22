@@ -1,12 +1,23 @@
 from typing import Dict, List
 
+from mypy_extensions import TypedDict
+
+Blocks = TypedDict(
+    "Blocks",
+    {
+        "trial_range_block": List[int],
+        "prob_reward_gamble_block": float,
+        "prob_reward_save_block": float,
+    },
+)
+
 
 class UsersettingsTypes:
     def __init__(self) -> None:
         self.TASK: str = ""
 
         self.GAMBLE_SIDE: str = ""
-        self.BLOCKS: List[Dict[str, List[int]]] = list()
+        self.BLOCKS: List[Blocks] = list()
 
         # reward in seconds
         self.BIG_REWARD: float = float()
