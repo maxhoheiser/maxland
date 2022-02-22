@@ -3,8 +3,33 @@ import json
 import os
 from typing import List
 
+from mypy_extensions import TypedDict
+
 import maxland.system_constants as system_constants
 from maxland.types_usersettings import UsersettingsTypes
+
+TimeDict = TypedDict(
+    "TimeDict",
+    {
+        "time_start": float,
+        "time_wheel_stopping_check": float,
+        "time_wheel_stopping_punish": float,
+        "time_present_stimulus": float,
+        "time_open_loop": float,
+        "time_open_loop_fail_punish": float,
+        "time_stimulus_presentation": float,
+        "time_stimulus_freeze": float,
+        "time_no_reward": float,
+        "time_inter_trial": float,
+        "time_range_no_reward_punish": List[float],
+        "time_reward_waiting": float,
+        "time_reward": float,
+        "time_big_reward_waiting": float,
+        "time_big_reward_open": float,
+        "time_small_reward_open": float,
+        "time_reward_open": float,
+    },
+)
 
 
 class TrialParameterHandler:
@@ -61,7 +86,7 @@ class TrialParameterHandler:
             self.fade_start = self.usersettings.FADE_START  # from center to left side where fade away starts
             self.fade_end = self.usersettings.FADE_END  # from left center to left side where fade away ends
 
-        self.time_dict = self.create_time_dictionary()
+        self.time_dict: TimeDict = self.create_time_dictionary()
 
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
@@ -240,7 +265,7 @@ class TrialParameterHandler:
             time_dict (dict): dictionary with all the state times
         """
 
-        time_dict = {
+        time_dict_construction = {
             "time_start": self.usersettings.TIME_START,
             "time_wheel_stopping_check": self.usersettings.TIME_WHEEL_STOPPING_CHECK,
             "time_wheel_stopping_punish": self.usersettings.TIME_WHEEL_STOPPING_PUNISH,
@@ -259,15 +284,18 @@ class TrialParameterHandler:
                 "time_small_reward_open": self.get_valve_open_time(self.small_reward),
                 "time_big_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.big_reward)),
                 "time_small_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.small_reward)),
+                # add placeholder for
             }
-            time_dict.update(gamble_times)
+            time_dict_construction.update(gamble_times)
 
         if self.task == "conf":
             conf_time = {
                 "time_range_no_reward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
                 "time_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.reward)),
             }
-            time_dict.update(conf_time)
+            time_dict_construction.update(conf_time)
+
+        time_dict: TimeDict = time_dict_construction
 
         return time_dict
 
