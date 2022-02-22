@@ -86,9 +86,9 @@ if settings_obj.run_session:
 
     bpod.softcode_handler_function = softcode_handler
 
-    stimulus_game = Stimulus(settings_obj, rotary_encoder_module)
-
     probability_obj = ProbabilityConstructor(settings_obj)
+
+    stimulus_game = Stimulus(settings_obj, rotary_encoder_module)
 
     # create main state machine trial loop ---------------------------------------------
     # state machine configs
@@ -122,8 +122,8 @@ if settings_obj.run_session:
             state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
             state_change_conditions={
                 "Tup": "present_stimulus",
-                settings_obj.threshold_left: "wheel_stopping_check_failed_punish",
-                settings_obj.threshold_right: "wheel_stopping_check_failed_punish",
+                settings_obj.rotary_encoder_threshhold_left: "wheel_stopping_check_failed_punish",
+                settings_obj.rotary_encoder_threshhold_right: "wheel_stopping_check_failed_punish",
             },
             output_actions=[],
         )
@@ -154,8 +154,8 @@ if settings_obj.run_session:
             state_timer=settings_obj.time_dict["time_open_loop"],
             state_change_conditions={
                 "Tup": "stop_open_loop_fail",
-                settings_obj.stimulus_left: "stop_open_loop_reward_left",
-                settings_obj.stimulus_right: "stop_open_loop_reward_right",
+                settings_obj.stimulus_threshold_left: "stop_open_loop_reward_left",
+                settings_obj.stimulus_threshold_right: "stop_open_loop_reward_right",
             },
             output_actions=[("SoftCode", settings_obj.soft_code_start_open_loop)],
         )
