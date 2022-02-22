@@ -1,6 +1,9 @@
 import random
+from typing import Dict, List
 
 import numpy as np
+
+from maxland.parameter_handler import TrialParameterHandler
 
 
 class ProbabilityConstructor:
@@ -10,14 +13,14 @@ class ProbabilityConstructor:
         settings (TrialParameterHandler object): the object for all the session parameters from TrialParameterHandler
     """
 
-    def __init__(self, settings):
+    def __init__(self, settings: TrialParameterHandler):
         self.settings = settings
-        self.stimulus_sides = dict()
-        self.trials_correct_side_chosen = []
+        self.stimulus_sides: Dict[str, bool] = {}
+        self.trials_correct_side_chosen: List[bool] = []
         self.current_trial_correct_side_chosen = False
         # insist mode tracking
-        self.chosen_sides_li = []
-        self.insist_mode_chosen_side_li = []
+        self.chosen_sides_li: List[str] = []
+        self.insist_mode_chosen_side_li = List[str]
         self.insist_mode_active = False
         self.insist_side = None
         self.active_rule = "RU0"  # id of active rule

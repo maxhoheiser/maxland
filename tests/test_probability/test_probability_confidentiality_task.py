@@ -40,7 +40,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         self.assertEqual(probability_constructor.stimulus_sides["left"], True)
 
     @patch("maxland.probability_conf.random")
-    def test_ret_random_side_insist_mode_active_right(self, random):
+    def test_get_random_side_insist_mode_active_right(self, random):
         random.getrandbits._mock_side_effect = self.random.getrandbits
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.insist_mode_active = True
@@ -155,12 +155,8 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor.rule_switch_check(current_trial_num)
 
         self.assertEqual(probability_constructor.active_rule, SWITCHED_RULE)
-        self.assertEqual(
-            probability_constructor.settings.stimulus_correct_side, self.usersettings_example_import.STIMULUS_WRONG
-        )
-        self.assertEqual(
-            probability_constructor.settings.stimulus_wrong_side, self.usersettings_example_import.STIMULUS_CORRECT
-        )
+        self.assertEqual(probability_constructor.settings.stimulus_correct_side, self.usersettings_example_import.STIMULUS_WRONG)
+        self.assertEqual(probability_constructor.settings.stimulus_wrong_side, self.usersettings_example_import.STIMULUS_CORRECT)
 
     def test_rule_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
@@ -186,12 +182,8 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor.rule_switch_check(current_trial_num)
 
         self.assertEqual(probability_constructor.active_rule, SWITCHED_RULE)
-        self.assertEqual(
-            probability_constructor.settings.stimulus_correct_side, self.usersettings_example_import.STIMULUS_WRONG
-        )
-        self.assertEqual(
-            probability_constructor.settings.stimulus_wrong_side, self.usersettings_example_import.STIMULUS_CORRECT
-        )
+        self.assertEqual(probability_constructor.settings.stimulus_correct_side, self.usersettings_example_import.STIMULUS_WRONG)
+        self.assertEqual(probability_constructor.settings.stimulus_wrong_side, self.usersettings_example_import.STIMULUS_CORRECT)
 
     def test_rule_not_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)

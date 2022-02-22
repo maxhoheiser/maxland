@@ -836,14 +836,14 @@ class UserInput:
             lbl_trial_range = tk.Label(frame_1, text="Trial Range:", font=fontStyleRegular, bg="gray86")
             lbl_trial_range.grid(row=0, column=0, padx=(10, 5), pady=5, sticky="E")
 
-            self.var_range_min = tk.StringVar(frame_1, value=self.settings.blocks[self.num]["trial_range_block"][0])
+            self.var_range_min = tk.StringVar(frame_1, value=str(self.settings.blocks[self.num]["trial_range_block"][0]))
             self.etr_range_min = tk.Entry(frame_1, textvariable=self.var_range_min, width=4)
             self.etr_range_min.grid(row=0, column=1, padx=(0, 2), pady=5, sticky="W")
 
             lbl_rial_til = tk.Label(frame_1, text="to", font=fontStyleRegular, bg="gray86")
             lbl_rial_til.grid(row=0, column=2, pady=5, sticky="W")
 
-            self.var_range_max = tk.StringVar(frame_1, value=self.settings.blocks[self.num]["trial_range_block"][1])
+            self.var_range_max = tk.StringVar(frame_1, value=str(self.settings.blocks[self.num]["trial_range_block"][1]))
             self.etr_range_max = tk.Entry(frame_1, textvariable=self.var_range_max, width=4)
             self.etr_range_max.grid(row=0, column=3, padx=(0, 10), pady=5, sticky="W")
 
@@ -860,7 +860,7 @@ class UserInput:
             )
             lbl_prob_gb.grid(row=0, column=0, padx=(10, 5), sticky="E")
 
-            self.var_prob_gb = tk.StringVar(frame_2, value=self.settings.blocks[self.num]["prob_reward_gamble_block"])
+            self.var_prob_gb = tk.StringVar(frame_2, value=str(self.settings.blocks[self.num]["prob_reward_gamble_block"]))
             self.etr_prob_gb = tk.Entry(frame_2, textvariable=self.var_prob_gb, width=6)
             self.etr_prob_gb.grid(row=0, column=2, padx=(0, 2), sticky="W")
             # prob save
@@ -872,7 +872,7 @@ class UserInput:
             )
             lbl_rial_range.grid(row=1, column=0, padx=(10, 5), pady=5, sticky="E")
 
-            self.var_prob_save = tk.StringVar(frame_2, value=self.settings.blocks[self.num]["prob_reward_save_block"])
+            self.var_prob_save = tk.StringVar(frame_2, value=str(self.settings.blocks[self.num]["prob_reward_save_block"]))
             self.etr_prob_save = tk.Entry(frame_2, textvariable=self.var_prob_save, width=6)
             self.etr_prob_save.grid(row=1, column=2, padx=(0, 10), pady=5, sticky="W")
 

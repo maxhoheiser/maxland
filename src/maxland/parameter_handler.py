@@ -1,8 +1,35 @@
 import csv
 import json
 import os
+from typing import List
+
+from mypy_extensions import TypedDict
 
 import maxland.system_constants as system_constants
+from maxland.types_usersettings import UsersettingsTypes
+
+TimeDict = TypedDict(
+    "TimeDict",
+    {
+        "time_start": float,
+        "time_wheel_stopping_check": float,
+        "time_wheel_stopping_punish": float,
+        "time_present_stimulus": float,
+        "time_open_loop": float,
+        "time_open_loop_fail_punish": float,
+        "time_stimulus_presentation": float,
+        "time_stimulus_freeze": float,
+        "time_no_reward": float,
+        "time_inter_trial": float,
+        "time_range_no_reward_punish": List[float],
+        "time_reward_waiting": float,
+        "time_reward": float,
+        "time_big_reward_waiting": float,
+        "time_big_reward_open": float,
+        "time_small_reward_open": float,
+        "time_reward_open": float,
+    },
+)
 
 
 class TrialParameterHandler:
@@ -15,7 +42,7 @@ class TrialParameterHandler:
         session_folder (path): path to current session folder
     """
 
-    def __init__(self, usersettings, settings_folder, session_folder):
+    def __init__(self, usersettings: UsersettingsTypes, settings_folder, session_folder):
         self.usersettings = usersettings
         self.settings_folder = settings_folder
         self.session_folder = session_folder
@@ -34,7 +61,7 @@ class TrialParameterHandler:
             self.blocks = self.usersettings.BLOCKS
             self.big_reward = self.usersettings.BIG_REWARD  # reward amount in ml
             self.small_reward = self.usersettings.SMALL_REWARD  # reward amount in ml
-            self.manual_reward = None
+            self.manual_reward: int = int()
 
         # specific for confidentiality task
         if self.task == "conf":
@@ -59,7 +86,7 @@ class TrialParameterHandler:
             self.fade_start = self.usersettings.FADE_START  # from center to left side where fade away starts
             self.fade_end = self.usersettings.FADE_END  # from left center to left side where fade away ends
 
-        self.time_dict = self.create_time_dictionary()
+        self.time_dict: TimeDict = self.create_time_dictionary()
 
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
@@ -67,7 +94,7 @@ class TrialParameterHandler:
 
         # animal variables
         self.animal_weight = self.usersettings.ANIMAL_WEIGHT
-        self.animal_weight_after = None
+        self.animal_weight_after: int = int()
 
         # system settings for each session
         self.soft_code_present_stimulus = system_constants.SOFT_CODE_PRESENT_STIMULUS
@@ -77,24 +104,29 @@ class TrialParameterHandler:
         self.soft_code_start_logging = system_constants.SOFT_CODE_START_LOGGING
         self.soft_code_end_logging = system_constants.SOFT_CODE_END_LOGGING
         self.soft_code_stop_close_loop = system_constants.SOFT_CODE_STOP_CLOSE_LOOP
+        self.soft_code_wheel_not_stopping = system_constants.SOFT_CODE_WHEEL_NOT_STOPPING
         # rotary encoder
         self.wheel_diameter = system_constants.WHEEL_DIAMETER
-        self.reset_rotary_encoder = system_constants.RESET_ROTARY_ENCODER
-        self.thresh_left = system_constants.THRESH_LEFT
-        self.thresh_right = system_constants.THRESH_RIGHT
-        self.stimulus_left = system_constants.STIMULUS_LEFT
-        self.stimulus_right = system_constants.STIMULUS_RIGHT
-        self.wheel_position = []
+        self.serial_message_reset_rotary_encoder = system_constants.SERIAL_MESSAGE_RESET_ROTARY_ENCODER
+        self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
+        self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POSITION
+        self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
+        self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
+        self.stimulus_threshold_left = system_constants.STIMULUS_THRESHOLD_LEFT
+        self.stimulus_threshold_right = system_constants.STIMULUS_THRESHOLD_RIGHT
+        self.wheel_position = List[float]
         # stimulus
         self.fps = system_constants.FPS
         self.screen_width = system_constants.SCREEN_WIDTH
         self.screen_height = system_constants.SCREEN_HEIGHT
         self.monitor_distance = system_constants.MONITOR_DISTANCE
         self.monitor_width = system_constants.MONITOR_WIDTH
-        self.stimulus_position = []
+        self.stimulus_position = List[float]
         # tkinter settings
         self.run_session = False
-        self.notes = None
+        self.notes: str = ""
+        # probability
+        self.probability_list: List[int] = list()
 
     def update_reward_time(self):
         if self.task == "gamble":
@@ -108,12 +140,8 @@ class TrialParameterHandler:
 
     def update_waiting_times(self):
         if self.task == "gamble":
-            self.time_dict["time_big_reward_waiting"] = (
-                self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
-            )
-            self.time_dict["time_small_reward_waiting"] = (
-                self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
-            )
+            self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
+            self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
         if self.task == "conf":
             self.time_dict["time_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_reward_open"]
 
@@ -237,7 +265,7 @@ class TrialParameterHandler:
             time_dict (dict): dictionary with all the state times
         """
 
-        time_dict = {
+        time_dict_construction = {
             "time_start": self.usersettings.TIME_START,
             "time_wheel_stopping_check": self.usersettings.TIME_WHEEL_STOPPING_CHECK,
             "time_wheel_stopping_punish": self.usersettings.TIME_WHEEL_STOPPING_PUNISH,
@@ -255,18 +283,19 @@ class TrialParameterHandler:
                 "time_big_reward_open": self.get_valve_open_time(self.big_reward),
                 "time_small_reward_open": self.get_valve_open_time(self.small_reward),
                 "time_big_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.big_reward)),
-                "time_small_reward_waiting": (
-                    self.usersettings.TIME_REWARD - self.get_valve_open_time(self.small_reward)
-                ),
+                "time_small_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.small_reward)),
+                # add placeholder for
             }
-            time_dict.update(gamble_times)
+            time_dict_construction.update(gamble_times)
 
         if self.task == "conf":
             conf_time = {
                 "time_range_no_reward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
                 "time_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.reward)),
             }
-            time_dict.update(conf_time)
+            time_dict_construction.update(conf_time)
+
+        time_dict: TimeDict = time_dict_construction
 
         return time_dict
 
