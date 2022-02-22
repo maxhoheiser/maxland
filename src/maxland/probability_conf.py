@@ -15,11 +15,11 @@ class ProbabilityConstructor:
 
     def __init__(self, settings: TrialParameterHandler):
         self.settings = settings
-        self.stimulus_sides = Dict[str, bool]
-        self.trials_correct_side_chosen = List[bool]
+        self.stimulus_sides: Dict[str, bool] = {}
+        self.trials_correct_side_chosen: List[bool] = []
         self.current_trial_correct_side_chosen = False
         # insist mode tracking
-        self.chosen_sides_li = List[str]
+        self.chosen_sides_li: List[str] = []
         self.insist_mode_chosen_side_li = List[str]
         self.insist_mode_active = False
         self.insist_side = None

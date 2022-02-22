@@ -36,7 +36,7 @@ class TrialParameterHandler:
             self.blocks = self.usersettings.BLOCKS
             self.big_reward = self.usersettings.BIG_REWARD  # reward amount in ml
             self.small_reward = self.usersettings.SMALL_REWARD  # reward amount in ml
-            self.manual_reward = int
+            self.manual_reward: int = int()
 
         # specific for confidentiality task
         if self.task == "conf":
@@ -69,7 +69,7 @@ class TrialParameterHandler:
 
         # animal variables
         self.animal_weight = self.usersettings.ANIMAL_WEIGHT
-        self.animal_weight_after = None
+        self.animal_weight_after: int = int()
 
         # system settings for each session
         self.soft_code_present_stimulus = system_constants.SOFT_CODE_PRESENT_STIMULUS
@@ -99,9 +99,9 @@ class TrialParameterHandler:
         self.stimulus_position = List[float]
         # tkinter settings
         self.run_session = False
-        self.notes = str
+        self.notes: str = ""
         # probability
-        self.probability_list = List[int]
+        self.probability_list: List[int] = list()
 
     def update_reward_time(self):
         if self.task == "gamble":
