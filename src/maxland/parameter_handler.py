@@ -1,8 +1,10 @@
 import csv
 import json
 import os
+from typing import List
 
 import maxland.system_constants as system_constants
+from maxland.types.usersettings import Usersettings
 
 
 class TrialParameterHandler:
@@ -15,7 +17,7 @@ class TrialParameterHandler:
         session_folder (path): path to current session folder
     """
 
-    def __init__(self, usersettings, settings_folder, session_folder):
+    def __init__(self, usersettings: Usersettings, settings_folder, session_folder):
         self.usersettings = usersettings
         self.settings_folder = settings_folder
         self.session_folder = session_folder
@@ -34,8 +36,7 @@ class TrialParameterHandler:
             self.blocks = self.usersettings.BLOCKS
             self.big_reward = self.usersettings.BIG_REWARD  # reward amount in ml
             self.small_reward = self.usersettings.SMALL_REWARD  # reward amount in ml
-            self.manual_reward = None
-            self.probability_list = []
+            self.manual_reward = int
 
         # specific for confidentiality task
         if self.task == "conf":
@@ -88,19 +89,19 @@ class TrialParameterHandler:
         self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
         self.stimulus_threshold_left = system_constants.STIMULUS_THRESHOLD_LEFT
         self.stimulus_threshold_right = system_constants.STIMULUS_THRESHOLD_RIGHT
-        self.wheel_position = []
+        self.wheel_position = List[float]
         # stimulus
         self.fps = system_constants.FPS
         self.screen_width = system_constants.SCREEN_WIDTH
         self.screen_height = system_constants.SCREEN_HEIGHT
         self.monitor_distance = system_constants.MONITOR_DISTANCE
         self.monitor_width = system_constants.MONITOR_WIDTH
-        self.stimulus_position = []
+        self.stimulus_position = List[float]
         # tkinter settings
         self.run_session = False
-        self.notes = None
+        self.notes = str
         # probability
-        self.probability_list = None
+        self.probability_list = List[int]
 
     def update_reward_time(self):
         if self.task == "gamble":
