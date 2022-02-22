@@ -83,7 +83,7 @@ class TrialParameterHandler:
         self.wheel_diameter = system_constants.WHEEL_DIAMETER
         self.serial_message_reset_rotary_encoder = system_constants.SERIAL_MESSAGE_RESET_ROTARY_ENCODER
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
-        self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POS
+        self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POSITION
         self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
         self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
         self.stimulus_threshold_left = system_constants.STIMULUS_THRESHOLD_LEFT
