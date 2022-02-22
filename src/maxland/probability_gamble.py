@@ -1,5 +1,7 @@
 import random
 
+from maxland.parameter_handler import TrialParameterHandler
+
 
 class ProbabilityConstructor:
     """
@@ -9,7 +11,7 @@ class ProbabilityConstructor:
         settings (TrialParameterHandler object): the object for all the session parameters from TrialParameterHandler
     """
 
-    def __init__(self, settings):
+    def __init__(self, settings: TrialParameterHandler):
         self.settings = settings
         self.set_block_trial_number_from_range()
         self.trial_number = self.get_total_trial_count()
