@@ -5,7 +5,6 @@ from pathlib import Path
 import usersettings
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
-from pybpodgui_api.models.session import Session
 
 from maxland.helperfunctions import (
     find_rotaryencoder_com_port,
@@ -203,7 +202,7 @@ if settings_obj.run_session:
         # reward left
         sma.add_state(
             state_name="stop_open_loop_reward_left",
-            state_timer=settings_obj.time_dict["time_stim_freez"],
+            state_timer=settings_obj.time_dict["time_stimulus_freeze"],
             state_change_conditions={"Tup": "check_reward_left"},
             output_actions=[
                 ("SoftCode", settings_obj.soft_code_stop_open_loop),
@@ -323,7 +322,7 @@ if settings_obj.run_session:
         # reward right side: ======================================================================
         sma.add_state(
             state_name="stop_open_loop_reward_right",
-            state_timer=settings_obj.time_dict["time_stim_freez"],
+            state_timer=settings_obj.time_dict["time_stimulus_freeze"],
             state_change_conditions={"Tup": "check_reward_right"},
             output_actions=[
                 ("SoftCode", settings_obj.soft_code_stop_open_loop),
@@ -482,7 +481,8 @@ if settings_obj.run_session:
 
         try:
             stimulus_game.run_game(display_stimulus_event, start_open_loop_event, freeze_stimulus_event, bpod, sma)
-        except:
+        except Exception as e:
+            print(e)
             continue
 
         closer.join()

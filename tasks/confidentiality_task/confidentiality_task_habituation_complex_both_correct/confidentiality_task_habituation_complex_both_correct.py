@@ -135,7 +135,7 @@ if settings_obj.run_session:
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings_obj.time_dict["time_wheel_stopping_punish"],
             state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
-            output_actions=[("SoftCode", 9)],
+            output_actions=[("SoftCode", settings_obj.soft_code_wheel_not_stopping)],
         )
 
         # Open Loop

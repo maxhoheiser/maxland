@@ -41,7 +41,7 @@ repos:
         args:
           - --fail-under=6
           - --rcfile=./.pylintrc
-          - --disable=C0114,C0115,C0116
+          - --disable=C0114,C0115,C0116,R0801
   - repo: https://github.com/pycqa/flake8
     rev: 4.0.1
     hooks:
