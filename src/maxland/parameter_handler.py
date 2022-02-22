@@ -81,7 +81,7 @@ class TrialParameterHandler:
         self.soft_code_wheel_not_stopping = system_constants.SOFT_CODE_WHEEL_NOT_STOPPING
         # rotary encoder
         self.wheel_diameter = system_constants.WHEEL_DIAMETER
-        self.bit_message_reset_rotary_encoder = system_constants.BIT_MESSAGE_RESET_ROTARY_ENCODER
+        self.serial_message_reset_rotary_encoder = system_constants.SERIAL_MESSAGE_RESET_ROTARY_ENCODER
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
         self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POS
         self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
@@ -99,6 +99,8 @@ class TrialParameterHandler:
         # tkinter settings
         self.run_session = False
         self.notes = None
+        # probability
+        self.probability_list = None
 
     def update_reward_time(self):
         if self.task == "gamble":
@@ -112,12 +114,8 @@ class TrialParameterHandler:
 
     def update_waiting_times(self):
         if self.task == "gamble":
-            self.time_dict["time_big_reward_waiting"] = (
-                self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
-            )
-            self.time_dict["time_small_reward_waiting"] = (
-                self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
-            )
+            self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
+            self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
         if self.task == "conf":
             self.time_dict["time_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_reward_open"]
 
@@ -259,9 +257,7 @@ class TrialParameterHandler:
                 "time_big_reward_open": self.get_valve_open_time(self.big_reward),
                 "time_small_reward_open": self.get_valve_open_time(self.small_reward),
                 "time_big_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.big_reward)),
-                "time_small_reward_waiting": (
-                    self.usersettings.TIME_REWARD - self.get_valve_open_time(self.small_reward)
-                ),
+                "time_small_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.small_reward)),
             }
             time_dict.update(gamble_times)
 

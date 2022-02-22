@@ -1,6 +1,6 @@
 TASK = "gamble"
 
-GAMBLE_SIDE = "Left"
+GAMBLE_SIDE = "left"
 BLOCKS = [
     {"trial_range_block": [4, 7], "prob_reward_gamble_block": 10.0, "prob_reward_save_block": 20.0},
     {"trial_range_block": [3, 5], "prob_reward_gamble_block": 30.0, "prob_reward_save_block": 40.0},
