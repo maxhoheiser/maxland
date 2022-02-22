@@ -1,12 +1,12 @@
 from typing import Dict, List
 
 
-class Usersettings:
+class UsersettingsTypes:
     def __init__(self) -> None:
         self.TASK: str = ""
 
         self.GAMBLE_SIDE: str = ""
-        self.BLOCKS: Dict[str, List[int]] = dict()
+        self.BLOCKS: List[Dict[str, List[int]]] = list()
 
         # reward in seconds
         self.BIG_REWARD: float = float()

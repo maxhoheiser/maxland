@@ -4,7 +4,7 @@ import os
 from typing import List
 
 import maxland.system_constants as system_constants
-from maxland.types.usersettings import Usersettings
+from maxland.types_usersettings import UsersettingsTypes
 
 
 class TrialParameterHandler:
@@ -17,7 +17,7 @@ class TrialParameterHandler:
         session_folder (path): path to current session folder
     """
 
-    def __init__(self, usersettings: Usersettings, settings_folder, session_folder):
+    def __init__(self, usersettings: UsersettingsTypes, settings_folder, session_folder):
         self.usersettings = usersettings
         self.settings_folder = settings_folder
         self.session_folder = session_folder
