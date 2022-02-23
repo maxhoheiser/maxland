@@ -21,6 +21,7 @@ TimeDict = TypedDict(
         "time_big_reward_waiting": float,
         "time_big_reward_open": float,
         "time_small_reward_open": float,
+        "time_small_reward_waiting": float,
         "time_reward_open": float,
     },
 )
