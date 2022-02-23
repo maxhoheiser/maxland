@@ -2,7 +2,7 @@ import csv
 import json
 import os
 import random
-from typing import List
+from typing import Dict, List
 
 import maxland.system_constants as system_constants
 from maxland.types_time_dict import TimeDict
@@ -103,6 +103,8 @@ class TrialParameterHandler:
         self.run_session = False
         self.notes: str = ""
         # probability
+        self.probability_list: List[Dict[str, bool]] = list()
+        # historic trial values
         self.stimulus_correct_side_history: List[str] = list()
         self.trials_correct_side_history: List[bool] = list()
         self.time_punish_history: List[float] = list()
