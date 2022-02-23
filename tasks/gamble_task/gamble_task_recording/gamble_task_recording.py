@@ -28,13 +28,18 @@ window.draw_window_before_gamble()
 window.show_window()
 window.update_settings()
 
-# multithreading flags
-display_stimulus_event = threading.Event()
-start_open_loop_event = threading.Event()
-freeze_stimulus_event = threading.Event()
-display_stimulus_event.clear()
-start_open_loop_event.clear()
-freeze_stimulus_event.clear()
+# create threading flags
+event_display_stimulus = threading.Event()
+event_start_open_loop = threading.Event()
+event_still_show_stimulus = threading.Event()
+event_display_stimulus.clear()
+event_start_open_loop.clear()
+event_still_show_stimulus.clear()
+event_flags = {
+    "event_display_stimulus": event_display_stimulus,
+    "event_start_open_loop": event_start_open_loop,
+    "event_still_show_stimulus": event_still_show_stimulus,
+}
 
 
 # run session
@@ -50,16 +55,16 @@ if settings_obj.run_session:
     # softcode handler
     def softcode_handler(data):
         if data == settings_obj.soft_code_present_stimulus:
-            display_stimulus_event.set()
+            event_display_stimulus.set()
             print("present stimulus")
         elif data == settings_obj.soft_code_start_open_loop:
-            start_open_loop_event.set()
+            event_start_open_loop.set()
             print("start open loop")
         elif data == settings_obj.soft_code_stop_open_loop:
             stimulus_game.stop_open_loop()
             print("stop open loop")
         elif data == settings_obj.soft_code_end_present_stimulus:
-            freeze_stimulus_event.set()
+            event_still_show_stimulus.set()
             print("end present stimulus")
         elif data == settings_obj.soft_code_wheel_not_stopping:
             print("wheel not stopping")
@@ -472,15 +477,15 @@ if settings_obj.run_session:
                 stimulus_game,
                 bpod,
                 sma,
-                display_stimulus_event,
-                start_open_loop_event,
-                freeze_stimulus_event,
+                event_display_stimulus,
+                event_start_open_loop,
+                event_still_show_stimulus,
             ),
         )
         closer.start()
 
         try:
-            stimulus_game.run_game(display_stimulus_event, start_open_loop_event, freeze_stimulus_event, bpod, sma)
+            stimulus_game.run_game(event_flags)
         except Exception as e:
             print(e)
             continue

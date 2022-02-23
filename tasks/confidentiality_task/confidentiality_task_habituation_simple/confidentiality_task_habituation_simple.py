@@ -245,7 +245,7 @@ if settings_obj.run_session:
 
         try:
             if settings_obj.stimulus_type == "three-stimuli":
-                stimulus_game.run_game_habituation_3_simple(settings_obj, event_flags)
+                stimulus_game.run_game_habituation_3_simple(event_flags)
             else:
                 print("\nNo correct stimulus type selected\n")
         except Exception as e:

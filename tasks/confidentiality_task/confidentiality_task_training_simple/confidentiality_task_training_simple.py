@@ -291,11 +291,11 @@ if settings_obj.run_session:
 
         try:
             if settings_obj.stimulus_type == "three-stimuli":
-                stimulus_game.run_game_3(settings_obj, event_flags)
+                stimulus_game.run_game_3(event_flags)
             if settings_obj.stimulus_type == "two-stimuli":
-                stimulus_game.run_game_2(settings_obj, event_flags)
+                stimulus_game.run_game_2(event_flags)
             if settings_obj.stimulus_type == "one-stimulus":
-                stimulus_game.run_game_1(settings_obj, event_flags)
+                stimulus_game.run_game_1(event_flags)
             else:
                 print("\nNo correct stim type selected\n")
         except Exception as e:

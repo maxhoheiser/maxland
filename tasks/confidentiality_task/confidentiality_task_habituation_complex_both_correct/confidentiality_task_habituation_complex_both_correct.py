@@ -292,7 +292,7 @@ if settings_obj.run_session:
         closer.start()
 
         try:
-            stimulus_game.run_game_habituation_2(settings_obj, event_flags)
+            stimulus_game.run_game_habituation_2(event_flags)
         except Exception as e:
             print(e)
             break

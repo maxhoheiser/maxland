@@ -53,7 +53,7 @@ event_start_open_loop = threading.Event()
 event_still_show_stimulus = threading.Event()
 event_display_stimulus.clear()
 event_start_open_loop.clear()
-event_display_stimulus.clear()
+event_still_show_stimulus.clear()
 event_flags = {
     "event_display_stimulus": event_display_stimulus,
     "event_start_open_loop": event_start_open_loop,
@@ -80,7 +80,7 @@ if settings_obj.run_session:
         if data == settings_obj.soft_code_stop_open_loop:
             stimulus_game.stop_open_loop()
         if data == settings_obj.soft_code_end_present_stimulus:
-            event_display_stimulus.set()
+            event_still_show_stimulus.set()
         if data == settings_obj.soft_code_wheel_not_stopping:
             print("wheel not stopping")
 
@@ -418,7 +418,7 @@ if settings_obj.run_session:
         closer.start()
 
         try:
-            stimulus_game.run_game(settings_obj, event_flags)
+            stimulus_game.run_game(event_flags)
         except Exception as e:
             print(e)
             break
