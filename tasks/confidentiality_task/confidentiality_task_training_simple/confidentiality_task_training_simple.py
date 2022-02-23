@@ -11,9 +11,7 @@ In addition it uses three custom classes:
 
 """
 import os
-import random
 import threading
-from typing import List
 
 import usersettings
 from pybpodapi.bpod import Bpod
@@ -83,24 +81,11 @@ if settings_obj.run_session:
 
     stimulus_game = Stimulus(settings_obj, rotary_encoder_module, probability_obj.stimulus_sides)
 
-    # list of side for correct stimulus
-    sides_li: List[int] = []
-    times_punish_li: List[int] = []
-    insist_mode_li: List[int] = []
-    active_rule_li: List[int] = []
-
     # create main state machine trial loop ---------------------------------------------
     # state machine configs
     for trial in range(settings_obj.trial_number):
         # get random punish time
-        punish_time = round(
-            random.uniform(
-                float(settings_obj.time_dict["time_range_no_reward_punish"][0]),
-                float(settings_obj.time_dict["time_range_no_reward_punish"][1]),
-            ),
-            2,
-        )
-        times_punish_li.append(punish_time)
+        punish_time = settings_obj.get_punish_time()
 
         sma = StateMachine(bpod)
 
@@ -322,16 +307,12 @@ if settings_obj.run_session:
         probability_obj.insist_mode_check()
         probability_obj.rule_switch_check(trial)
 
-        print("---------------------------------------------------\n")
-        print("finished")
-
         # save session settings
         session_name = bpod.session_name
-        settings_obj.sides_li = sides_li
-        settings_obj.times_punish_li = times_punish_li
-        settings_obj.insist_mode_li = insist_mode_li
-        settings_obj.rule_switch_li = active_rule_li
         settings_obj.save_usersettings(session_name)
+
+        print("---------------------------------------------------\n")
+        print(f"{trial} finished\n")
 
 
 try_run_function(rotary_encoder_module.close())()
