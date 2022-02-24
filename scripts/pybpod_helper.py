@@ -1,57 +1,67 @@
+import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
-import argparse
-import shutil
+
 from pybpodgui_api.models.project import Project
 
 
-class pybpod_helper():
+class pybpod_helper:
     def __init__(self, root_path, project_path):
         self.root_path = root_path
         self.project_path = project_path
         self.project = Project()
-        self.hostname = os.environ['COMPUTERNAME']
+        self.hostname = os.environ["COMPUTERNAME"]
 
     def populate_project_folder(self):
         """copy all the necessary files for the bpod setup to the folder of this setup"""
-        # create project
+
         self.create_project()
-        # boards
+
         print("Creating: Bpod board")
         board = self.create_board()
 
-        # create project.json files
         user, subject = self.create_defaults()
 
-        # tasks
-        # gambl task
-        exp_gamble = self.create_experiment("gamble_task")
-        #   training
-        task_name = 'gamble_task_training'
+        # gamble task
+        experiment_gamble = self.create_experiment("gamble_task")
+
+        task_name = "gamble_task_training"
         self.create_task(task_name)
-        self.create_setup(exp_gamble, task_name, board, subject)
-        #   recording
-        task_name = 'gamble_task_recording'
+        self.create_setup(experiment_gamble, task_name, board, subject)
+
+        task_name = "gamble_task_recording"
         self.create_task(task_name)
-        self.create_setup(exp_gamble, task_name, board, subject)
-        # choice task
-        # self.create_experiment("choice_task")
-        #   habituation
-        #   training
-        #   recording
+        self.create_setup(experiment_gamble, task_name, board, subject)
+
+        # confidentiality task
+        experiment_confidentiality = self.create_experiment("gamble_task")
+
+        task_name = "confidentiality_task_habituation_complex"
+        self.create_task(task_name)
+        self.create_setup(experiment_confidentiality, task_name, board, subject)
+
+        task_name = "confidentiality_task_habituation_complex_both_correct"
+        self.create_task(task_name)
+        self.create_setup(experiment_confidentiality, task_name, board, subject)
+
+        task_name = "confidentiality_task_habituation_simple"
+        self.create_task(task_name)
+        self.create_setup(experiment_confidentiality, task_name, board, subject)
+
+        task_name = "confidentiality_task_training_simple"
+        self.create_task(task_name)
+        self.create_setup(experiment_confidentiality, task_name, board, subject)
 
         # calibration, administer reward etc
         self.create_experiment("calibration_etc")
 
         print("Creating: default usersettings, user, and subject")
         self.create_defaults()
-        # create project.json files
-
-    # helper functions for task folder createion =======================================
 
     def create_task(self, task_name):
         """copy files for given task to poject dir
@@ -71,22 +81,30 @@ class pybpod_helper():
                 return
             elif user_input == "y":
                 # copy files to new task
-                src = self.root_path/"tasks"/task_name
-                dest = self.project_path/"tasks"/task_name
+                source_path = self.get_source_of_task_file(task_name)
+                destination_path = self.project_path / "tasks" / task_name
                 task = self.project.create_task()
                 task.name = task_name
                 self.project.save(self.project_path)
-                self.copytree(src, dest)
+                self.copytree(src, destination_path)
                 print(f"Created task: {task_name}")
         else:
             # copy files to new task
-            src = self.root_path/"tasks"/task_name
-            dest = self.project_path/"tasks"/task_name
+            source_path = self.get_source_of_task_file(task_name)
+            destination_path = self.project_path / "tasks" / task_name
             task = self.project.create_task()
             task.name = task_name
             self.project.save(self.project_path)
-            self.copytree(src, dest)
+            self.copytree(source_path, destination_path)
             print(f"Created task: {task_name}")
+
+    def get_source_of_task_file(self, task_name):
+        if "gamble" in task_name:
+            source_path = self.root_path / "tasks" / "gamble_task" / task_name
+            return source_path
+        if "confidentiality" in task_name:
+            source_path = self.root_path / "tasks" / "confidentiality_task" / task_name
+            return source_path
 
     def create_board(self):
         """create new bpod board for new setup
@@ -97,7 +115,7 @@ class pybpod_helper():
         if not self.project.boards:
             # copy files to new board
             board = self.project.create_board()
-            board.name = ("board_"+self.hostname)
+            board.name = "board_" + self.hostname
             self.project.save(self.project_path)
             print("Created borad")
         else:
@@ -124,7 +142,7 @@ class pybpod_helper():
         """create new setup for setup
 
         Args:
-            experiment (bpod.experiment): experminet under which the setup is created
+            experiment (bpod.experiment): experiment under which the setup is created
             setup_name (str): name of the setup
             board (bpod.board): board which will be added as default to the setup
             subject (bpod.subject): subject which will be added as default to the setup
@@ -147,12 +165,12 @@ class pybpod_helper():
             bpod.subject:
         """
         # copy usersettings
-        src = self.root_path/("scripts/user_settings.py")
-        dest = self.project_path/"user_settings.py"
+        src = self.root_path / ("scripts/user_settings.py")
+        dest = self.project_path / "user_settings.py"
         shutil.copy(src, dest)
         # add default prject to user settings
-        with open(dest, 'a') as f:
-            f.write(f"\nDEFAULT_PROJECT_PATH = \"{self.project_path}\"\n")
+        with open(dest, "a") as f:
+            f.write(f'\nDEFAULT_PROJECT_PATH = "{self.project_path}"\n')
         # create default user
         if self.project.find_user("test_user") is None:
             user = self.project.create_user()
@@ -181,7 +199,7 @@ class pybpod_helper():
             self.project.load(self.project_path)
             print(f"  Skipping creation: maxland project found in: {self.project_path}")
         except:  # noqa
-            self.project.name = ("maxland_"+self.hostname)
+            self.project.name = "maxland_" + self.hostname
             self.project.save(self.project_path)
             print(f"Created: project maxland_{self.hostname}")
 
