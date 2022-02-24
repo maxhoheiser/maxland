@@ -39,6 +39,6 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_get_total_trial_count(self, random):
         random.randint._mock_side_effect = self.random.randint
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        trial_num = probability_constructor.get_total_trial_count()
+        trial_number = probability_constructor.get_total_trial_count()
 
-        self.assertEqual(trial_num, 19)
+        self.assertEqual(trial_number, 19)
