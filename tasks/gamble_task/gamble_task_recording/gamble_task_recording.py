@@ -80,7 +80,7 @@ if settings_obj.run_session:
     probability_obj = ProbabilityConstructor(settings_obj)
 
     # create main state machine trial loops
-    for trial in range(settings_obj.trial_num):
+    for trial in range(settings_obj.trial_number):
         probability_dict = settings_obj.probability_list[trial]
         sma = StateMachine(bpod)
 
@@ -105,7 +105,7 @@ if settings_obj.run_session:
             state_timer=0,
             state_change_conditions={"Tup": "wheel_stopping_check"},
             output_actions=[
-                ("Serial1", settings_obj.bit_message_reset_rotary_encoder),
+                ("Serial1", settings_obj.serial_message_reset_rotary_encoder),
                 ("BNC1", 0),
                 ("BNC2", 1),
             ],  # activate white light while waiting
@@ -136,7 +136,7 @@ if settings_obj.run_session:
         # continue if wheel stopped for time x
         sma.add_state(
             state_name="present_stim",
-            state_timer=settings_obj.time_dict["time_stim_pres"],
+            state_timer=settings_obj.time_dict["time_stimulus_presentation"],
             state_change_conditions={"Tup": "sync_state_2"},
             output_actions=[
                 ("SoftCode", settings_obj.soft_code_present_stimulus),
@@ -156,7 +156,7 @@ if settings_obj.run_session:
             state_timer=0,
             state_change_conditions={"Tup": "open_loop"},
             output_actions=[
-                ("Serial1", settings_obj.bit_message_reset_rotary_encoder),
+                ("Serial1", settings_obj.serial_message_reset_rotary_encoder),
                 ("BNC1", 0),
                 ("BNC2", 1),
             ],  # reset rotary encoder postition to 0
