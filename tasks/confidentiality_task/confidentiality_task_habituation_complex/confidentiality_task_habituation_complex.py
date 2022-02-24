@@ -12,6 +12,7 @@ In addition it uses three custom classes:
 """
 import os
 import threading
+from typing import cast
 
 import usersettings
 from pybpodapi.bpod import Bpod
@@ -26,12 +27,15 @@ from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_conf import ProbabilityConstructor
 from maxland.rotaryencoder import BpodRotaryEncoder
 from maxland.stimulus_conf import Stimulus
+from maxland.types_usersettings import UsersettingsTypes
 from maxland.userinput import UserInput
+
+usersettings_obj = cast(UsersettingsTypes, usersettings)
 
 session_folder = os.getcwd()
 settings_folder = os.path.dirname(__file__)
 
-settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
+settings_obj = TrialParameterHandler(usersettings_obj, settings_folder, session_folder)
 
 bpod = Bpod()
 

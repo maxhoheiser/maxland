@@ -1,6 +1,7 @@
 import os
 import threading
 from pathlib import Path
+from typing import cast
 
 import usersettings
 from pybpodapi.bpod import Bpod
@@ -15,11 +16,14 @@ from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_gamble import ProbabilityConstructor
 from maxland.rotaryencoder import BpodRotaryEncoder
 from maxland.stimulus_gamble import Stimulus
+from maxland.types_usersettings import UsersettingsTypes
 from maxland.userinput import UserInput
+
+usersettings_obj = cast(UsersettingsTypes, usersettings)
 
 session_folder = os.getcwd()
 settings_folder = Path(execution_folder_path=os.path.dirname(__file__))
-settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
+settings_obj = TrialParameterHandler(usersettings_obj, settings_folder, session_folder)
 
 bpod = Bpod()
 
