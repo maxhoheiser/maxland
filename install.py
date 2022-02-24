@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -90,9 +89,6 @@ def check_pre_dependencies():
 def install_dependencies():
     print("\n\nINFO: Installing required python packages")
     os.system("conda activate maxland && pip install -e .")
-    # clean up build
-    shutil.rmtree(root_path / "Maxland.egg-info")
-    shutil.rmtree(root_path / "dist")
     print("Requirements successfully installed in maxland\n")
 
 

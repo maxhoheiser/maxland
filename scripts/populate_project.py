@@ -1,11 +1,7 @@
-# populate project script
+import os
 from pathlib import Path
-import sys
-#import pybpod_helper
 
 from pybpod_helper import pybpod_helper
-
-import os
 
 
 def check_exist(project_path):
@@ -27,8 +23,8 @@ def check_exist(project_path):
 
 if __name__ == "__main__":
     root_path = Path.cwd().parent
-    hostname = os.environ['COMPUTERNAME']
-    project_path = root_path / ("maxland_"+hostname)
+    hostname = os.environ["COMPUTERNAME"]
+    project_path = root_path / ("maxland_" + hostname)
     check_exist(project_path)
 
     helper = pybpod_helper(root_path, project_path)
