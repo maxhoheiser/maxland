@@ -1,4 +1,5 @@
 import random
+from typing import Dict, List
 
 from maxland.parameter_handler import TrialParameterHandler
 
@@ -31,7 +32,7 @@ class ProbabilityConstructor:
         return trial_number
 
     def get_probability_list(self):
-        probability_list = []
+        probability_list: List[Dict[str, bool]] = list()
         block_number = 0
         for block in self.settings.blocks:
             probability_list.extend(self.get_all_trials_of_blocks(block, self.settings.is_gamble_side_left, block_number))

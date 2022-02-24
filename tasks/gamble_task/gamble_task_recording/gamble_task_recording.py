@@ -1,6 +1,7 @@
 import os
 import threading
 from pathlib import Path
+from typing import cast
 
 import usersettings
 from pybpodapi.bpod import Bpod
@@ -15,11 +16,14 @@ from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_gamble import ProbabilityConstructor
 from maxland.rotaryencoder import BpodRotaryEncoder
 from maxland.stimulus_gamble import Stimulus
+from maxland.types_usersettings import UsersettingsTypes
 from maxland.userinput import UserInput
+
+usersettings_obj = cast(UsersettingsTypes, usersettings)
 
 session_folder = os.getcwd()
 settings_folder = Path(execution_folder_path=os.path.dirname(__file__))
-settings_obj = TrialParameterHandler(usersettings, settings_folder, session_folder)
+settings_obj = TrialParameterHandler(usersettings_obj, settings_folder, session_folder)
 
 bpod = Bpod()
 
@@ -28,13 +32,18 @@ window.draw_window_before_gamble()
 window.show_window()
 window.update_settings()
 
-# multithreading flags
-display_stimulus_event = threading.Event()
-start_open_loop_event = threading.Event()
-freeze_stimulus_event = threading.Event()
-display_stimulus_event.clear()
-start_open_loop_event.clear()
-freeze_stimulus_event.clear()
+# create threading flags
+event_display_stimulus = threading.Event()
+event_start_open_loop = threading.Event()
+event_still_show_stimulus = threading.Event()
+event_display_stimulus.clear()
+event_start_open_loop.clear()
+event_still_show_stimulus.clear()
+event_flags = {
+    "event_display_stimulus": event_display_stimulus,
+    "event_start_open_loop": event_start_open_loop,
+    "event_still_show_stimulus": event_still_show_stimulus,
+}
 
 
 # run session
@@ -50,16 +59,16 @@ if settings_obj.run_session:
     # softcode handler
     def softcode_handler(data):
         if data == settings_obj.soft_code_present_stimulus:
-            display_stimulus_event.set()
+            event_display_stimulus.set()
             print("present stimulus")
         elif data == settings_obj.soft_code_start_open_loop:
-            start_open_loop_event.set()
+            event_start_open_loop.set()
             print("start open loop")
         elif data == settings_obj.soft_code_stop_open_loop:
             stimulus_game.stop_open_loop()
             print("stop open loop")
         elif data == settings_obj.soft_code_end_present_stimulus:
-            freeze_stimulus_event.set()
+            event_still_show_stimulus.set()
             print("end present stimulus")
         elif data == settings_obj.soft_code_wheel_not_stopping:
             print("wheel not stopping")
@@ -71,7 +80,7 @@ if settings_obj.run_session:
     probability_obj = ProbabilityConstructor(settings_obj)
 
     # create main state machine trial loops
-    for trial in range(settings_obj.trial_num):
+    for trial in range(settings_obj.trial_number):
         probability_dict = settings_obj.probability_list[trial]
         sma = StateMachine(bpod)
 
@@ -96,7 +105,7 @@ if settings_obj.run_session:
             state_timer=0,
             state_change_conditions={"Tup": "wheel_stopping_check"},
             output_actions=[
-                ("Serial1", settings_obj.bit_message_reset_rotary_encoder),
+                ("Serial1", settings_obj.serial_message_reset_rotary_encoder),
                 ("BNC1", 0),
                 ("BNC2", 1),
             ],  # activate white light while waiting
@@ -127,7 +136,7 @@ if settings_obj.run_session:
         # continue if wheel stopped for time x
         sma.add_state(
             state_name="present_stim",
-            state_timer=settings_obj.time_dict["time_stim_pres"],
+            state_timer=settings_obj.time_dict["time_stimulus_presentation"],
             state_change_conditions={"Tup": "sync_state_2"},
             output_actions=[
                 ("SoftCode", settings_obj.soft_code_present_stimulus),
@@ -147,7 +156,7 @@ if settings_obj.run_session:
             state_timer=0,
             state_change_conditions={"Tup": "open_loop"},
             output_actions=[
-                ("Serial1", settings_obj.bit_message_reset_rotary_encoder),
+                ("Serial1", settings_obj.serial_message_reset_rotary_encoder),
                 ("BNC1", 0),
                 ("BNC2", 1),
             ],  # reset rotary encoder postition to 0
@@ -472,15 +481,15 @@ if settings_obj.run_session:
                 stimulus_game,
                 bpod,
                 sma,
-                display_stimulus_event,
-                start_open_loop_event,
-                freeze_stimulus_event,
+                event_display_stimulus,
+                event_start_open_loop,
+                event_still_show_stimulus,
             ),
         )
         closer.start()
 
         try:
-            stimulus_game.run_game(display_stimulus_event, start_open_loop_event, freeze_stimulus_event, bpod, sma)
+            stimulus_game.run_game(event_flags)
         except Exception as e:
             print(e)
             continue

@@ -149,11 +149,11 @@ class UserInput:
         except ValueError:
             return False
 
-    def draw_window_before(self):
+    def draw_window_before(self, stage: str = None):
         if self.task == "gamble":
             self.draw_window_before_gamble()
         if self.task == "conf":
-            self.draw_window_before_conf()
+            self.draw_window_before_conf(stage)
 
     def draw_window_after(self):
         if self.task == "gamble":

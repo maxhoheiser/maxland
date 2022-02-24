@@ -1,35 +1,12 @@
 import csv
 import json
 import os
-from typing import List
-
-from mypy_extensions import TypedDict
+import random
+from typing import Dict, List
 
 import maxland.system_constants as system_constants
+from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import UsersettingsTypes
-
-TimeDict = TypedDict(
-    "TimeDict",
-    {
-        "time_start": float,
-        "time_wheel_stopping_check": float,
-        "time_wheel_stopping_punish": float,
-        "time_present_stimulus": float,
-        "time_open_loop": float,
-        "time_open_loop_fail_punish": float,
-        "time_stimulus_presentation": float,
-        "time_stimulus_freeze": float,
-        "time_no_reward": float,
-        "time_inter_trial": float,
-        "time_range_no_reward_punish": List[float],
-        "time_reward_waiting": float,
-        "time_reward": float,
-        "time_big_reward_waiting": float,
-        "time_big_reward_open": float,
-        "time_small_reward_open": float,
-        "time_reward_open": float,
-    },
-)
 
 
 class TrialParameterHandler:
@@ -126,7 +103,13 @@ class TrialParameterHandler:
         self.run_session = False
         self.notes: str = ""
         # probability
-        self.probability_list: List[int] = list()
+        self.probability_list: List[Dict[str, bool]] = list()
+        # historic trial values
+        self.stimulus_correct_side_history: List[str] = list()
+        self.trials_correct_side_history: List[bool] = list()
+        self.time_punish_history: List[float] = list()
+        self.insist_mode_history: List[str] = list()
+        self.active_rule_history: List[str] = list()
 
     def update_reward_time(self):
         if self.task == "gamble":
@@ -298,6 +281,17 @@ class TrialParameterHandler:
         time_dict: TimeDict = time_dict_construction
 
         return time_dict
+
+    def get_punish_time(self):
+        punish_time = round(
+            random.uniform(
+                float(self.time_dict["time_range_no_reward_punish"][0]),
+                float(self.time_dict["time_range_no_reward_punish"][1]),
+            ),
+            2,
+        )
+        self.time_punish_history.append(punish_time)
+        return punish_time
 
     def update_userinput_file_gamble(self):
         """updates usersettings file with new variable values"""

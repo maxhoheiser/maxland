@@ -16,7 +16,7 @@ class Stimulus:
         rotary_encoder (RotaryEncoder object): object handeling rotary encoder module
     """
 
-    def __init__(self, settings: TrialParameterHandler, rotary_encoder: BpodRotaryEncoder, correct_stimulus_side: str):
+    def __init__(self, settings: TrialParameterHandler, rotary_encoder: BpodRotaryEncoder, stimulus_sides: Dict[str, bool]):
         self.settings = settings
         self.trials = settings.trial_number
         self.FPS = settings.fps
@@ -28,7 +28,7 @@ class Stimulus:
         )
 
         self.rotary_encoder = rotary_encoder
-        self.correct_stimulus_side = correct_stimulus_side
+        self.stimulus_sides = stimulus_sides
 
         self.gain_left = self.get_gain(settings.rotaryencoder_thresholds[0], settings.rotaryencoder_stimulus_end_position[0])
         self.gain_right = self.get_gain(settings.rotaryencoder_thresholds[1], settings.rotaryencoder_stimulus_end_position[1])
@@ -148,7 +148,7 @@ class Stimulus:
         event_still_show_stimulus.clear()
         self.reset_loop_flags()
 
-        if self.correct_stimulus_side == "right":
+        if self.stimulus_sides == "right":
             right_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
             right_or = self.settings.stimulus_correct_side["grating_ori"]
             right_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
@@ -158,7 +158,7 @@ class Stimulus:
             left_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
             left_ps = self.settings.stimulus_correct_side["grating_speed"]
 
-        if self.correct_stimulus_side == "left":
+        if self.stimulus_sides == "left":
             left_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
             left_or = self.settings.stimulus_correct_side["grating_ori"]
             left_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
@@ -222,7 +222,7 @@ class Stimulus:
         event_still_show_stimulus.clear()
         self.reset_loop_flags()
 
-        if self.correct_stimulus_side == "left":
+        if self.stimulus_sides == "left":
             right_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
             right_or = self.settings.stimulus_correct_side["grating_ori"]
             right_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
@@ -232,7 +232,7 @@ class Stimulus:
             left_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
             left_ps = self.settings.stimulus_correct_side["grating_speed"]
 
-        if self.correct_stimulus_side == "right":
+        if self.stimulus_sides == "right":
             left_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
             left_or = self.settings.stimulus_correct_side["grating_ori"]
             left_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
@@ -297,9 +297,9 @@ class Stimulus:
         event_display_stimulus = event_flags["event_display_stimulus"]
         event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
-        if self.correct_stimulus_side == "right":
+        if self.stimulus_sides == "right":
             stimulus = self.settings.stimulus_correct_side
-        if self.correct_stimulus_side == "left":
+        if self.stimulus_sides == "left":
             stimulus = self.settings.stimulus_wrong_side
         stim_sf = self.get_grating_frequency(stimulus["grating_sf"])
         stim_or = stimulus["grating_ori"]
@@ -392,10 +392,10 @@ class Stimulus:
         grating_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
         grating_ps = self.settings.stimulus_correct_side["grating_speed"]
 
-        if self.correct_stimulus_side == "right":
+        if self.stimulus_sides == "right":
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[1])
 
-        if self.correct_stimulus_side == "left":
+        if self.stimulus_sides == "left":
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[0])
 
         stim = self.gen_stimulus()
@@ -456,10 +456,10 @@ class Stimulus:
             grating_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
             grating_ps = self.settings.stimulus_wrong_side["grating_speed"]
 
-        if self.correct_stimulus_side == "right":
+        if self.stimulus_sides == "right":
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[0])
 
-        if self.correct_stimulus_side == "left":
+        if self.stimulus_sides == "left":
             grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[1])
 
         # on soft code of state 1 ----------------------
