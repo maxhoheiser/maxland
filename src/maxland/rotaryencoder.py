@@ -1,5 +1,8 @@
 import numpy as np
 from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
+from pybpodapi.bpod import Bpod
+
+from maxland.parameter_handler import TrialParameterHandler
 
 WRAP_POINT = 0
 
@@ -11,16 +14,16 @@ class BpodRotaryEncoder:
         settings (TrialParameterHandler object):  the object for all the session parameters from TrialPArameterHandler
     """
 
-    def __init__(self, com_port, settings, bpod):
+    def __init__(self, com_port, settings: TrialParameterHandler, bpod: Bpod):
         self.com_port = com_port
         self.rotary_encoder = RotaryEncoderModule(self.com_port)
         self.bpod = bpod
-        self.reset = settings.reset_rotary_encoder
+        self.serial_message_reset = settings.serial_message_reset_rotary_encoder
         self.wrap_point = WRAP_POINT
-        self.all_thresholds = settings.thresholds
-        self.enabled_thresholds = self.get_enabled_thresholds(self.all_thresholds)
-        self.events = self.get_events(self.all_thresholds)
-        self.set_bit_message()
+        self.thresholds = settings.rotaryencoder_thresholds
+        self.enabled_thresholds = self.get_enabled_thresholds(self.thresholds)
+        self.events = self.get_events(self.thresholds)
+        self.set_serial_message()
         self.set_configuration()
 
     def get_enabled_thresholds(self, all_thresholds):
@@ -33,13 +36,13 @@ class BpodRotaryEncoder:
         events = [f"RotaryEncoder1_{x}" for x in list(range(1, len(thresholds) + 1))]
         return events
 
-    def set_bit_message(self):
+    def set_serial_message(self):
         rotary_encoder = [x for x in self.bpod.modules if x.name == "RotaryEncoder1"][0]
-        self.bpod.load_serial_message(rotary_encoder, self.reset, [ord("Z"), ord("E")])
+        self.bpod.load_serial_message(rotary_encoder, self.serial_message_reset, [ord("Z"), ord("E")])
 
     def set_configuration(self):
         """loads rotary encoder module with thresholds"""
-        self.rotary_encoder.set_thresholds(self.all_thresholds)
+        self.rotary_encoder.set_thresholds(self.thresholds)
         self.rotary_encoder.enable_thresholds(self.enabled_thresholds)
         self.rotary_encoder.enable_evt_transmission()
         self.set_wrap_point(self.wrap_point)
