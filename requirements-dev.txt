@@ -1,6 +1,8 @@
 aenum==3.1.8
+alabaster==0.7.12
 anyio==3.5.0
 AnyQt==0.0.13
+appdirs==1.4.4
 appnope==0.1.2
 arabic-reshaper==2.1.3
 argon2-cffi==21.3.0
@@ -33,6 +35,7 @@ debugpy==1.5.1
 decorator==4.4.2
 defusedxml==0.7.1
 distlib==0.3.4
+docutils==0.17.1
 dukpy==0.2.3
 entrypoints==0.4
 esprima==4.0.1
@@ -58,6 +61,7 @@ identify==2.4.9
 idna==3.3
 imageio==2.15.0
 imageio-ffmpeg==0.4.5
+imagesize==1.3.0
 importlib-metadata==4.11.0
 importlib-resources==5.4.0
 iniconfig==1.1.1
@@ -339,8 +343,16 @@ Send2Trash==1.8.0
 six==1.16.0
 smmap==5.0.0
 sniffio==1.2.0
+snowballstemmer==2.2.0
 sounddevice==0.4.4
 SoundFile==0.10.3.post1
+Sphinx==4.4.0
+sphinxcontrib-applehelp==1.0.2
+sphinxcontrib-devhelp==1.0.2
+sphinxcontrib-htmlhelp==2.0.0
+sphinxcontrib-jsmath==1.0.1
+sphinxcontrib-qthelp==1.0.3
+sphinxcontrib-serializinghtml==1.1.5
 stack-data==0.1.4
 tables==3.7.0
 terminado==0.13.1
