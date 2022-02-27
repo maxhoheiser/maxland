@@ -29,9 +29,7 @@ pip-delete-this-directory.txt
 *.tox/
 
 # PyBpod files
-maxland_TRAINING/*
-maxland_RECORDING*
-maxland_TESTING*
+maxland_*/*
 boards*
 experiments*
 tasks/iblrig/*

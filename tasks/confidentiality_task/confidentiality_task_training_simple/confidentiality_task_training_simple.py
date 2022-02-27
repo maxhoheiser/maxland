@@ -61,7 +61,7 @@ if settings_obj.run_session:
     # configure rotary encoder
     com_port = find_rotaryencoder_com_port()
     rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
-    rotary_encoder_module.set_bit_message()
+    rotary_encoder_module.set_serial_message()
     rotary_encoder_module.set_configuration()
     rotary_encoder_module.enable_stream()
 

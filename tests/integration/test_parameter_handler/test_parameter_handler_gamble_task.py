@@ -7,7 +7,9 @@ from pathlib import Path
 
 from maxland.parameter_handler import TrialParameterHandler
 
-USERSETTINGS_EXAMPLE_GAMBLE_TASK = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_gamble_task.py")
+USERSETTINGS_EXAMPLE_GAMBLE_TASK = os.path.join(
+    Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_gamble_task.py"
+)
 NEW_BIG_REWARD = 10.15
 NEW_SMALL_REWARD = 11.16
 

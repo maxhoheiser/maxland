@@ -10,7 +10,7 @@ from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_gamble import ProbabilityConstructor
 from maxland.stimulus_gamble import Stimulus
 
-USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_gamble_task.py")
+USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_gamble_task.py")
 
 TEST_DISPLAY = {
     "monitor_width": 2560,

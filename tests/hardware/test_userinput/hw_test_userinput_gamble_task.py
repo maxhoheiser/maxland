@@ -6,7 +6,7 @@ from pathlib import Path
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.userinput import UserInput
 
-USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_gamble_task.py")
+USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_gamble_task.py")
 NEW_GAMBLE_SIDE = "right"
 NEW_TIME_MIN = 33
 NEW_TIME_MAX = 44
