@@ -10,7 +10,7 @@ from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_conf import ProbabilityConstructor
 from maxland.stimulus_conf import Stimulus
 
-USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_conf_task.py")
+USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
 CORRECT_SIDE_LEFT = "left"
 CORRECT_SIDE_RIGHT = "right"
 

@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.rotaryencoder import BpodRotaryEncoder
 
-USERSETTINGS_EXAMPLE = os.path.join(Path(os.path.dirname(__file__)), "usersettings_example_gamble_task.py")
+USERSETTINGS_EXAMPLE = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_gamble_task.py")
 COM_PORT = "COM1"
 
 # hardware in the loop tests

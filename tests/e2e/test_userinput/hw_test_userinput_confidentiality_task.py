@@ -6,7 +6,7 @@ from pathlib import Path
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.userinput import UserInput
 
-USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_conf_task.py")
+USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
 NEW_TRIAL_NUMBER = 92
 NEW_AMOUNT = 33.3
 NEW_STIMULUS_END_POSITION_LEFT = "-32"

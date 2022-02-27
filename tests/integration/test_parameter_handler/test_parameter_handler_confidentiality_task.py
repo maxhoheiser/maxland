@@ -8,7 +8,7 @@ from pathlib import Path
 from maxland.parameter_handler import TrialParameterHandler
 
 USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK = os.path.join(
-    Path(os.path.dirname(__file__)).parent.absolute(), "usersettings_example_conf_task.py"
+    Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py"
 )
 NEW_REWARD = 12.17
 
