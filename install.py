@@ -1,12 +1,14 @@
 import argparse
 import json
 import os
+import platform
 import subprocess
 import sys
 from pathlib import Path
 
 root_path = Path.cwd()
-hostname = os.environ["COMPUTERNAME"]
+hostname = platform.node()
+print(hostname)
 project_path_default = root_path / ("maxland_" + hostname)
 sys.path.append(os.path.join(os.getcwd(), "scripts"))
 
@@ -77,13 +79,14 @@ def check_pre_dependencies():
         print("pip... OK")
         # update conda and packages
         os.system("conda activate maxland && conda update -y -n base -c defaults conda && conda update -y --all")
+        print("All dependencies OK.")
+        return
     except Exception as err:
         print(
             err,
             "\nEither git, conda, or pip were not found.\nplease install them and run the script again",
         )
-        return
-    print("All dependencies OK.")
+        raise Exception("Depends not found")
 
 
 def install_dependencies():
@@ -120,7 +123,8 @@ def create_project_folder(project_folder_path):
 
 def get_project_folder(default_project_folder_path):
     print(
-        f"\nDo you want to use the default path: {default_project_folder_path}, if not, you can enter a valid path to install to? (y/valid path)"
+        f"\nDo you want to use the default path: {default_project_folder_path}, \
+        if not, you can enter a valid path to install to? (y/valid path)"
     )
     user_input = input()
     if user_input == "y":
@@ -128,7 +132,7 @@ def get_project_folder(default_project_folder_path):
     else:
         try:
             new_project_folder_path = Path(user_input)
-        except Exception as e:
+        except Exception:
             print("Please choose a valid path")
             return get_project_folder(default_project_folder_path)
         if new_project_folder_path.exists() and len(os.listdir(new_project_folder_path)) != 0:
