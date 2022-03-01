@@ -25,13 +25,13 @@ TIME_NO_REWARD = 1.0
 TIME_INTER_TRIAL = 1.5
 
 # stimulus size and color - only for moving stimulus
-STIMULUS_RAD = 45  # pixel radius of stimulus
-STIMULUS_COL = [0, 255, 0]  # color of stimulus
-BACKGROUND_COL = [0, 0, 0]
+STIMULUS_RADIUS = 45  # pixel radius of stimulus
+STIMULUS_COLOR = [0, 255, 0]  # color of stimulus
+BACKGROUND_COLOR = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]
-STIMULUS_END_POS = [-2048, 2048]  # pixel
+STIMULUS_END_POSITION = [-2048, 2048]  # pixel
 
 LIFE_PLOT = False
 # animal weight in grams
