@@ -5,9 +5,10 @@ from typing import List
 
 from maxland.parameter_handler import TrialParameterHandler
 
-WINDOW_SIZE = [950, 1000]
-WINDOW_SIZE_GAMBLE_TASK = [835, 920]
-WINDOW_SIZE_CONFIDENTIALITY_TASK = [880, 1070]
+WINDOW_SIZE = [855, 1000]
+CANVAS_SIZE = [835, 920]
+WINDOW_SIZE_GAMBLE_TASK = [855, 920]
+WINDOW_SIZE_CONFIDENTIALITY_TASK = [855, 1070]
 
 
 class UserInput:
@@ -21,9 +22,19 @@ class UserInput:
         self.task = self.settings.task
         # setup tkinter variables
         self.root = tk.Tk()
-        geometry_string = self.get_geometry()
+        self.container = ttk.Frame(self.root)
+        self.canvas = tk.Canvas(self.container, width=CANVAS_SIZE[0], height=CANVAS_SIZE[1])
+        self.canvas.bind_all("<MouseWheel>", self.update_frame_on_scroll)
+        self.scrollbar = ttk.Scrollbar(self.container, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = ttk.Frame(self.canvas)
+
+        self.scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
         self.root.title("Maxland")
-        self.root.geometry(geometry_string)
+        self.root.geometry(self.get_geometry())
         self.fontStyleBold = font.Font(family="Calibri", size=20)
         self.fontStyleRegular = font.Font(family="Calibri", size=11)
         self.fontStyleBox = font.Font(family="Calibri", size=10)
@@ -31,6 +42,9 @@ class UserInput:
         self.check_weight = False
         self.padx = 30
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def update_frame_on_scroll(self, event) -> None:
+        self.scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
 
     def update_settings(self):
         self.settings.life_plot = bool(self.var_liveplot.get())
@@ -118,7 +132,7 @@ class UserInput:
             self.window_size[0] = screen_size[0]
             window_offset[0] = 0
         if self.window_size[1] > screen_size[1]:
-            self.window_size[1] = screen_size[1]
+            self.window_size[1] = screen_size[1] - 100
             window_offset[1] = 0
         return str(self.window_size[0]) + "x" + str(self.window_size[1]) + "+" + str(window_offset[0]) + "+" + str(window_offset[1])
 
@@ -140,6 +154,9 @@ class UserInput:
         self.on_close()
 
     def show_window(self):
+        self.container.pack()
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
         self.root.mainloop()
 
     def is_float(self, string):
@@ -184,9 +201,9 @@ class UserInput:
         return block_list
 
     def draw_window_before_gamble(self):
-        tk.Label(self.root, text="Gamble Task Settings", font=self.fontStyleBold).pack()
-        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2)
-        frame_1 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        ttk.Label(self.scrollable_frame, text="Gamble Task Settings").pack()
+        ttk.Label(self.scrollable_frame, text="ESSENTIAL SETTINGS", foreground="gray66").pack(anchor=tk.W, padx=(10, 2))
+        frame_1 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_1.pack(fill=tk.BOTH, padx=self.padx, pady=(2, 10))
 
         lbl_gamble_side = tk.Label(frame_1, text="Gamble Side:", font=self.fontStyleRegular)
@@ -210,8 +227,10 @@ class UserInput:
         self.btn_liveplot.grid(row=0, column=5, sticky="W", padx=20)
 
         # frame blocks
-        tk.Label(self.root, text="BLOCKS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(10, 2))
-        frame_2 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="BLOCKS", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(10, 2)
+        )
+        frame_2 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_2.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         blk0 = self.Block(0, frame_2, self.settings, self.fontStyleRegular, 0)
@@ -221,8 +240,10 @@ class UserInput:
         self.blocks = [blk0, blk1, blk2]
 
         # frame rewards
-        tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_3 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_3.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         lbl_big_reward = tk.Label(frame_3, text="Gamble side reward [ml]:", font=self.fontStyleRegular)
@@ -242,8 +263,10 @@ class UserInput:
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
         # frame stimulus
-        tk.Label(self.root, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_4 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_4 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_4.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         # frame row 0
@@ -304,8 +327,10 @@ class UserInput:
         self.etr_rotary_thresh_right.grid(row=1, column=7, padx=(2, 10), pady=8, sticky="W")
 
         # frame time
-        tk.Label(self.root, text="TIME", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_5 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="TIME", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_5 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_5.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         frame_5_0 = tk.Frame(frame_5)
@@ -393,18 +418,20 @@ class UserInput:
             "time at end of each Trial",
         )
 
-        btn_ok = tk.Button(self.root, text="OK", command=self.on_confirm, width=20)
+        btn_ok = tk.Button(self.scrollable_frame, text="OK", command=self.on_confirm, width=20)
         btn_ok.pack(side=tk.RIGHT, padx=self.padx, pady=10)
-        btn_cancel = tk.Button(self.root, text="Cancel", command=self.on_cancel, width=20)
+        btn_cancel = tk.Button(self.scrollable_frame, text="Cancel", command=self.on_cancel, width=20)
         btn_cancel.pack(side=tk.RIGHT)
 
     def draw_window_after_gamble(self):
         """tkinter window to get user input after session, variables and default values are read from settings object"""
-        tk.Label(self.root, text="Gamble Task Report", font=self.fontStyleBold).pack()
+        tk.Label(self.scrollable_frame, text="Gamble Task Report", font=self.fontStyleBold).pack()
 
         # frame essential input
-        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2)
-        frame_1 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2
+        )
+        frame_1 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_1.pack(fill=tk.BOTH, padx=self.padx, pady=(2, 10))
 
         # animal weight input
@@ -415,8 +442,10 @@ class UserInput:
         self.etr_animal_weight_after.grid(row=0, column=4, pady=8)
 
         # frame manual rewards
-        tk.Label(self.root, text="MANUAL REWARD", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="MANUAL REWARD", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_3 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_3.pack(fill=tk.BOTH, padx=self.padx, pady=2)
         lbl_reward = tk.Label(frame_3, text="Manual administered reward [ml]:", font=self.fontStyleRegular)
         lbl_reward.grid(row=0, column=0, padx=5, pady=8)
@@ -426,13 +455,15 @@ class UserInput:
         self.etr_reward_manual.grid(row=0, column=1, pady=8)
 
         # frame time
-        tk.Label(self.root, text="NOTES", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
+        tk.Label(self.scrollable_frame, text="NOTES", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
 
-        scrollbar = tk.Scrollbar(self.root)
+        scrollbar = tk.Scrollbar(self.scrollable_frame)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.notes = tk.Text(
-            self.root,
+            self.scrollable_frame,
             highlightbackground="black",
             highlightthickness=1,
             height=38,
@@ -443,18 +474,20 @@ class UserInput:
         scrollbar.config(command=self.notes.yview)
         self.notes.config(yscrollcommand=scrollbar.set)
 
-        btn_ok = tk.Button(self.root, text="OK", command=self.on_confirm_after_session, width=20)
+        btn_ok = tk.Button(self.scrollable_frame, text="OK", command=self.on_confirm_after_session, width=20)
         btn_ok.pack(side=tk.RIGHT, padx=self.padx, pady=10)
-        btn_cancel = tk.Button(self.root, text="Cancel", command=self.on_cancel, width=20)
+        btn_cancel = tk.Button(self.scrollable_frame, text="Cancel", command=self.on_cancel, width=20)
         btn_cancel.pack(side=tk.RIGHT)
 
     # Confidentiality Task Specific Settings ===============================================
     def draw_window_before_conf(self, stage="training"):
-        tk.Label(self.root, text="Confidentiality Task Settings", font=self.fontStyleBold).pack()
+        tk.Label(self.scrollable_frame, text="Confidentiality Task Settings", font=self.fontStyleBold).pack()
 
         # frame essential input
-        tk.Label(self.root, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2)
-        frame_1 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="ESSENTIAL SETTINGS", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2
+        )
+        frame_1 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_1.pack(fill=tk.BOTH, padx=self.padx, pady=(2, 10))
 
         # animal weight input
@@ -473,8 +506,10 @@ class UserInput:
         self.btn_liveplot.grid(row=0, column=5, sticky="W", padx=20)
 
         # frame trials
-        tk.Label(self.root, text="TRIAL", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(10, 2))
-        frame_2 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="TRIAL", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(10, 2)
+        )
+        frame_2 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_2.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         # trial
@@ -485,8 +520,10 @@ class UserInput:
         self.etr_trial_num = tk.Entry(frame_2, textvariable=self.var_trial_num, width=10)
         self.etr_trial_num.grid(row=0, column=1, pady=8)
 
-        tk.Label(self.root, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(10, 2))
-        frame_3 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="REWARD", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(10, 2)
+        )
+        frame_3 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_3.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         # reward
@@ -503,8 +540,10 @@ class UserInput:
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
         # frame stimulus
-        tk.Label(self.root, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_4 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="STIMULUS", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_4 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_4.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         # frame row 1
@@ -544,7 +583,7 @@ class UserInput:
         self.etr_rotary_thresh_right.grid(row=0, column=9, padx=(2, 10), pady=8, sticky="W")
 
         # frame stimulus detail =====================================================================
-        frame_5 = tk.Frame(self.root)
+        frame_5 = tk.Frame(self.scrollable_frame)
         frame_5.pack(fill=tk.BOTH, padx=self.padx, pady=0)
 
         # frame_5_0 correct ================
@@ -620,7 +659,7 @@ class UserInput:
         self.etr_stim_wrong_speed.grid(row=2, column=3, padx=(0, 10), pady=10, sticky="W")
 
         # variable stimulus variables
-        frame_6 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        frame_6 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_6.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         # select stim type dropdown
@@ -666,8 +705,10 @@ class UserInput:
         self.etr_stim_col.grid(row=0, column=6, padx=(0, 2), pady=8, sticky="W")
 
         # frame insist mode
-        tk.Label(self.root, text="INSIST MODE", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_7 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="INSIST MODE", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_7 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_7.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         lbl_insist_range_trigger = tk.Label(frame_7, text="Insist Mode Trigger Range:", font=self.fontStyleRegular)
@@ -694,8 +735,10 @@ class UserInput:
         self.etr_insist_range_deact.grid(row=0, column=6, padx=(0, 0), pady=8, sticky="E")
 
         # frame time
-        tk.Label(self.root, text="TIME [seconds]", font=self.fontStyleBox, fg="gray66").pack(anchor=tk.W, padx=self.padx - 2, pady=(15, 2))
-        frame_7 = tk.Frame(self.root, highlightbackground="black", highlightthickness=1)
+        tk.Label(self.scrollable_frame, text="TIME [seconds]", font=self.fontStyleBox, fg="gray66").pack(
+            anchor=tk.W, padx=self.padx - 2, pady=(15, 2)
+        )
+        frame_7 = tk.Frame(self.scrollable_frame, highlightbackground="black", highlightthickness=1)
         frame_7.pack(fill=tk.BOTH, padx=self.padx, pady=2)
 
         frame_7_0 = tk.Frame(frame_7)
@@ -794,10 +837,10 @@ class UserInput:
         )
 
         # ok button
-        btn_ok = tk.Button(self.root, text="OK", command=self.on_confirm, width=20)
+        btn_ok = tk.Button(self.scrollable_frame, text="OK", command=self.on_confirm, width=20)
         btn_ok.pack(side=tk.RIGHT, padx=self.padx, pady=10)
         # cancle button
-        btn_cancel = tk.Button(self.root, text="Cancel", command=self.on_cancel, width=20)
+        btn_cancel = tk.Button(self.scrollable_frame, text="Cancel", command=self.on_cancel, width=20)
         btn_cancel.pack(side=tk.RIGHT)
 
     class Block:
