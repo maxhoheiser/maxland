@@ -133,7 +133,7 @@ class pybpod_helper:
         shutil.copy(source_path, destination_path)
         # add default prject to user settings
         with open(destination_path, "a") as f:
-            f.write(f'\nDEFAULT_PROJECT_PATH = "{self.project_path}"\n')
+            f.write(f'\nDEFAULT_PROJECT_PATH = r"{self.project_path}"\n')
         # create default user
         if self.project.find_user("test_user") is None:
             user = self.project.create_user()
