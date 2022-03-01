@@ -5,10 +5,10 @@ from typing import List
 
 from maxland.parameter_handler import TrialParameterHandler
 
-WINDOW_SIZE = [823, 1000]
-CANVAS_SIZE = [800, 920]
-WINDOW_SIZE_GAMBLE_TASK = [824, 920]
-WINDOW_SIZE_CONFIDENTIALITY_TASK = [825, 1070]
+WINDOW_SIZE = [855, 1000]
+CANVAS_SIZE = [835, 920]
+WINDOW_SIZE_GAMBLE_TASK = [855, 920]
+WINDOW_SIZE_CONFIDENTIALITY_TASK = [855, 1070]
 
 
 class UserInput:
@@ -118,7 +118,7 @@ class UserInput:
         self.settings.animal_weight_after = self.var_animal_weight_after.get()
         self.settings.notes = self.notes.get("1.0", "end")
 
-    def get_geometry(self):  # TODO: not needed or change to canvas
+    def get_geometry(self):
         if self.task == "gamble":
             self.window_size = WINDOW_SIZE_GAMBLE_TASK
         if self.task == "conf":
@@ -132,7 +132,7 @@ class UserInput:
             self.window_size[0] = screen_size[0]
             window_offset[0] = 0
         if self.window_size[1] > screen_size[1]:
-            self.window_size[1] = screen_size[1]
+            self.window_size[1] = screen_size[1] - 100
             window_offset[1] = 0
         return str(self.window_size[0]) + "x" + str(self.window_size[1]) + "+" + str(window_offset[0]) + "+" + str(window_offset[1])
 
