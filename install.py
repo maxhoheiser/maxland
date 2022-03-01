@@ -86,7 +86,7 @@ def check_pre_dependencies():
             err,
             "\nEither git, conda, or pip were not found.\nplease install them and run the script again",
         )
-        raise Exception("Depends not found")
+        sys.exit(0)
 
 
 def install_dependencies():
