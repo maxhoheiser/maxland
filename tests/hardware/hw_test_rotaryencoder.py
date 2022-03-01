@@ -29,6 +29,10 @@ class TestBpodRotaryEncoderModule(unittest.TestCase):
         self.bpod = None
         self.com_port = None
 
+    def test_get_com_port(self):
+        com_port = find_rotaryencoder_com_port()
+        self.assertEqual(com_port, self.com_port)
+
     def test_com_port_found(self):
         self.assertIsNotNone(self.com_port)
 
