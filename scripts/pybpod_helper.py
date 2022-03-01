@@ -29,7 +29,7 @@ class pybpod_helper:
         self.create_setup(experiment_gamble, task_name, subject)
 
         # confidentiality task
-        experiment_confidentiality = self.create_experiment("gamble_task")
+        experiment_confidentiality = self.create_experiment("confidentiality_task")
 
         task_name = "confidentiality_task_habituation_complex"
         self.create_task(task_name)
