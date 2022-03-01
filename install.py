@@ -101,7 +101,7 @@ def create_project_folder(project_folder_path):
     if env is None:
         msg = "Can't configure project folder, conda environment maxland not found"
         raise ValueError(msg)
-    if project_folder_path.exists():
+    if project_folder_path.exists() and os.listdir(project_folder_path):
         print(
             f"Found previous configuration in {str(project_folder_path)}",
             "\nDo you want to update config? (y/n)",
