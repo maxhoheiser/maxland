@@ -1,4 +1,5 @@
 import os
+import platform
 from pathlib import Path
 
 from pybpod_helper import pybpod_helper
@@ -23,7 +24,7 @@ def check_exist(project_path):
 
 if __name__ == "__main__":
     root_path = Path.cwd().parent
-    hostname = os.environ["COMPUTERNAME"]
+    hostname = platform.node()
     project_path = root_path / ("maxland_" + hostname)
     check_exist(project_path)
 

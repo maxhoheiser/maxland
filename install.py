@@ -8,7 +8,6 @@ from pathlib import Path
 
 root_path = Path.cwd()
 hostname = platform.node()
-print(hostname)
 project_path_default = root_path / ("maxland_" + hostname)
 sys.path.append(os.path.join(os.getcwd(), "scripts"))
 

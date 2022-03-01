@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 
 from pybpodgui_api.models.project import Project
@@ -9,7 +10,7 @@ class pybpod_helper:
         self.root_path = root_path
         self.project_path = project_path
         self.project = Project()
-        self.hostname = os.environ["COMPUTERNAME"]
+        self.hostname = platform.node()
 
     def populate_project_folder(self):
         self.create_project()
