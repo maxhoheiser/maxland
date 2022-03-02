@@ -71,8 +71,6 @@ if settings_obj.run_session:
     # configure rotary encoder
     com_port = find_rotaryencoder_com_port()
     rotary_encoder_module = BpodRotaryEncoder(com_port, settings_obj, bpod)
-    rotary_encoder_module.set_serial_message()
-    rotary_encoder_module.set_configuration()
     rotary_encoder_module.enable_stream()
 
     # softcode handler
@@ -410,7 +408,7 @@ if settings_obj.run_session:
 
         closer = threading.Thread(
             target=post_session_cleanup,
-            args=(stimulus_game, bpod, sma, event_flags, "gamble_task"),
+            args=(stimulus_game, bpod, sma, event_flags, settings_obj.task_name),
         )
         closer.start()
 
