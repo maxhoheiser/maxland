@@ -24,7 +24,7 @@ class TrialParameterHandler:
         self.settings_folder = settings_folder
         self.session_folder = session_folder
 
-        self.task = self.usersettings.TASK
+        self.task_name = self.usersettings.TASK
         self.life_plot = self.usersettings.LIFE_PLOT
         # stimulus
         self.stimulus_radius = self.usersettings.STIMULUS_RADIUS
@@ -32,7 +32,7 @@ class TrialParameterHandler:
         self.background_color = self.usersettings.BACKGROUND_COLOR
 
         # specific for gamble task
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             self.gamble_side = self.usersettings.GAMBLE_SIDE
             self.is_gamble_side_left = self.get_is_gamble_side_left()
             self.blocks = self.usersettings.BLOCKS
@@ -41,7 +41,7 @@ class TrialParameterHandler:
             self.manual_reward: int = int()
 
         # specific for confidentiality task
-        if self.task == "conf":
+        if self.task_name == "conf":
             self.reward = self.usersettings.REWARD
             self.trial_number = self.usersettings.TRIAL_NUMBER
             # stimulus
@@ -112,31 +112,31 @@ class TrialParameterHandler:
         self.active_rule_history: List[str] = list()
 
     def update_reward_time(self):
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             if self.time_dict["time_reward"] < self.time_dict["time_big_reward_open"]:
                 self.time_dict["time_reward"] = self.time_dict["time_big_reward_open"]
             if self.time_dict["time_reward"] < self.time_dict["time_small_reward_open"]:
                 self.time_dict["time_reward"] = self.time_dict["time_small_reward_open"]
-        if self.task == "conf":
+        if self.task_name == "conf":
             if self.time_dict["time_reward"] < self.time_dict["time_reward_open"]:
                 self.time_dict["time_reward"] = self.time_dict["time_reward_open"]
 
     def update_waiting_times(self):
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
             self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
-        if self.task == "conf":
+        if self.task_name == "conf":
             self.time_dict["time_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_reward_open"]
 
     def update_parameters(self):
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             # update valve open times
             self.time_dict["time_big_reward_open"] = self.get_valve_open_time(self.big_reward)
             self.time_dict["time_small_reward_open"] = self.get_valve_open_time(self.small_reward)
             self.update_reward_time()
             self.update_waiting_times()
             self.is_gamble_side_left = self.get_is_gamble_side_left()
-        if self.task == "conf":
+        if self.task_name == "conf":
             self.time_dict["time_reward_open"] = self.get_valve_open_time(self.reward)
             self.update_reward_time()
             self.update_waiting_times()
@@ -260,7 +260,7 @@ class TrialParameterHandler:
             "time_inter_trial": self.usersettings.TIME_INTER_TRIAL,
         }
 
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             gamble_times = {
                 "time_no_reward": self.usersettings.TIME_NO_REWARD,
                 "time_big_reward_open": self.get_valve_open_time(self.big_reward),
@@ -271,7 +271,7 @@ class TrialParameterHandler:
             }
             time_dict_construction.update(gamble_times)
 
-        if self.task == "conf":
+        if self.task_name == "conf":
             conf_time = {
                 "time_range_no_reward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
                 "time_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.reward)),
