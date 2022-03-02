@@ -1,9 +1,15 @@
 import os
 import sys
 from contextlib import contextmanager
+from enum import Enum
+from typing import NewType, Union
 
 from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
 from pybpodapi.bpod import Bpod
+from pybpodapi.state_machine import StateMachine
+
+from maxland.stimulus_conf import Stimulus as StimulusConfidentiality
+from maxland.stimulus_gamble import Stimulus as StimulusGamble
 
 
 @contextmanager
@@ -29,20 +35,27 @@ def try_run_function(function_to_run):
     return wrapper
 
 
+class TaskName(Enum):
+    GAMBLE = "gamble"
+    CONFIDENTIALITY = "confidentiality"
+
+
+TaskNames = NewType("TaskNames", TaskName)
+
+
 def post_session_cleanup(
-    bpod,
-    sma,
-    display_stim_event,
-    still_show_event,
-    stimulus_game,
-    rotary_encoder_module,
+    stimulus_game: Union[StimulusGamble, StimulusConfidentiality],
+    bpod: Bpod,
+    sma: StateMachine,
+    events,
+    task_name: TaskNames,
 ):
     if not bpod.run_state_machine(sma):
-        still_show_event.set()
-        display_stim_event.set()
+        events["event_still_show_stimulus"].set()
+        events["event_display_stimulus"].set()
+        if task_name == TaskNames.GAMBLE:
+            events["event_start_open_loop"].set()
         try_run_function(stimulus_game.win.close())()
-        try_run_function(stimulus_game.close())()
-        try_run_function(rotary_encoder_module.close())()
         print("\nCLOSED\n")
 
 
