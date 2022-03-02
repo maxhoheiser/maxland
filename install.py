@@ -94,6 +94,13 @@ def install_dependencies():
     print("Requirements successfully installed in maxland\n")
 
 
+def install_dev_dependencies():
+    print("\n\nINFO: Installing development required python packages")
+    os.system("conda activate maxland && pip install -r requirements-dev.txt")
+    os.system("conda activate maxland && pre-commit install")
+    print("Development requirements successfully installed in maxland\n")
+
+
 def create_project_folder(project_folder_path):
     """create a project folder for this computer in main maxland folder drive for pybpod"""
     print(f"\n\nINFO: Setting up default project folder in {project_folder_path}")
@@ -158,12 +165,15 @@ if __name__ == "__main__":
         action="store_true",
         help="Use new install procedure",
     )
+    parser.add_argument("--dev", required=False, default=False, action="store_true")
     args = parser.parse_args()
 
     try:
         check_pre_dependencies()
         create_maxland_env()
         install_dependencies()
+        if args.dev:
+            install_dev_dependencies()
         project_folder_actual = get_project_folder(project_path_default)
         create_project_folder(project_folder_actual)
         create_desctop_shortcut()
