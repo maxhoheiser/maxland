@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Dict, List
 
 from mypy_extensions import TypedDict
@@ -12,9 +13,14 @@ Blocks = TypedDict(
 )
 
 
+class TaskName(str, Enum):
+    GAMBLE = "gamble_task"
+    CONFIDENTIALITY = "conf_task"
+
+
 class UsersettingsTypes:
     def __init__(self) -> None:
-        self.TASK: str = ""
+        self.TASK: TaskName = TaskName()
 
         self.GAMBLE_SIDE: str = ""
         self.BLOCKS: List[Blocks] = list()
