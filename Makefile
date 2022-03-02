@@ -5,7 +5,7 @@ install:
 	python install.py
 
 test:
-	python -m unittest discover -v && python -m unittest discover -v -p "hw_test_*.py"
+	python -m unittest discover -v -b && python -b -m unittest discover -v -p "hw_test_*.py" -b
 
 test-ci:
 	tox

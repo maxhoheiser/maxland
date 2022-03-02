@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 
 from pybpodgui_api.models.project import Project
@@ -9,7 +10,7 @@ class pybpod_helper:
         self.root_path = root_path
         self.project_path = project_path
         self.project = Project()
-        self.hostname = os.environ["COMPUTERNAME"]
+        self.hostname = platform.node()
 
     def populate_project_folder(self):
         self.create_project()
@@ -29,7 +30,7 @@ class pybpod_helper:
         self.create_setup(experiment_gamble, task_name, subject)
 
         # confidentiality task
-        experiment_confidentiality = self.create_experiment("gamble_task")
+        experiment_confidentiality = self.create_experiment("confidentiality_task")
 
         task_name = "confidentiality_task_habituation_complex"
         self.create_task(task_name)
@@ -132,7 +133,7 @@ class pybpod_helper:
         shutil.copy(source_path, destination_path)
         # add default prject to user settings
         with open(destination_path, "a") as f:
-            f.write(f'\nDEFAULT_PROJECT_PATH = "{self.project_path}"\n')
+            f.write(f'\nDEFAULT_PROJECT_PATH = r"{self.project_path}"\n')
         # create default user
         if self.project.find_user("test_user") is None:
             user = self.project.create_user()

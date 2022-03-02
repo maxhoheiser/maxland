@@ -1,4 +1,5 @@
 import os
+import platform
 from pathlib import Path
 
 from pybpod_helper import pybpod_helper
@@ -6,10 +7,10 @@ from pybpod_helper import pybpod_helper
 
 def check_exist(project_path):
     # check if folder already exists
-    if project_path.exists():
+    if project_path.exists() and os.listdir(project_path):
         print(
             f"Found previous configuration in {str(project_path)}",
-            "\nDo you want to update config? (y/n)\nALL FILES WILL BE DELETED !!",
+            "\nDo you want to update config? \nALL FILES WILL BE DELETED ! (y/n)",
         )
         user_input = input()
         if user_input == "n":
@@ -23,7 +24,7 @@ def check_exist(project_path):
 
 if __name__ == "__main__":
     root_path = Path.cwd().parent
-    hostname = os.environ["COMPUTERNAME"]
+    hostname = platform.node()
     project_path = root_path / ("maxland_" + hostname)
     check_exist(project_path)
 
