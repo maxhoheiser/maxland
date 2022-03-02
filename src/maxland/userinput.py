@@ -19,7 +19,7 @@ class UserInput:
 
     def __init__(self, settings: TrialParameterHandler):
         self.settings = settings
-        self.task = self.settings.task
+        self.task = self.settings.task_name
         # setup tkinter variables
         self.root = tk.Tk()
         self.container = ttk.Frame(self.root)
