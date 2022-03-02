@@ -36,8 +36,8 @@ def try_run_function(function_to_run):
 
 
 class TaskName(Enum):
-    GAMBLE = "gamble"
-    CONFIDENTIALITY = "confidentiality"
+    GAMBLE = "gamble_task"
+    CONFIDENTIALITY = "conf_task"
 
 
 TaskNames = NewType("TaskNames", TaskName)
@@ -47,14 +47,14 @@ def post_session_cleanup(
     stimulus_game: Union[StimulusGamble, StimulusConfidentiality],
     bpod: Bpod,
     sma: StateMachine,
-    events,
+    event_flags,
     task_name: TaskNames,
 ):
     if not bpod.run_state_machine(sma):
-        events["event_still_show_stimulus"].set()
-        events["event_display_stimulus"].set()
+        event_flags["event_still_show_stimulus"].set()
+        event_flags["event_display_stimulus"].set()
         if task_name == TaskNames.GAMBLE:
-            events["event_start_open_loop"].set()
+            event_flags["event_start_open_loop"].set()
         try_run_function(stimulus_game.win.close())()
         print("\nCLOSED\n")
 
