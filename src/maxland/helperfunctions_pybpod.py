@@ -5,7 +5,7 @@ import shutil
 from pybpodgui_api.models.project import Project
 
 
-class pybpod_helper:
+class PybpodHelper:
     def __init__(self, root_path, project_path):
         self.root_path = root_path
         self.project_path = project_path
@@ -49,7 +49,11 @@ class pybpod_helper:
         self.create_setup(experiment_confidentiality, task_name, subject)
 
         # calibration, administer reward etc
-        self.create_experiment("calibration_etc")
+        self.create_experiment("helper_routines")
+
+        task_name = "flush_water"
+        self.create_task(task_name)
+        self.create_setup(experiment_confidentiality, task_name, subject)
 
         print("Creating: default usersettings, user, and subject")
         self.create_defaults()
@@ -67,7 +71,7 @@ class pybpod_helper:
                 return
         # copy files to new task
         source_path = self.get_source_of_task_file(task_name)
-        destination_path = self.project_path / "tasks" / task_name
+        destination_path = os.path.join(self.project_path, "tasks", task_name)
         task = self.project.create_task()
         task.name = task_name
         self.project.save(self.project_path)
@@ -76,10 +80,14 @@ class pybpod_helper:
 
     def get_source_of_task_file(self, task_name):
         if "gamble" in task_name:
-            source_path = self.root_path / "tasks" / "gamble_task" / task_name
+            source_path = os.path.join(self.root_path, "tasks", "gamble_task", task_name)
             return source_path
         if "confidentiality" in task_name:
-            source_path = self.root_path / "tasks" / "confidentiality_task" / task_name
+            source_path = os.path.join(self.root_path, "tasks", "confidentiality_task", task_name)
+            return source_path
+        if "flush_water" in task_name:
+            source_path = os.path.join(self.root_path, "tasks", task_name)
+            print(source_path)
             return source_path
 
     def create_board(self):
@@ -88,7 +96,7 @@ class pybpod_helper:
             board = self.project.create_board()
             board.name = "board_" + self.hostname
             self.project.save(self.project_path)
-            print("Created borad")
+            print("Created boarad")
         else:
             print("Board already exists")
             board = self.project.boards[0].name
@@ -128,8 +136,8 @@ class pybpod_helper:
             bpod.subject:
         """
         # copy usersettings
-        source_path = self.root_path / ("scripts/user_settings.py")
-        destination_path = self.project_path / "user_settings.py"
+        source_path = os.path.join(self.root_path, ("scripts/user_settings.py"))
+        destination_path = os.path.join(self.project_path, "user_settings.py")
         shutil.copy(source_path, destination_path)
         # add default prject to user settings
         with open(destination_path, "a") as f:
