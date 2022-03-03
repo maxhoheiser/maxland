@@ -80,13 +80,13 @@ class PybpodHelper:
 
     def get_source_of_task_file(self, task_name):
         if "gamble" in task_name:
-            source_path = self.root_path / "tasks" / "gamble_task" / task_name
+            source_path = os.path.join(self.root_path, "tasks", "gamble_task", task_name)
             return source_path
         if "confidentiality" in task_name:
-            source_path = self.root_path / "tasks" / "confidentiality_task" / task_name
+            source_path = os.path.join(self.root_path, "tasks", "confidentiality_task", task_name)
             return source_path
         if "flush_water" in task_name:
-            source_path = self.root_path / "tasks" / task_name
+            source_path = os.path.join(self.root_path, "tasks", task_name)
             print(source_path)
             return source_path
 
@@ -136,8 +136,8 @@ class PybpodHelper:
             bpod.subject:
         """
         # copy usersettings
-        source_path = self.root_path / ("scripts/user_settings.py")
-        destination_path = self.project_path / "user_settings.py"
+        source_path = os.path.join(self.root_path, "scripts/user_settings.py")
+        destination_path = os.path.join(self.project_path, "user_settings.py")
         shutil.copy(source_path, destination_path)
         # add default prject to user settings
         with open(destination_path, "a") as f:
