@@ -5,7 +5,7 @@ import shutil
 from pybpodgui_api.models.project import Project
 
 
-class pybpod_helper:
+class PybpodHelper:
     def __init__(self, root_path, project_path):
         self.root_path = root_path
         self.project_path = project_path
@@ -51,7 +51,7 @@ class pybpod_helper:
         # calibration, administer reward etc
         self.create_experiment("helper_routines")
 
-        task_name = "fluash_water"
+        task_name = "flush_water"
         self.create_task(task_name)
         self.create_setup(experiment_confidentiality, task_name, subject)
 
@@ -87,6 +87,7 @@ class pybpod_helper:
             return source_path
         if "flush_water" in task_name:
             source_path = self.root_path / "tasks" / task_name
+            print(source_path)
             return source_path
 
     def create_board(self):
