@@ -49,7 +49,11 @@ class pybpod_helper:
         self.create_setup(experiment_confidentiality, task_name, subject)
 
         # calibration, administer reward etc
-        self.create_experiment("calibration_etc")
+        self.create_experiment("helper_routines")
+
+        task_name = "fluash_water"
+        self.create_task(task_name)
+        self.create_setup(experiment_confidentiality, task_name, subject)
 
         print("Creating: default usersettings, user, and subject")
         self.create_defaults()
@@ -81,6 +85,9 @@ class pybpod_helper:
         if "confidentiality" in task_name:
             source_path = self.root_path / "tasks" / "confidentiality_task" / task_name
             return source_path
+        if "flush_water" in task_name:
+            source_path = self.root_path / "tasks" / task_name
+            return source_path
 
     def create_board(self):
         if not self.project.boards:
@@ -88,7 +95,7 @@ class pybpod_helper:
             board = self.project.create_board()
             board.name = "board_" + self.hostname
             self.project.save(self.project_path)
-            print("Created borad")
+            print("Created boarad")
         else:
             print("Board already exists")
             board = self.project.boards[0].name
