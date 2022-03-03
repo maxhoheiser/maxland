@@ -196,11 +196,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        # check_pre_dependencies()
-        # create_maxland_env()
-        # install_dependencies()
-        # if args.dev:
-        #    install_dev_dependencies()
+        check_pre_dependencies()
+        create_maxland_env()
+        install_dependencies()
+        if args.dev:
+            install_dev_dependencies()
         project_folder_actual = get_project_folder(project_path_default)
         populate_project_folder(project_folder_actual)
         create_desctop_shortcut()
