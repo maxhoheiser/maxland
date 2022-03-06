@@ -8,7 +8,7 @@ from pathlib import Path
 
 from maxland.helperfunctions_pybpod import PybpodHelper
 
-root_path = os.path.dirname(__file__)
+root_path = os.path.dirname(os.path.abspath(__file__))
 hostname = platform.node()
 project_path_default = Path(os.path.join(root_path, ("maxland_" + hostname)))
 sys.path.append(os.path.join(os.getcwd(), "scripts"))
@@ -202,6 +202,7 @@ if __name__ == "__main__":
         if args.dev:
             install_dev_dependencies()
         project_folder_actual = get_project_folder(project_path_default)
+        print(project_folder_actual)
         populate_project_folder(project_folder_actual)
         create_desctop_shortcut()
         print("\n\nINFO: maxland installed, you should be good to go!")
