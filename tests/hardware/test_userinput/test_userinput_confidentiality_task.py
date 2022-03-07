@@ -36,6 +36,8 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.widget.update_idletasks()
 
     def tearDown(self):
+        self.window.on_cancel()
+        self.window = None
         self.parameter_handler = None
 
     # test helpers
@@ -63,6 +65,38 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         return list(map(int, rgb_string.split(",")))
 
     # tests
+    def test_draw_window_habituation_simple(self):
+        self.parameter_handler.stimulus_type = "three-stimuli"
+        window = UserInput(self.parameter_handler)
+        window.draw_window_before(stage="habituation_simple")
+        widget = window.root
+        widget.update_idletasks()
+        window.on_cancel()
+
+    def test_draw_window_habituation_complex_three_stimuli(self):
+        self.parameter_handler.stimulus_type = "three-stimuli"
+        window = UserInput(self.parameter_handler)
+        window.draw_window_before(stage="habituation_complex")
+        widget = window.root
+        widget.update_idletasks()
+        window.on_cancel()
+
+    def test_draw_window_habituation_complex_two_stimuli(self):
+        self.parameter_handler.stimulus_type = "two-stimuli"
+        window = UserInput(self.parameter_handler)
+        window.draw_window_before(stage="habituation_complex")
+        widget = window.root
+        widget.update_idletasks()
+        window.on_cancel()
+
+    def test_draw_window_training_simple(self):
+        self.parameter_handler.stimulus_type = "two-stimuli"
+        window = UserInput(self.parameter_handler)
+        window.draw_window_before(stage="training_simple")
+        widget = window.root
+        widget.update_idletasks()
+        window.on_cancel()
+
     def test_draw_userinput_window(self):
         self.window.on_close()
 
