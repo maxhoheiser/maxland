@@ -675,13 +675,13 @@ class UserInput:
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(self.settings.stimulus_type)
             self.drp_stim.current(idx)  # set current value
-        elif stage == "habituation_simple":
+        if stage == "habituation_simple":
             list_drp = "three-stimuli"
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
-            idx = list_drp.index(self.settings.stimulus_type)
+            idx = self.settings.gui_dropdown_list.index(list_drp)
             self.drp_stim.current(idx)  # set current valu
-        elif stage == "habituation_complex":
+        if stage == "habituation_complex":
             list_drp = ("three-stimuli", "two-stimuli")
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
