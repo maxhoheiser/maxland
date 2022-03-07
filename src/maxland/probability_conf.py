@@ -23,6 +23,8 @@ class ProbabilityConstructor:
         self.active_rule = "RU0"  # id of active rule
         self.is_initial_rule_active = True
 
+        self.get_random_side()
+
     def get_random_side(self):
         # check insist mode
         if self.insist_mode_active:
