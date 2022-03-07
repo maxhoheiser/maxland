@@ -137,19 +137,23 @@ if __name__ == "__main__":
         help="Use new install procedure",
     )
     parser.add_argument("--dev", required=False, default=False, action="store_true")
+    parser.add_argument("--update", required=False, default=False, action="store_true")
     args = parser.parse_args()
 
     try:
-        check_pre_dependencies()
-        create_maxland_env()
-        install_dependencies()
-        if args.dev:
-            install_dev_dependencies()
-        project_folder_actual = get_project_folder(project_path_default)
+        if not args.update:
+            check_pre_dependencies()
+            create_maxland_env()
+            install_dependencies()
 
-        os.system(f"conda activate maxland && python scripts/populate_project.py {project_folder_actual} {root_path}")
+            if args.dev:
+                install_dev_dependencies()
+            project_folder_actual = get_project_folder(project_path_default)
 
-        create_desctop_shortcut()
+            create_desctop_shortcut()
+
+        os.system(f"conda activate maxland && python scripts/populate_project.py {project_folder_actual} {root_path} {args.update}")
+
         print("\n\nINFO: maxland installed, you should be good to go!")
     except OSError as msg:
         print(msg, "\n\nSOMETHING IS WRONG!")

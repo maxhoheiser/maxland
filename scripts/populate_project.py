@@ -6,7 +6,6 @@ from maxland.helperfunctions_pybpod import PybpodHelper
 
 
 def create_bpod_setup(root_path, project_folder_path):
-    check_project_exist(project_folder_path)
     helper = PybpodHelper(root_path, project_folder_path)
     helper.populate_project_folder()
     print("Create default project folder done")
@@ -44,6 +43,7 @@ def populate_project_folder(root_path, project_folder_path):
             return
 
         if user_input == "y":
+            check_project_exist(project_folder_path)
             create_bpod_setup(root_path, project_folder_path)
             return
 
@@ -56,14 +56,29 @@ def populate_project_folder(root_path, project_folder_path):
         return
 
 
+def update_project_folder(root_path, project_folder_path):
+    """update a project folder by copying task files from root_path to project_folder_path"""
+    if not os.listdir(project_folder_path):
+        return
+    else:
+        create_bpod_setup(root_path, project_folder_path)
+        return
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Populate Maxland PyBpod Setup")
     parser.add_argument("path", type=str, help="Path to project folder")
     parser.add_argument("root", type=str, help="Path to root folder")
+    parser.add_argument("--update", required=False, default=False, action="store_true")
 
     args = parser.parse_args()
 
     root_path = Path(args.root)
     project_folder = Path(args.path)
+    update = args.update
 
-    populate_project_folder(root_path, project_folder)
+    if not args.update:
+        populate_project_folder(root_path, project_folder)
+
+    if args.update:
+        update_project_folder(root_path, project_folder)
