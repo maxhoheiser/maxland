@@ -6,8 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-from maxland.helperfunctions_pybpod import PybpodHelper
-
 root_path = os.path.dirname(os.path.abspath(__file__))
 hostname = platform.node()
 project_path_default = Path(os.path.join(root_path, ("maxland_" + hostname)))
@@ -49,10 +47,7 @@ def create_maxland_env():
     print("\nINFO: create anaconda environment maxland:")
     maxland_env = get_maxland_env_path()
     if maxland_env:
-        print(
-            f"Found pre-existing environment in {maxland_env}",
-            "\nDo you want to reinstall the environment? (y/n):",
-        )
+        print(f"Found pre-existing environment in {maxland_env}", "\nDo you want to reinstall the environment? (y/n):")
         user_input = input()
         if user_input == "y":
             remove_maxland_env()
@@ -101,57 +96,6 @@ def install_dev_dependencies():
     os.system("conda activate maxland && pip install -r requirements-dev.txt")
     os.system("conda activate maxland && pre-commit install")
     print("Development requirements successfully installed in maxland\n")
-
-
-def check_project_exist(project_path):
-    # check if folder already exists
-    if project_path.exists() and os.listdir(project_path):
-        print(
-            f"Found previous configuration in {str(project_path)}",
-            "\nDo you want to update config? \nALL FILES WILL BE DELETED ! (y/n)",
-        )
-        user_input = input()
-        if user_input == "n":
-            return
-        elif user_input == "y":
-            os.system(f"del {project_path}\\*.* /s /q && rmdir {project_path}\\ /s /q")
-        elif user_input != "n" and user_input != "y":
-            print("\n Please select either y of n")
-            return check_project_exist()
-
-
-def create_bpod_setup(project_folder_path):
-    check_project_exist(project_folder_path)
-    helper = PybpodHelper(root_path, project_folder_path)
-    helper.populate_project_folder()
-    print("Create default project folder done")
-    return
-
-
-def populate_project_folder(project_folder_path):
-    """create a project folder for this computer in main maxland folder drive for pybpod"""
-    print(f"\n\nINFO: Setting up default project folder in {project_folder_path}")
-
-    if project_folder_path.exists() and os.listdir(project_folder_path):
-        print(
-            f"Found previous configuration in {str(project_folder_path)}",
-            "\nDo you want to update config? (y/n)",
-        )
-        user_input = input()
-        if user_input == "n":
-            return
-
-        if user_input == "y":
-            create_bpod_setup(project_folder_path)
-            return
-
-        if user_input not in ("y", "n"):
-            print("\n Please select either y of n")
-            return populate_project_folder(project_folder_path)
-    else:
-        project_folder_path.mkdir(parents=True, exist_ok=True)
-        create_bpod_setup(project_folder_path)
-        return
 
 
 def get_project_folder(default_project_folder_path):
@@ -203,7 +147,11 @@ if __name__ == "__main__":
             install_dev_dependencies()
         project_folder_actual = get_project_folder(project_path_default)
         print(project_folder_actual)
-        populate_project_folder(project_folder_actual)
+
+        os.system(
+            "conda activate maxland && python scripts/populate_project.py --path " + str(project_folder_actual) + " --root" + str(root_path)
+        )
+
         create_desctop_shortcut()
         print("\n\nINFO: maxland installed, you should be good to go!")
     except OSError as msg:
