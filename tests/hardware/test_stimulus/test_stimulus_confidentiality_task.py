@@ -11,8 +11,6 @@ from maxland.probability_conf import ProbabilityConstructor
 from maxland.stimulus_conf import Stimulus
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
-CORRECT_SIDE_LEFT = "left"
-CORRECT_SIDE_RIGHT = "right"
 
 TEST_DISPLAY = {
     "monitor_width": 1024,
@@ -49,7 +47,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         rotary_encoder = MagicMock()
         rotary_encoder.rotary_encoder.read_stream.return_value = []
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
         time.sleep(1)
         game.on_close()
 
@@ -59,7 +57,9 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        print(self.probability_constructor.stimulus_sides)
+
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
@@ -80,7 +80,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
@@ -101,7 +101,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
@@ -122,7 +122,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
@@ -143,7 +143,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
@@ -164,7 +164,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        game = Stimulus(self.parameter_handler, rotary_encoder, CORRECT_SIDE_LEFT)
+        game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
