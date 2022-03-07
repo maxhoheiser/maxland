@@ -1,12 +1,13 @@
 import argparse
 import os
+from pathlib import Path
 
 from maxland.helperfunctions_pybpod import PybpodHelper
 
 
-def create_bpod_setup(project_folder_path):
+def create_bpod_setup(root_path, project_folder_path):
     check_project_exist(project_folder_path)
-    helper = PybpodHelper(args.root_path, project_folder_path)
+    helper = PybpodHelper(root_path, project_folder_path)
     helper.populate_project_folder()
     print("Create default project folder done")
     return
@@ -29,7 +30,7 @@ def check_project_exist(project_path):
             return check_project_exist()
 
 
-def populate_project_folder(project_folder_path):
+def populate_project_folder(root_path, project_folder_path):
     """create a project folder for this computer in main maxland folder drive for pybpod"""
     print(f"\n\nINFO: Setting up default project folder in {project_folder_path}")
 
@@ -43,23 +44,26 @@ def populate_project_folder(project_folder_path):
             return
 
         if user_input == "y":
-            create_bpod_setup(project_folder_path)
+            create_bpod_setup(root_path, project_folder_path)
             return
 
         if user_input not in ("y", "n"):
             print("\n Please select either y of n")
-            return populate_project_folder(project_folder_path)
+            return populate_project_folder(root_path, project_folder_path)
     else:
         project_folder_path.mkdir(parents=True, exist_ok=True)
-        create_bpod_setup(project_folder_path)
+        create_bpod_setup(root_path, project_folder_path)
         return
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Populate Maxland PyBpod Setup")
-    parser.add_argument("--path", required=True, action="store_true")
-    parser.add_argument("--root", required=True, action="store_true")
+    parser.add_argument("path", type=str, help="Path to project folder")
+    parser.add_argument("root", type=str, help="Path to root folder")
 
     args = parser.parse_args()
 
-    populate_project_folder(args.project_folder_actual)
+    root_path = Path(args.root)
+    project_folder = Path(args.path)
+
+    populate_project_folder(root_path, project_folder)
