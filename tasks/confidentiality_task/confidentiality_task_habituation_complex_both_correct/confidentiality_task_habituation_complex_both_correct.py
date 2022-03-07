@@ -288,9 +288,8 @@ if settings_obj.run_session:
                 stimulus_game,
                 bpod,
                 sma,
-                event_display_stimulus,
-                event_still_show_stimulus,
-                rotary_encoder_module,
+                event_flags,
+                settings_obj.task_name,
             ),
         )
         closer.start()
