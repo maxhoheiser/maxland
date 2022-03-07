@@ -42,7 +42,7 @@ class UsersettingsTypes:
         self.TIME_INTER_TRIAL: float = float()
         # confidentiality times
         self.TIME_REWARD: float = float()
-        self.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH: List[float] = list()
+        self.TIME_RANGE_NO_REWARD_PUNISH: List[float] = list()
 
         # stimulus size and color - only for moving stimulus
         self.STIMULUS_RADIUS: int = int()

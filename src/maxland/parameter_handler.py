@@ -273,7 +273,7 @@ class TrialParameterHandler:
 
         if self.task_name == "conf":
             conf_time = {
-                "time_range_no_reward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
+                "time_range_no_reward_punish": self.usersettings.TIME_RANGE_NO_REWARD_PUNISH,
                 "time_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.reward)),
             }
             time_dict_construction.update(conf_time)
