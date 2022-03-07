@@ -348,7 +348,7 @@ class TrialParameterHandler:
                 "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
                 "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
                 "TIME_REWARD = " + repr(self.time_dict["time_reward"]) + "\n"
-                "TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
+                "TIME_RANGE_NO_REWARD_PUNCHISH = " + repr(self.time_dict["time_no_reward_punish"]) + "\n"
                 "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# insist mode\n"
                 "INSIST_RANGE_TRIGGER = " + json.dumps(self.insist_range_trigger) + "\n"
