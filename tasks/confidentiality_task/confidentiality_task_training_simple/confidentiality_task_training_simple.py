@@ -90,6 +90,7 @@ if settings_obj.run_session:
     for trial in range(settings_obj.trial_number):
         # get random punish time
         punish_time = settings_obj.get_punish_time()
+        probability_obj.get_random_side()
 
         sma = StateMachine(bpod)
 
