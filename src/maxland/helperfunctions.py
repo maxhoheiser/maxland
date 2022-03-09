@@ -43,9 +43,9 @@ def post_session_cleanup(
     task_name: TaskName,
 ):
     if not bpod.run_state_machine(sma):
-        event_flags["event_still_show_stimulus"].set()
         event_flags["event_display_stimulus"].set()
         if task_name == TaskName.GAMBLE:
+            event_flags["event_still_show_stimulus"].set()
             event_flags["event_start_open_loop"].set()
         try_run_function(stimulus_game.win.close())()
         print("\nCLOSED\n")

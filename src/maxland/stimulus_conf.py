@@ -142,10 +142,8 @@ class Stimulus:
     # Stimulus Type 3 (main) = fixed gratings + moving circle ==========================
     def run_game_3(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
-        event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
         event_display_stimulus.clear()
-        event_still_show_stimulus.clear()
         self.reset_loop_flags()
 
         if self.stimulus_sides["right"]:
@@ -205,21 +203,24 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
-        event_still_show_stimulus.wait()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, "+")
+            grating_right.setPhase(right_ps, "+")
+            grating_left.draw()
+            grating_right.draw()
+            stim.draw()
+            self.win.flip()
         self.win.flip()
 
         # cleanup for next loop
         self.reset_loop_flags()
         event_display_stimulus.clear()
-        event_still_show_stimulus.clear()
 
     # Stimulus Type 2 = moving gratings ================================================
     def run_game_2(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
-        event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
         event_display_stimulus.clear()
-        event_still_show_stimulus.clear()
         self.reset_loop_flags()
 
         if self.stimulus_sides["left"]:
@@ -285,7 +286,12 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freez movement ---------
-        event_still_show_stimulus.wait()
+        while self.run_closed_loop_after:
+            grating_left.setPhase(left_ps, "+")
+            grating_right.setPhase(right_ps, "+")
+            grating_left.draw()
+            grating_right.draw()
+            self.win.flip()
         self.win.flip()
 
         # cleanup for next loop
@@ -295,7 +301,6 @@ class Stimulus:
     # Stimulus Type 1 = single moving grating ==========================================
     def run_game_1(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
-        event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
         if self.stimulus_sides["right"]:
             stimulus = self.settings.stimulus_correct_side
@@ -335,13 +340,15 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
-        event_still_show_stimulus.wait()
+        while self.run_closed_loop_after:
+            grating.setPhase(stim_ps, "+")
+            grating.draw()
+            self.win.flip()
         self.win.flip()
 
         # cleanup for next loop
         self.reset_loop_flags()
         event_display_stimulus.clear()
-        event_still_show_stimulus.clear()
 
     # Habituation  Type 3 online center stim psychopy Loop =============================
     def run_game_habituation_3_simple(self, event_flags: EventFlags):
