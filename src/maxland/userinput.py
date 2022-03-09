@@ -59,10 +59,6 @@ class UserInput:
         self.settings.time_dict["time_no_reward"] = float(self.time_reward.var.get())
         self.settings.time_dict["time_inter_trial"] = float(self.time_inter_trial.var.get())
         self.settings.time_dict["time_open_loop_fail_punish"] = float(self.time_open_loop_fail_punish.var.get())
-        self.settings.time_dict["time_range_no_reward_punish"] = [
-            float(self.time_no_reward_punish.var_1.get()),
-            float(self.time_no_reward_punish.var_2.get()),
-        ]
 
         self.settings.set_min_time_inter_trial()
         self.settings.rotaryencoder_thresholds[0] = int(self.var_rotary_thresh_left.get())
