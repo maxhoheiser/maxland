@@ -392,7 +392,6 @@ class Stimulus:
     # Habituation Typ 3 only single correct grating ====================================
     def run_game_habituation_3_complex(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
-        event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
         grating_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
         grating_or = self.settings.stimulus_correct_side["grating_ori"]
@@ -437,18 +436,19 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
-        event_still_show_stimulus.wait()
+        while self.run_closed_loop_after:
+            grating.setPhase(grating_ps, "+")
+            grating.draw()
+            self.win.flip()
         self.win.flip()
 
         # cleanup for next loop
         self.reset_loop_flags()
         event_display_stimulus.clear()
-        event_still_show_stimulus.clear()
 
     # Habituation Typ 2 complex ========================================================
     def run_game_habituation_2(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
-        event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
         random_grating = bool(random.getrandbits(1))
 
@@ -496,9 +496,12 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
+        while self.run_closed_loop_after:
+            grating.setPhase(grating_ps, "+")
+            grating.draw()
+            self.win.flip()
         self.win.flip()
 
         # cleanup for next loop
         self.reset_loop_flags()
         event_display_stimulus.clear()
-        event_still_show_stimulus.clear()

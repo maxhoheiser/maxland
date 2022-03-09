@@ -74,7 +74,6 @@ if settings_obj.run_session:
         if data == settings_obj.soft_code_stop_open_loop:
             stimulus_game.stop_open_loop()
         if data == settings_obj.soft_code_end_present_stimulus:
-            stimulus_game.stop_closed_loop_after()
             event_still_show_stimulus.set()
         if data == settings_obj.soft_code_wheel_not_stopping:
             print("wheel not stopping")
@@ -265,4 +264,3 @@ if settings_obj.run_session:
 
 
 try_run_function(rotary_encoder_module.close())()
-try_run_function(bpod.close())()
