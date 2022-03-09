@@ -149,10 +149,14 @@ if __name__ == "__main__":
             if args.dev:
                 install_dev_dependencies()
 
+            project_folder_actual = get_project_folder(project_path_default)
+            os.system(f"conda activate maxland && python scripts/populate_project.py {project_folder_actual} {root_path}")
+
             create_desctop_shortcut()
 
-        project_folder_actual = get_project_folder(project_path_default)
-        os.system(f"conda activate maxland && python scripts/populate_project.py {project_folder_actual} {root_path} {args.update}")
+        if args.update:
+            project_folder_actual = get_project_folder(project_path_default)
+            os.system(f"conda activate maxland && python scripts/populate_project.py {project_folder_actual} {root_path} --update")
 
         print("\n\nINFO: maxland installed, you should be good to go!")
     except OSError as msg:
