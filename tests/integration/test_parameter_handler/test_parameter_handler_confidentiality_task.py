@@ -76,3 +76,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         saved_file = os.path.join(self.settings_folder_path, "usersettings.py")
 
         self.assertFalse(filecmp.cmp(USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK, saved_file))
+
+    def test_create_time_dict(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        usersettings_object.create_time_dictionary()
