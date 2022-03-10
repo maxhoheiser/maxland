@@ -475,7 +475,7 @@ if settings_obj.run_session:
 
         closer = threading.Thread(
             target=post_session_cleanup,
-            args=(stimulus_game, bpod, sma, event_flags, settings_obj.task_name),
+            args=(stimulus_game, bpod, sma, event_flags),
         )
         closer.start()
 

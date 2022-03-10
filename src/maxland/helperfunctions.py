@@ -9,7 +9,6 @@ from pybpodapi.state_machine import StateMachine
 
 from maxland.stimulus_conf import Stimulus as StimulusConfidentiality
 from maxland.stimulus_gamble import Stimulus as StimulusGamble
-from maxland.types_usersettings import TaskName
 
 
 @contextmanager
@@ -40,13 +39,10 @@ def post_session_cleanup(
     bpod: Bpod,
     sma: StateMachine,
     event_flags,
-    task_name: TaskName,
 ):
     if not bpod.run_state_machine(sma):
-        event_flags["event_display_stimulus"].set()
-        if task_name == TaskName.GAMBLE:
-            event_flags["event_still_show_stimulus"].set()
-            event_flags["event_start_open_loop"].set()
+        for event_flag in event_flags.values():
+            event_flag.set()
         try_run_function(stimulus_game.win.close())()
         print("\nCLOSED\n")
 

@@ -284,7 +284,6 @@ if settings_obj.run_session:
                 bpod,
                 sma,
                 event_flags,
-                settings_obj.task_name,
             ),
         )
         closer.start()
