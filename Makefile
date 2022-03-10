@@ -5,7 +5,16 @@ install:
 	python install.py
 
 test:
-	python -m unittest discover -v -b && python -b -m unittest discover -v -p "hw_test_*.py" -b
+	python -m nose2 -v -B
+
+test-integration:
+	python -m nose2 -v -B -s tests/integration
+
+test-hardware:
+	python -m nose2 -v -B -s tests/hardware
+
+test-e2e:
+	python -m nose2 -v -B -s tests/e2e
 
 test-ci:
 	tox
