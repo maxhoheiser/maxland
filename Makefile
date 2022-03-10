@@ -5,7 +5,7 @@ install:
 	python install.py
 
 test:
-	python -m nose2 -v -B -s tests/integration && python -b -m unittest discover -v -p "hw_test_*.py" -b
+	python -m nose2 -v -B
 
 test-integration:
 	python -m nose2 -v -B -s tests/integration
