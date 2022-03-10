@@ -3,7 +3,6 @@ from io import StringIO
 from unittest.mock import MagicMock, patch
 
 import maxland.helperfunctions as hf
-from maxland.types_usersettings import TaskName
 
 
 class TestHelperFunctionsTryRunFunction(unittest.TestCase):
@@ -56,36 +55,29 @@ class TestHelperFunctionsPostSessionCleanup(unittest.TestCase):
         self.rotary_encoder_module = MagicMock()
         self.rotary_encoder_module.close.return_value = None
 
-        self.task_name_gamble = TaskName.GAMBLE
-        self.task_name_confidentiality = TaskName.CONFIDENTIALITY
-
     def tearDown(self):
         pass
 
     def test_post_session_cleanup_bpod_sma_not_running_gamble(self):
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
-            hf.post_session_cleanup(self.stimulus_game, self.bpod, self.sma, self.event_flags_gamble, self.task_name_gamble)
+            hf.post_session_cleanup(self.stimulus_game, self.bpod, self.sma, self.event_flags_gamble)
             self.assertEqual(mock_stdout.getvalue(), "\nCLOSED\n\n")
 
     def test_post_session_cleanup_bpod_sma_not_running_confidentiality(self):
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
-            hf.post_session_cleanup(
-                self.stimulus_game, self.bpod, self.sma, self.event_flags_confidentiality, self.task_name_confidentiality
-            )
+            hf.post_session_cleanup(self.stimulus_game, self.bpod, self.sma, self.event_flags_confidentiality)
             self.assertEqual(mock_stdout.getvalue(), "\nCLOSED\n\n")
 
     def test_post_session_cleanup_gamble_bpod_sma_running_gamble(self):
         self.bpod.run_state_machine.return_value = True
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
-            hf.post_session_cleanup(self.stimulus_game, self.bpod, self.sma, self.event_flags_gamble, self.task_name_gamble)
+            hf.post_session_cleanup(self.stimulus_game, self.bpod, self.sma, self.event_flags_gamble)
             self.assertEqual(mock_stdout.getvalue(), "")
 
     def test_post_session_cleanup_gamble_bpod_sma_running_confidentiality(self):
         self.bpod.run_state_machine.return_value = True
 
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
-            hf.post_session_cleanup(
-                self.stimulus_game, self.bpod, self.sma, self.event_flags_confidentiality, self.task_name_confidentiality
-            )
+            hf.post_session_cleanup(self.stimulus_game, self.bpod, self.sma, self.event_flags_confidentiality)
             self.assertEqual(mock_stdout.getvalue(), "")
