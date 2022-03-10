@@ -47,10 +47,13 @@ window.show_window()
 # create threading flags
 event_display_stimulus = threading.Event()
 event_still_show_stimulus = threading.Event()
+event_start_open_loop = threading.Event()
 event_display_stimulus.clear()
 event_still_show_stimulus.clear()
+event_start_open_loop.clear()
 event_flags = {
     "event_display_stimulus": event_display_stimulus,
+    "event_start_open_loop": event_start_open_loop,
     "event_still_show_stimulus": event_still_show_stimulus,
 }
 
@@ -70,10 +73,11 @@ if settings_obj.run_session:
         if data == settings_obj.soft_code_present_stimulus:
             event_display_stimulus.set()
         if data == settings_obj.soft_code_start_open_loop:
-            stimulus_game.stop_closed_loop_before()
+            event_start_open_loop.set()
         if data == settings_obj.soft_code_stop_open_loop:
             stimulus_game.stop_open_loop()
         if data == settings_obj.soft_code_end_present_stimulus:
+            stimulus_game.stop_closed_loop_after()
             event_still_show_stimulus.set()
         if data == settings_obj.soft_code_wheel_not_stopping:
             print("wheel not stopping")

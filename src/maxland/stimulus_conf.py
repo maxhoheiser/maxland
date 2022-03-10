@@ -353,6 +353,7 @@ class Stimulus:
     # Habituation  Type 3 online center stim psychopy Loop =============================
     def run_game_habituation_3_simple(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
+        event_start_open_loop = event_flags["event_start_open_loop"]
         event_still_show_stimulus = event_flags["event_still_show_stimulus"]
 
         stim = self.gen_stimulus()
@@ -363,6 +364,8 @@ class Stimulus:
         self.win.flip()
 
         # on soft code of state 2 ----------------------
+        event_start_open_loop.wait()
+
         self.rotary_encoder.rotary_encoder.enable_stream()
         # open loop
         pos = 0
@@ -387,6 +390,7 @@ class Stimulus:
         # cleanup for next loop
         self.reset_loop_flags()
         event_display_stimulus.clear()
+        event_start_open_loop.clear()
         event_still_show_stimulus.clear()
 
     # Habituation Typ 3 only single correct grating ====================================
