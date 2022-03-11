@@ -1,14 +1,10 @@
 import os
 import sys
 from contextlib import contextmanager
-from typing import Union
 
 from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
 from pybpodapi.bpod import Bpod
 from pybpodapi.state_machine import StateMachine
-
-from maxland.stimulus_conf import Stimulus as StimulusConfidentiality
-from maxland.stimulus_gamble import Stimulus as StimulusGamble
 
 
 @contextmanager
@@ -35,7 +31,7 @@ def try_run_function(function_to_run):
 
 
 def post_session_cleanup(
-    stimulus_game: Union[StimulusGamble, StimulusConfidentiality],
+    stimulus_game,
     bpod: Bpod,
     sma: StateMachine,
     event_flags,
