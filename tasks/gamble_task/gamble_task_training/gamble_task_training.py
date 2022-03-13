@@ -423,13 +423,10 @@ if settings_obj.run_session:
             break
 
         closer.join()
-        print("---------------------------------------------------")
-        try:
-            print(f"trial: {bpod.session.current_trial}")
-        except Exception as e:
-            print(e)
-            continue
+        print("---------------------------------------------------\n")
+        print(f"Current trial: {trial}")
 
+    print("---------------------------------------------------\n")
     print("finished")
 
     # save session settings
