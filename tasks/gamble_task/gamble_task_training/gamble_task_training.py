@@ -347,7 +347,6 @@ if settings_obj.run_session:
             if probability_dict["safe_reward"]:
                 print("safe reward right")
                 # small reward
-                print("safe_reward_right")
                 sma.add_state(
                     state_name="check_reward_right",
                     state_timer=0,
