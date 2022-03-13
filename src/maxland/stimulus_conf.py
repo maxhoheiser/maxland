@@ -413,9 +413,11 @@ class Stimulus:
 
         # on soft code of state 1 ----------------------
         event_display_stimulus.wait()
+        self.win.flip()
         while self.run_closed_loop_before:
             grating.setPhase(grating_ps, "+")
             grating.draw()
+            stim.draw()
             self.win.flip()
 
         # on soft code of state 2 ----------------------
@@ -443,6 +445,7 @@ class Stimulus:
         while self.run_closed_loop_after:
             grating.setPhase(grating_ps, "+")
             grating.draw()
+            stim.draw()
             self.win.flip()
         self.win.flip()
 
