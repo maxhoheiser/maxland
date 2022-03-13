@@ -30,8 +30,8 @@ class Stimulus:
         self.rotary_encoder = rotary_encoder
         self.stimulus_sides = stimulus_sides
 
-        self.gain_left = self.get_gain(settings.rotaryencoder_thresholds[0], settings.rotaryencoder_stimulus_end_position[0])
-        self.gain_right = self.get_gain(settings.rotaryencoder_thresholds[1], settings.rotaryencoder_stimulus_end_position[1])
+        self.gain_left = self.get_gain(settings.rotaryencoder_thresholds[0], settings.stimulus_end_position[0])
+        self.gain_right = self.get_gain(settings.rotaryencoder_thresholds[1], settings.stimulus_end_position[1])
         self.gain = self.gain_left
 
         self.monitor = monitors.Monitor("testMonitor", width=self.monitor_width, distance=self.monitor_distance)
@@ -75,8 +75,8 @@ class Stimulus:
     def get_grating_frequency(self, frequency):
         return frequency
 
-    def get_gain(self, threshold, rotaryencoder_stimulus_end_position):
-        gain = abs(rotaryencoder_stimulus_end_position / threshold)
+    def get_gain(self, threshold, stimulus_end_position):
+        gain = abs(stimulus_end_position / threshold)
         return round(gain, 2)
 
     def ceil(self, num):
@@ -166,8 +166,8 @@ class Stimulus:
             right_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
             right_ps = self.settings.stimulus_correct_side["grating_speed"]
 
-        grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.rotaryencoder_stimulus_end_position[0])
-        grating_right = self.gen_grating(right_sf, right_or, right_size, self.settings.rotaryencoder_stimulus_end_position[1])
+        grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.stimulus_end_position[0])
+        grating_right = self.gen_grating(right_sf, right_or, right_size, self.settings.stimulus_end_position[1])
         stim = self.gen_stimulus()
 
         # on soft code of state 1 ----------------------
@@ -243,8 +243,8 @@ class Stimulus:
             right_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
             right_ps = self.settings.stimulus_correct_side["grating_speed"]
 
-        grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.rotaryencoder_stimulus_end_position[0])
-        grating_right = self.gen_grating(right_sf, right_or, right_size, self.settings.rotaryencoder_stimulus_end_position[1])
+        grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.stimulus_end_position[0])
+        grating_right = self.gen_grating(right_sf, right_or, right_size, self.settings.stimulus_end_position[1])
 
         # on soft code of state 1 ----------------------
         event_display_stimulus.wait()
@@ -403,10 +403,10 @@ class Stimulus:
         grating_ps = self.settings.stimulus_correct_side["grating_speed"]
 
         if self.stimulus_sides["right"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[1])
+            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[1])
 
         if self.stimulus_sides["left"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[0])
+            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[0])
 
         stim = self.gen_stimulus()
         stim.draw()
@@ -468,10 +468,10 @@ class Stimulus:
             grating_ps = self.settings.stimulus_wrong_side["grating_speed"]
 
         if self.stimulus_sides["right"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[0])
+            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[0])
 
         if self.stimulus_sides["left"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.rotaryencoder_stimulus_end_position[1])
+            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[1])
 
         # on soft code of state 1 ----------------------
         event_display_stimulus.wait()

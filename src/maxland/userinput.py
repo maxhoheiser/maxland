@@ -52,7 +52,7 @@ class UserInput:
         self.settings.time_dict["time_start"] = float(self.time_start.var.get())
         self.settings.time_dict["time_wheel_stopping_check"] = float(self.time_wheel_stopping_check.var.get())
         self.settings.time_dict["time_wheel_stopping_punish"] = float(self.time_wheel_stopping_punish.var.get())
-        self.settings.time_dict["time_stimulus_presentation"] = float(self.time_stimulus_presentation.var.get())
+        self.settings.time_dict["time_present_stimulus"] = float(self.time_present_stimulus.var.get())
         self.settings.time_dict["time_open_loop"] = float(self.time_open_loop.var.get())
         self.settings.time_dict["time_stimulus_freeze"] = float(self.time_stimulus_freeze.var.get())
         self.settings.time_dict["time_reward"] = float(self.time_reward.var.get())
@@ -63,7 +63,7 @@ class UserInput:
         self.settings.set_min_time_inter_trial()
         self.settings.rotaryencoder_thresholds[0] = int(self.var_rotary_thresh_left.get())
         self.settings.rotaryencoder_thresholds[1] = int(self.var_rotary_thresh_right.get())
-        self.settings.rotaryencoder_stimulus_end_position = [
+        self.settings.stimulus_end_position = [
             int(self.var_stimulus_end_pos_left.get()),
             int(self.var_stimulus_end_pos_right.get()),
         ]
@@ -300,14 +300,14 @@ class UserInput:
         lbl_stimulus_position = tk.Label(frame_4_1, text="Stim end pos [px]:", font=self.fontStyleRegular)
         lbl_stimulus_position.grid(row=1, column=0, padx=(10, 5), pady=8)
 
-        self.var_stimulus_end_pos_left = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[0])
+        self.var_stimulus_end_pos_left = tk.StringVar(frame_4_1, value=self.settings.stimulus_end_position[0])
         self.etr_stimulus_end_pos_left = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_left, width=6)
         self.etr_stimulus_end_pos_left.grid(row=1, column=1, padx=(0, 2), pady=8, sticky="W")
 
         lbl_stim_til = tk.Label(frame_4_1, text="to", font=self.fontStyleRegular)
         lbl_stim_til.grid(row=1, column=2, pady=8, sticky="W")
 
-        self.var_stimulus_end_pos_right = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[1])
+        self.var_stimulus_end_pos_right = tk.StringVar(frame_4_1, value=self.settings.stimulus_end_position[1])
         self.etr_stimulus_end_pos_right = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_right, width=6)
         self.etr_stimulus_end_pos_right.grid(row=1, column=3, padx=(2, 10), pady=8, sticky="W")
 
@@ -364,12 +364,12 @@ class UserInput:
             "time to wait before new trial starts, if the wheel is not stopped",
         )
         # row 3
-        self.time_stimulus_presentation = self.Time(
+        self.time_present_stimulus = self.Time(
             frame_5_0,
             3,
             self.fontStyleRegular,
             "Stimulus presentation",
-            self.settings.time_dict["time_stimulus_presentation"],
+            self.settings.time_dict["time_present_stimulus"],
             "time stimulus is presented but not movable",
         )
         # row 4
@@ -558,12 +558,12 @@ class UserInput:
 
         lbl_stimulus_position = tk.Label(frame_4_1, text="Stim end pos [px]:", font=self.fontStyleRegular)
         lbl_stimulus_position.grid(row=0, column=2, padx=(10, 2), pady=8)
-        self.var_stimulus_end_pos_left = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[0])
+        self.var_stimulus_end_pos_left = tk.StringVar(frame_4_1, value=self.settings.stimulus_end_position[0])
         self.etr_stimulus_end_pos_left = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_left, width=4)
         self.etr_stimulus_end_pos_left.grid(row=0, column=3, padx=(0, 2), pady=8, sticky="W")
         lbl_stim_til = tk.Label(frame_4_1, text="to", font=self.fontStyleRegular)
         lbl_stim_til.grid(row=0, column=4, pady=8, sticky="W")
-        self.var_stimulus_end_pos_right = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_stimulus_end_position[1])
+        self.var_stimulus_end_pos_right = tk.StringVar(frame_4_1, value=self.settings.stimulus_end_position[1])
         self.etr_stimulus_end_pos_right = tk.Entry(frame_4_1, textvariable=self.var_stimulus_end_pos_right, width=4)
         self.etr_stimulus_end_pos_right.grid(row=0, column=5, padx=(2, 10), pady=8, sticky="W")
 
@@ -772,12 +772,12 @@ class UserInput:
             "time wait if the wheel is not stopped before new trial starts",
         )
         # row 3
-        self.time_stimulus_presentation = self.Time(
+        self.time_present_stimulus = self.Time(
             frame_7_0,
             3,
             self.fontStyleRegular,
             "Stim Presentation",
-            self.settings.time_dict["time_stimulus_presentation"],
+            self.settings.time_dict["time_present_stimulus"],
             "time stimulus is presented but not movable",
         )
         # row 4

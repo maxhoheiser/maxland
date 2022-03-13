@@ -67,7 +67,7 @@ class TestUserInputGambleTask(unittest.TestCase):
             "time_start": self.window.time_start,
             "time_wheel_stopping_check": self.window.time_wheel_stopping_check,
             "time_wheel_stopping_punish": self.window.time_wheel_stopping_punish,
-            "time_stimulus_presentation": self.window.time_stimulus_presentation,
+            "time_present_stimulus": self.window.time_present_stimulus,
             "time_open_loop": self.window.time_open_loop,
             "time_stimulus_freeze": self.window.time_stimulus_freeze,
             "time_reward": self.window.time_reward,
@@ -178,7 +178,7 @@ class TestUserInputGambleTask(unittest.TestCase):
         self.times_tester(time_dict_key)
 
     def test_time_stimulus_presentation(self):
-        time_dict_key = "time_stimulus_presentation"
+        time_dict_key = "time_present_stimulus"
         self.times_tester(time_dict_key)
 
     def test_time_open_loop(self):

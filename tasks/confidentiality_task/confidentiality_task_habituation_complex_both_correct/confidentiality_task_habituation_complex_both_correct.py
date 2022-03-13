@@ -126,7 +126,7 @@ if settings_obj.run_session:
         # Open Loop
         sma.add_state(
             state_name="present_stimulus",
-            state_timer=settings_obj.time_dict["time_stimulus_presentation"],
+            state_timer=settings_obj.time_dict["time_present_stimulus"],
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
             output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus)],
         )

@@ -6,7 +6,7 @@ from typing import Dict, List
 
 import maxland.system_constants as system_constants
 from maxland.types_time_dict import TimeDict
-from maxland.types_usersettings import UsersettingsTypes
+from maxland.types_usersettings import GambleSide, UsersettingsTypes
 
 
 class TrialParameterHandler:
@@ -67,7 +67,7 @@ class TrialParameterHandler:
 
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
-        self.rotaryencoder_stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
+        self.stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
 
         # animal variables
         self.animal_weight = self.usersettings.ANIMAL_WEIGHT
@@ -236,7 +236,7 @@ class TrialParameterHandler:
             json.dump(self.stimulus_position, f, indent=4)
 
     def get_is_gamble_side_left(self):
-        if self.gamble_side == "left":
+        if self.gamble_side == GambleSide.LEFT:
             return True
         else:
             return False
@@ -252,7 +252,7 @@ class TrialParameterHandler:
             "time_start": self.usersettings.TIME_START,
             "time_wheel_stopping_check": self.usersettings.TIME_WHEEL_STOPPING_CHECK,
             "time_wheel_stopping_punish": self.usersettings.TIME_WHEEL_STOPPING_PUNISH,
-            "time_stimulus_presentation": self.usersettings.TIME_PRESENT_STIMULUS,
+            "time_present_stimulus": self.usersettings.TIME_PRESENT_STIMULUS,
             "time_open_loop": self.usersettings.TIME_OPEN_LOOP,
             "time_open_loop_fail_punish": self.usersettings.TIME_OPEN_LOOP_FAIL_PUNISH,
             "time_stimulus_freeze": self.usersettings.TIME_STIMULUS_FREEZE,
@@ -309,7 +309,7 @@ class TrialParameterHandler:
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
                 "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
-                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
+                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_present_stimulus"]) + "\n"
                 "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
                 "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
                 "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
@@ -322,7 +322,7 @@ class TrialParameterHandler:
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
-                "STIMULUS_END_POSITION = " + json.dumps(self.rotaryencoder_stimulus_end_position) + " # pixel\n\n"
+                "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
@@ -344,7 +344,7 @@ class TrialParameterHandler:
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
                 "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
-                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
+                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_present_stimulus"]) + "\n"
                 "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
                 "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
                 "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
@@ -368,7 +368,7 @@ class TrialParameterHandler:
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
-                "STIMULUS_END_POSITION = " + json.dumps(self.rotaryencoder_stimulus_end_position) + " # pixel\n\n"
+                "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"

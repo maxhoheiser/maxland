@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from mypy_extensions import TypedDict
 
@@ -14,15 +14,20 @@ Blocks = TypedDict(
 
 
 class TaskName(str, Enum):
-    GAMBLE = "gamble_task"
-    CONFIDENTIALITY = "conf_task"
+    GAMBLE = "gamble"
+    CONFIDENTIALITY = "conf"
+
+
+class GambleSide(str, Enum):
+    LEFT = "left"
+    RIGHT = "right"
 
 
 class UsersettingsTypes:
     def __init__(self) -> None:
         self.TASK: TaskName = TaskName()
 
-        self.GAMBLE_SIDE: str = ""
+        self.GAMBLE_SIDE: Union[GambleSide, None] = None
         self.BLOCKS: List[Blocks] = list()
 
         # reward in seconds

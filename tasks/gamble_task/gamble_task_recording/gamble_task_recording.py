@@ -134,7 +134,7 @@ if settings_obj.run_session:
         # continue if wheel stopped for time x
         sma.add_state(
             state_name="present_stim",
-            state_timer=settings_obj.time_dict["time_stimulus_presentation"],
+            state_timer=settings_obj.time_dict["time_present_stimulus"],
             state_change_conditions={"Tup": "sync_state_2"},
             output_actions=[
                 ("SoftCode", settings_obj.soft_code_present_stimulus),
