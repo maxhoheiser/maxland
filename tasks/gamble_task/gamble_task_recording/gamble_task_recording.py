@@ -77,6 +77,7 @@ if settings_obj.run_session:
         probability_dict = settings_obj.probability_list[trial]
         sma = StateMachine(bpod)
 
+        # start state to define block of trial
         sma.add_state(
             state_name="start",
             state_timer=settings_obj.time_dict["time_start"],
@@ -165,7 +166,7 @@ if settings_obj.run_session:
                 settings_obj.stimulus_threshold_right: "stop_open_loop_reward_right",
             },
             output_actions=[
-                ("SoftCode", settings_obj.soft_code_stop_open_loop),
+                ("SoftCode", settings_obj.soft_code_start_open_loop),
                 ("BNC1", 0),
                 ("BNC2", 0),
             ],  # softcode to start open loop
@@ -201,7 +202,7 @@ if settings_obj.run_session:
             ],
         )
 
-        # reward left
+        # reward left ---------------------------------
         sma.add_state(
             state_name="stop_open_loop_reward_left",
             state_timer=settings_obj.time_dict["time_stimulus_freeze"],
@@ -323,7 +324,7 @@ if settings_obj.run_session:
                     output_actions=[("BNC1", 0), ("BNC2", 1)],
                 )
 
-        # reward right side: ======================================================================
+        # reward right side: -------------------------
         sma.add_state(
             state_name="stop_open_loop_reward_right",
             state_timer=settings_obj.time_dict["time_stimulus_freeze"],
