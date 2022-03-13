@@ -260,7 +260,7 @@ if settings_obj.run_session:
                 )
 
             if not probability_dict["safe_reward"]:
-                print("nosafereward_gamble_left")
+                print("safe no-reward left")
                 # no reward
 
                 sma.add_state(
