@@ -135,7 +135,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_switching_initial_trials_wait_not_switch(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 2
-        probability_constructor.settings.rule_switch_trial_check_range = 4
+        probability_constructor.settings.rule_switch_check_trial_range = 4
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
         current_trial_num = 4
         probability_constructor.settings.trials_correct_side_history = [False, True, True, True]
@@ -147,7 +147,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_switching_initial_trials_wait_switch(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 1
-        probability_constructor.settings.rule_switch_trial_check_range = 3
+        probability_constructor.settings.rule_switch_check_trial_range = 3
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
         current_trial_num = 4
         probability_constructor.settings.trials_correct_side_history = [False, True, True, True]
@@ -161,7 +161,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 2
-        probability_constructor.settings.rule_switch_trial_check_range = 10
+        probability_constructor.settings.rule_switch_check_trial_range = 10
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 6
         current_trial_num = 10
         probability_constructor.settings.trials_correct_side_history = [
@@ -188,7 +188,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_not_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 2
-        probability_constructor.settings.rule_switch_trial_check_range = 10
+        probability_constructor.settings.rule_switch_check_trial_range = 10
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 7
         current_trial_num = 10
         probability_constructor.settings.trials_correct_side_history = [

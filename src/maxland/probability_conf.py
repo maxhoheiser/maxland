@@ -116,8 +116,8 @@ class ProbabilityConstructor:
         if current_trial_num >= self.settings.rule_switch_initial_trials_wait:
             rule_switch_range = self.settings.trials_correct_side_history[self.settings.rule_switch_initial_trials_wait :]
             # > not >= because trial counter in main states loop starts from 1 not 0
-            if len(rule_switch_range) >= self.settings.rule_switch_trial_check_range:
-                rule_switch_range_slice = rule_switch_range[-self.settings.rule_switch_trial_check_range :]
+            if len(rule_switch_range) >= self.settings.rule_switch_check_trial_range:
+                rule_switch_range_slice = rule_switch_range[-self.settings.rule_switch_check_trial_range :]
                 correct_chosen = sum(rule_switch_range_slice)
                 # check if rule switch
                 if self.is_initial_rule_active:

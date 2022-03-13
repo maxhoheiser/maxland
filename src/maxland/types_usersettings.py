@@ -75,9 +75,9 @@ class UsersettingsTypes:
         self.INSIST_RANGE_DEACTIVATE: int = int()
 
         # rule switching
-        self.RULE_SWITCH_INITIAL_WAIT: int = int()
-        self.RULE_SWITCH_RANGE: int = int()
-        self.RULE_SWITCH_CORRECT: int = int()
+        self.RULE_SWITCH_INITIAL_TRIALS_WAIT: int = int()
+        self.RULE_SWITCH_CHECK_TRIAL_RANGE: int = int()
+        self.RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH: int = int()
 
         # fade away
         self.FADE_START: int = int()

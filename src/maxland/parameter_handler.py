@@ -56,9 +56,9 @@ class TrialParameterHandler:
             self.insist_correct_deactivate = self.usersettings.INSIST_CORRECT_DEACTIVATE
             self.insist_range_deactivate = self.usersettings.INSIST_RANGE_DEACTIVATE
             # rule switching
-            self.rule_switch_initial_trials_wait = self.usersettings.RULE_SWITCH_INITIAL_WAIT
-            self.rule_switch_trial_check_range = self.usersettings.RULE_SWITCH_RANGE
-            self.rule_switch_trials_correct_trigger_switch = self.usersettings.RULE_SWITCH_CORRECT
+            self.rule_switch_initial_trials_wait = self.usersettings.RULE_SWITCH_INITIAL_TRIALS_WAIT
+            self.rule_switch_check_trial_range = self.usersettings.RULE_SWITCH_CHECK_TRIAL_RANGE
+            self.rule_switch_trials_correct_trigger_switch = self.usersettings.RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH
             # fade away box
             self.fade_start = self.usersettings.FADE_START  # from center to left side where fade away starts
             self.fade_end = self.usersettings.FADE_END  # from left center to left side where fade away ends
@@ -353,12 +353,12 @@ class TrialParameterHandler:
                 "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# insist mode\n"
                 "INSIST_RANGE_TRIGGER = " + json.dumps(self.insist_range_trigger) + "\n"
-                "INSIST_CORRECT_DEACTIVATE = " + json.dumps(self.insist_range_deactivate) + "\n"
-                "INSIST_RANGE_DEACTIVATE = " + json.dumps(self.insist_correct_deactivate) + "\n\n"
+                "INSIST_CORRECT_DEACTIVATE = " + json.dumps(self.insist_correct_deactivate) + "\n"
+                "INSIST_RANGE_DEACTIVATE = " + json.dumps(self.insist_range_deactivate) + "\n\n"
                 "# rule switching\n"
-                "RULE_SWITCH_INITIAL_WAIT = " + json.dumps(self.rule_switch_initial_trials_wait) + "\n"
-                "RULE_SWITCH_RANGE = " + json.dumps(self.rule_switch_trial_check_range) + "\n"
-                "RULE_SWITCH_CORRECT = " + json.dumps(self.rule_switch_trials_correct_trigger_switch) + "\n\n"
+                "RULE_SWITCH_INITIAL_TRIALS_WAIT = " + json.dumps(self.rule_switch_initial_trials_wait) + "\n"
+                "RULE_SWITCH_CHECK_TRIAL_RANGE = " + json.dumps(self.rule_switch_check_trial_range) + "\n"
+                "RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH = " + json.dumps(self.rule_switch_trials_correct_trigger_switch) + "\n\n"
                 "# fade away \n"
                 "FADE_START = " + repr(self.fade_start) + "\n"
                 "FADE_END = " + repr(self.fade_end) + "\n\n"
