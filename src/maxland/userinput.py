@@ -4,6 +4,7 @@ from tkinter import filedialog, ttk
 from typing import List
 
 from maxland.parameter_handler import TrialParameterHandler
+from maxland.types_usersettings import GambleSide
 
 WINDOW_SIZE = [855, 1000]
 CANVAS_SIZE = [835, 920]
@@ -210,7 +211,7 @@ class UserInput:
         lbl_gamble_side.grid(row=0, column=0, padx=5, pady=8)
         self.var_gamble_side = tk.StringVar(frame_1)
         self.var_gamble_side.set(self.settings.gamble_side)
-        dd_gamble_side = tk.OptionMenu(frame_1, self.var_gamble_side, "Left", "Right")
+        dd_gamble_side = tk.OptionMenu(frame_1, self.var_gamble_side, GambleSide.LEFT, GambleSide.RIGHT)
         dd_gamble_side.grid(row=0, column=1)
 
         lbl_animal_weight = tk.Label(frame_1, text="Animal weight:", font=self.fontStyleRegular)
