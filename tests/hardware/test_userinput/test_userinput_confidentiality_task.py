@@ -7,8 +7,11 @@ from maxland.parameter_handler import TrialParameterHandler
 from maxland.userinput import UserInput
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
+
+NEW_ANIMAL_WEIGHT = 22
 NEW_TRIAL_NUMBER = 92
 NEW_AMOUNT = 33.3
+# stimulus
 NEW_STIMULUS_END_POSITION_LEFT = "-32"
 NEW_STIMULUS_END_POSITION_RIGHT = "35"
 NEW_ROTARYENCODER_THRESHOLD_LEFT = "-83"
@@ -20,8 +23,13 @@ NEW_ORIENTATION = 45
 NEW_STIMULUS_SIZE = 43
 NEW_PHASE_SPEED = 0.05
 NEW_INSIST_MODE_TRIGGER_RANGE = 93
+# time
 NEW_TIME_VALUE = 77.4
 NEW_STIMULUS_TYPE = "three-stimuli "
+# insist
+NEW_INSIST_TRIGGER_RANGE = 28
+NEW_INSIST_CORRECT_DEACTIVATE = 4
+NEW_INSIST_RANGE_DEACTIVATE = 10
 
 
 class TestUserInputConfidentialityTask(unittest.TestCase):
@@ -36,9 +44,9 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.widget.update_idletasks()
 
     def tearDown(self):
-        self.window.on_cancel()
-        self.window = None
         self.parameter_handler = None
+        self.window = None
+        self.widget = None
 
     # test helpers
     def times_tester(self, time_dict_key: str):
@@ -109,6 +117,13 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.window.on_cancel()
 
         self.assertFalse(self.parameter_handler.run_session)
+
+    def test_animal_weight(self):
+        self.window.var_animal_weight.set(NEW_ANIMAL_WEIGHT)
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+
+        self.assertEqual(self.parameter_handler.animal_weight, NEW_ANIMAL_WEIGHT)
 
     def test_trial_number(self):
         self.window.var_trial_num.set(NEW_TRIAL_NUMBER)
@@ -207,6 +222,26 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.assertEqual(self.parameter_handler.stimulus_color, rgb_list)
 
     # test insist mode
+    def test_insist_mode_trigger_range(self):
+        self.window.var_insist_range_trigger.set(NEW_INSIST_TRIGGER_RANGE)
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+
+        self.assertEqual(self.parameter_handler.insist_range_trigger, NEW_INSIST_TRIGGER_RANGE)
+
+    def test_insist_mode_correct_deactivate(self):
+        self.window.var_insist_cor.set(NEW_INSIST_CORRECT_DEACTIVATE)
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+
+        self.assertEqual(self.parameter_handler.insist_correct_deactivate, NEW_INSIST_CORRECT_DEACTIVATE)
+
+    def test_insist_mode_range_deactivate(self):
+        self.window.var_insist_range_deact.set(NEW_INSIST_RANGE_DEACTIVATE)
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+
+        self.assertEqual(self.parameter_handler.insist_range_deactivate, NEW_INSIST_RANGE_DEACTIVATE)
 
     # test times
     def test_time_start(self):
