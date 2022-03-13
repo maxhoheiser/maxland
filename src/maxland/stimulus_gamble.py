@@ -27,8 +27,8 @@ class Stimulus:
         )
         self.rotary_encoder = rotary_encoder
 
-        self.gain_left = self.get_gain(settings.rotaryencoder_thresholds[0], settings.rotaryencoder_stimulus_end_position[0])
-        self.gain_right = self.get_gain(settings.rotaryencoder_thresholds[1], settings.rotaryencoder_stimulus_end_position[1])
+        self.gain_left = self.get_gain(settings.rotaryencoder_thresholds[0], settings.stimulus_end_position[0])
+        self.gain_right = self.get_gain(settings.rotaryencoder_thresholds[1], settings.stimulus_end_position[1])
         self.gain = self.gain_left
 
         self.monitor = monitors.Monitor("testMonitor", width=self.monitor_width, distance=self.monitor_distance)

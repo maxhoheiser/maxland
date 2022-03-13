@@ -6,7 +6,7 @@ from typing import Dict, List
 
 import maxland.system_constants as system_constants
 from maxland.types_time_dict import TimeDict
-from maxland.types_usersettings import UsersettingsTypes
+from maxland.types_usersettings import GambleSide, UsersettingsTypes
 
 
 class TrialParameterHandler:
@@ -24,7 +24,7 @@ class TrialParameterHandler:
         self.settings_folder = settings_folder
         self.session_folder = session_folder
 
-        self.task = self.usersettings.TASK
+        self.task_name = self.usersettings.TASK
         self.life_plot = self.usersettings.LIFE_PLOT
         # stimulus
         self.stimulus_radius = self.usersettings.STIMULUS_RADIUS
@@ -32,7 +32,7 @@ class TrialParameterHandler:
         self.background_color = self.usersettings.BACKGROUND_COLOR
 
         # specific for gamble task
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             self.gamble_side = self.usersettings.GAMBLE_SIDE
             self.is_gamble_side_left = self.get_is_gamble_side_left()
             self.blocks = self.usersettings.BLOCKS
@@ -41,7 +41,7 @@ class TrialParameterHandler:
             self.manual_reward: int = int()
 
         # specific for confidentiality task
-        if self.task == "conf":
+        if self.task_name == "conf":
             self.reward = self.usersettings.REWARD
             self.trial_number = self.usersettings.TRIAL_NUMBER
             # stimulus
@@ -56,9 +56,9 @@ class TrialParameterHandler:
             self.insist_correct_deactivate = self.usersettings.INSIST_CORRECT_DEACTIVATE
             self.insist_range_deactivate = self.usersettings.INSIST_RANGE_DEACTIVATE
             # rule switching
-            self.rule_switch_initial_trials_wait = self.usersettings.RULE_SWITCH_INITIAL_WAIT
-            self.rule_switch_trial_check_range = self.usersettings.RULE_SWITCH_RANGE
-            self.rule_switch_trials_correct_trigger_switch = self.usersettings.RULE_SWITCH_CORRECT
+            self.rule_switch_initial_trials_wait = self.usersettings.RULE_SWITCH_INITIAL_TRIALS_WAIT
+            self.rule_switch_check_trial_range = self.usersettings.RULE_SWITCH_CHECK_TRIAL_RANGE
+            self.rule_switch_trials_correct_trigger_switch = self.usersettings.RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH
             # fade away box
             self.fade_start = self.usersettings.FADE_START  # from center to left side where fade away starts
             self.fade_end = self.usersettings.FADE_END  # from left center to left side where fade away ends
@@ -67,7 +67,7 @@ class TrialParameterHandler:
 
         self.last_callibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
-        self.rotaryencoder_stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
+        self.stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
 
         # animal variables
         self.animal_weight = self.usersettings.ANIMAL_WEIGHT
@@ -105,38 +105,38 @@ class TrialParameterHandler:
         # probability
         self.probability_list: List[Dict[str, bool]] = list()
         # historic trial values
-        self.stimulus_correct_side_history: List[str] = list()
+        self.chosen_sides_history: List[str] = list()
         self.trials_correct_side_history: List[bool] = list()
         self.time_punish_history: List[float] = list()
         self.insist_mode_history: List[str] = list()
         self.active_rule_history: List[str] = list()
 
     def update_reward_time(self):
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             if self.time_dict["time_reward"] < self.time_dict["time_big_reward_open"]:
                 self.time_dict["time_reward"] = self.time_dict["time_big_reward_open"]
             if self.time_dict["time_reward"] < self.time_dict["time_small_reward_open"]:
                 self.time_dict["time_reward"] = self.time_dict["time_small_reward_open"]
-        if self.task == "conf":
+        if self.task_name == "conf":
             if self.time_dict["time_reward"] < self.time_dict["time_reward_open"]:
                 self.time_dict["time_reward"] = self.time_dict["time_reward_open"]
 
     def update_waiting_times(self):
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             self.time_dict["time_big_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_big_reward_open"]
             self.time_dict["time_small_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_small_reward_open"]
-        if self.task == "conf":
+        if self.task_name == "conf":
             self.time_dict["time_reward_waiting"] = self.time_dict["time_reward"] - self.time_dict["time_reward_open"]
 
     def update_parameters(self):
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             # update valve open times
             self.time_dict["time_big_reward_open"] = self.get_valve_open_time(self.big_reward)
             self.time_dict["time_small_reward_open"] = self.get_valve_open_time(self.small_reward)
             self.update_reward_time()
             self.update_waiting_times()
             self.is_gamble_side_left = self.get_is_gamble_side_left()
-        if self.task == "conf":
+        if self.task_name == "conf":
             self.time_dict["time_reward_open"] = self.get_valve_open_time(self.reward)
             self.update_reward_time()
             self.update_waiting_times()
@@ -236,7 +236,7 @@ class TrialParameterHandler:
             json.dump(self.stimulus_position, f, indent=4)
 
     def get_is_gamble_side_left(self):
-        if self.gamble_side == "left":
+        if self.gamble_side == GambleSide.LEFT:
             return True
         else:
             return False
@@ -252,7 +252,7 @@ class TrialParameterHandler:
             "time_start": self.usersettings.TIME_START,
             "time_wheel_stopping_check": self.usersettings.TIME_WHEEL_STOPPING_CHECK,
             "time_wheel_stopping_punish": self.usersettings.TIME_WHEEL_STOPPING_PUNISH,
-            "time_stimulus_presentation": self.usersettings.TIME_PRESENT_STIMULUS,
+            "time_present_stimulus": self.usersettings.TIME_PRESENT_STIMULUS,
             "time_open_loop": self.usersettings.TIME_OPEN_LOOP,
             "time_open_loop_fail_punish": self.usersettings.TIME_OPEN_LOOP_FAIL_PUNISH,
             "time_stimulus_freeze": self.usersettings.TIME_STIMULUS_FREEZE,
@@ -260,7 +260,7 @@ class TrialParameterHandler:
             "time_inter_trial": self.usersettings.TIME_INTER_TRIAL,
         }
 
-        if self.task == "gamble":
+        if self.task_name == "gamble":
             gamble_times = {
                 "time_no_reward": self.usersettings.TIME_NO_REWARD,
                 "time_big_reward_open": self.get_valve_open_time(self.big_reward),
@@ -271,10 +271,11 @@ class TrialParameterHandler:
             }
             time_dict_construction.update(gamble_times)
 
-        if self.task == "conf":
+        if self.task_name == "conf":
             conf_time = {
-                "time_range_no_reward_punish": self.usersettings.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH,
+                "time_range_no_reward_punish": self.usersettings.TIME_RANGE_NO_REWARD_PUNISH,
                 "time_reward_waiting": (self.usersettings.TIME_REWARD - self.get_valve_open_time(self.reward)),
+                "time_reward_open": self.get_valve_open_time(self.reward),
             }
             time_dict_construction.update(conf_time)
 
@@ -308,7 +309,7 @@ class TrialParameterHandler:
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
                 "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
-                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
+                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_present_stimulus"]) + "\n"
                 "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
                 "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
                 "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
@@ -321,7 +322,7 @@ class TrialParameterHandler:
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
-                "STIMULUS_END_POSITION = " + json.dumps(self.rotaryencoder_stimulus_end_position) + " # pixel\n\n"
+                "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
@@ -343,21 +344,21 @@ class TrialParameterHandler:
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
                 "TIME_WHEEL_STOPPING_PUNISH = " + repr(self.time_dict["time_wheel_stopping_punish"]) + "\n"
-                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_stimulus_presentation"]) + "\n"
+                "TIME_PRESENT_STIMULUS = " + repr(self.time_dict["time_present_stimulus"]) + "\n"
                 "TIME_OPEN_LOOP = " + repr(self.time_dict["time_open_loop"]) + "\n"
                 "TIME_OPEN_LOOP_FAIL_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
                 "TIME_STIMULUS_FREEZE = " + repr(self.time_dict["time_stimulus_freeze"]) + "\n"
                 "TIME_REWARD = " + repr(self.time_dict["time_reward"]) + "\n"
-                "TIME_RANGE_OPEN_LOOP_WRONG_PUNISH = " + repr(self.time_dict["time_open_loop_fail_punish"]) + "\n"
+                "TIME_RANGE_NO_REWARD_PUNISH = " + repr(self.time_dict["time_range_no_reward_punish"]) + "\n"
                 "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# insist mode\n"
                 "INSIST_RANGE_TRIGGER = " + json.dumps(self.insist_range_trigger) + "\n"
-                "INSIST_CORRECT_DEACTIVATE = " + json.dumps(self.insist_range_deactivate) + "\n"
-                "INSIST_RANGE_DEACTIVATE = " + json.dumps(self.insist_correct_deactivate) + "\n\n"
+                "INSIST_CORRECT_DEACTIVATE = " + json.dumps(self.insist_correct_deactivate) + "\n"
+                "INSIST_RANGE_DEACTIVATE = " + json.dumps(self.insist_range_deactivate) + "\n\n"
                 "# rule switching\n"
-                "RULE_SWITCH_INITIAL_WAIT = " + json.dumps(self.rule_switch_initial_trials_wait) + "\n"
-                "RULE_SWITCH_RANGE = " + json.dumps(self.rule_switch_trial_check_range) + "\n"
-                "RULE_SWITCH_CORRECT = " + json.dumps(self.rule_switch_trials_correct_trigger_switch) + "\n\n"
+                "RULE_SWITCH_INITIAL_TRIALS_WAIT = " + json.dumps(self.rule_switch_initial_trials_wait) + "\n"
+                "RULE_SWITCH_CHECK_TRIAL_RANGE = " + json.dumps(self.rule_switch_check_trial_range) + "\n"
+                "RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH = " + json.dumps(self.rule_switch_trials_correct_trigger_switch) + "\n\n"
                 "# fade away \n"
                 "FADE_START = " + repr(self.fade_start) + "\n"
                 "FADE_END = " + repr(self.fade_end) + "\n\n"
@@ -367,7 +368,7 @@ class TrialParameterHandler:
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
-                "STIMULUS_END_POSITION = " + json.dumps(self.rotaryencoder_stimulus_end_position) + " # pixel\n\n"
+                "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
                 "LIFE_PLOT = " + repr(self.life_plot) + "\n"
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"

@@ -4,19 +4,32 @@ import unittest
 from pathlib import Path
 
 from maxland.parameter_handler import TrialParameterHandler
+from maxland.types_usersettings import GambleSide
 from maxland.userinput import UserInput
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_gamble_task.py")
-NEW_GAMBLE_SIDE = "right"
-NEW_TIME_MIN = 33
-NEW_TIME_MAX = 44
-NEW_PROBABILITY_GAMBLE = 67
-NEW_PROBABILITY_SAVE = 83
-NEW_TIME_VALUE = 77.4
-NEW_AMOUNT = 33.3
-NEW_BACKGROUND_COLOR_RBG = "213, 214, 215"
-NEW_STIMULUS_COLOR_RBG = "213, 214, 215"
-NEW_STIMULUS_RADIUS = 65
+
+# Mock user input data
+NEW_GAMBLE_SIDE = GambleSide.RIGHT
+# Blocks
+NEW_BLOCK_TRIAL_RANGE_MIN = 3
+NEW_BLOCK_TRIAL_RANGE_MAX = 4
+NEW_BLOCK_PROBABILITY_GAMBLE = 80
+NEW_BLOCK_PROBABILITY_SAFE = 55
+# reward in seconds
+NEW_BIG_REWARD = 10.15
+NEW_SMALL_REWARD = 11.16
+# trial times
+NEW_TIME_VALUE = 3.2
+# stimulus
+NEW_STIMULUS_RADIUS = 46
+NEW_STIMULUS_COLOR_RBG = "1, 252, 1"
+NEW_BACKGROUND_COLOR_RGB = "1, 2, 3"
+# thresholds
+NEW_ROTARYENCODER_THRESHOLDS = [-91, 92, -3, 4]
+NEW_STIMULUS_END_POSITION = [-2047, 2049]
+NEW_LIFE_PLOT = False
+NEW_ANIMAL_WEIGHT = 11
 
 
 class TestUserInputGambleTask(unittest.TestCase):
@@ -42,32 +55,32 @@ class TestUserInputGambleTask(unittest.TestCase):
 
     # test helpers
     def block_time_range_tester(self, block_index):
-        self.window.blocks[block_index].var_range_min.set(NEW_TIME_MIN)
-        self.window.blocks[block_index].var_range_max.set(NEW_TIME_MAX)
+        self.window.blocks[block_index].var_range_min.set(NEW_BLOCK_TRIAL_RANGE_MIN)
+        self.window.blocks[block_index].var_range_max.set(NEW_BLOCK_TRIAL_RANGE_MAX)
         self.widget.update_idletasks()
         self.window.on_confirm()
 
         trial_range_block = self.parameter_handler.blocks[block_index]["trial_range_block"]
-        self.assertEqual(trial_range_block[0], NEW_TIME_MIN)
-        self.assertEqual(trial_range_block[1], NEW_TIME_MAX)
+        self.assertEqual(trial_range_block[0], NEW_BLOCK_TRIAL_RANGE_MIN)
+        self.assertEqual(trial_range_block[1], NEW_BLOCK_TRIAL_RANGE_MAX)
 
     def block_probability_tester(self, block_index):
-        self.window.blocks[block_index].var_prob_gb.set(NEW_PROBABILITY_GAMBLE)
-        self.window.blocks[block_index].var_prob_save.set(NEW_PROBABILITY_SAVE)
+        self.window.blocks[block_index].var_prob_gb.set(NEW_BLOCK_PROBABILITY_GAMBLE)
+        self.window.blocks[block_index].var_prob_save.set(NEW_BLOCK_PROBABILITY_SAFE)
         self.widget.update_idletasks()
         self.window.on_confirm()
 
         probability_gamble = self.parameter_handler.blocks[block_index]["prob_reward_gamble_block"]
         probability_save = self.parameter_handler.blocks[block_index]["prob_reward_save_block"]
-        self.assertEqual(probability_gamble, NEW_PROBABILITY_GAMBLE)
-        self.assertEqual(probability_save, NEW_PROBABILITY_SAVE)
+        self.assertEqual(probability_gamble, NEW_BLOCK_PROBABILITY_GAMBLE)
+        self.assertEqual(probability_save, NEW_BLOCK_PROBABILITY_SAFE)
 
     def times_tester(self, time_dict_key: str):
         all_time_objects = {
             "time_start": self.window.time_start,
             "time_wheel_stopping_check": self.window.time_wheel_stopping_check,
             "time_wheel_stopping_punish": self.window.time_wheel_stopping_punish,
-            "time_stimulus_presentation": self.window.time_stimulus_presentation,
+            "time_present_stimulus": self.window.time_present_stimulus,
             "time_open_loop": self.window.time_open_loop,
             "time_stimulus_freeze": self.window.time_stimulus_freeze,
             "time_reward": self.window.time_reward,
@@ -106,6 +119,13 @@ class TestUserInputGambleTask(unittest.TestCase):
 
         self.assertEqual(self.parameter_handler.gamble_side, NEW_GAMBLE_SIDE)
 
+    def test_animal_weight(self):
+        self.window.var_animal_weight.set(NEW_ANIMAL_WEIGHT)
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+
+        self.assertEqual(self.parameter_handler.animal_weight, NEW_ANIMAL_WEIGHT)
+
     def test_block_1_range(self):
         self.block_time_range_tester(0)
 
@@ -126,18 +146,18 @@ class TestUserInputGambleTask(unittest.TestCase):
 
     # test reward
     def test_big_reward_amount(self):
-        self.window.var_big_reward.set(NEW_AMOUNT)
+        self.window.var_big_reward.set(NEW_BIG_REWARD)
         self.widget.update_idletasks()
         self.window.on_confirm()
 
-        self.assertEqual(self.parameter_handler.big_reward, NEW_AMOUNT)
+        self.assertEqual(self.parameter_handler.big_reward, NEW_BIG_REWARD)
 
     def test_small_reward_amount(self):
-        self.window.var_small_reward.set(NEW_AMOUNT)
+        self.window.var_small_reward.set(NEW_SMALL_REWARD)
         self.widget.update_idletasks()
         self.window.on_confirm()
 
-        self.assertEqual(self.parameter_handler.small_reward, NEW_AMOUNT)
+        self.assertEqual(self.parameter_handler.small_reward, NEW_SMALL_REWARD)
 
     # test stimulus
     def test_stimulus_radius(self):
@@ -157,11 +177,11 @@ class TestUserInputGambleTask(unittest.TestCase):
 
     def test_window_background(self):
 
-        self.window.var_background_color.set(NEW_BACKGROUND_COLOR_RBG)
+        self.window.var_background_color.set(NEW_BACKGROUND_COLOR_RGB)
         self.widget.update_idletasks()
         self.window.on_confirm()
 
-        rgb_list = self.get_list_from_rgb_string(NEW_BACKGROUND_COLOR_RBG)
+        rgb_list = self.get_list_from_rgb_string(NEW_BACKGROUND_COLOR_RGB)
         self.assertEqual(self.parameter_handler.background_color, rgb_list)
 
     # test times
@@ -178,7 +198,7 @@ class TestUserInputGambleTask(unittest.TestCase):
         self.times_tester(time_dict_key)
 
     def test_time_stimulus_presentation(self):
-        time_dict_key = "time_stimulus_presentation"
+        time_dict_key = "time_present_stimulus"
         self.times_tester(time_dict_key)
 
     def test_time_open_loop(self):

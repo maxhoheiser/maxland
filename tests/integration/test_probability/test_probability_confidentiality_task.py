@@ -65,7 +65,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     # test insist mode
     def test_not_activate_insist(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["right", "left", "left", "right"]
+        probability_constructor.settings.chosen_sides_history = ["right", "left", "left", "right"]
         probability_constructor.settings.insist_range_trigger = 4
 
         probability_constructor.insist_mode_check()
@@ -74,7 +74,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
     def test_not_activate_insist_slice(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["left", "left", "left", "left", "left", "left", "right", "right"]
+        probability_constructor.settings.chosen_sides_history = ["left", "left", "left", "left", "left", "left", "right", "right"]
         probability_constructor.settings.insist_range_trigger = 5
 
         probability_constructor.insist_mode_check()
@@ -83,7 +83,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
     def test_activate_insist_left(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["right", "left", "right", "right", "right"]
+        probability_constructor.settings.chosen_sides_history = ["right", "left", "right", "right", "right"]
         probability_constructor.settings.insist_range_trigger = 3
 
         probability_constructor.insist_mode_check()
@@ -93,7 +93,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
     def test_activate_insist_right(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["left", "right", "left", "left", "left"]
+        probability_constructor.settings.chosen_sides_history = ["left", "right", "left", "left", "left"]
         probability_constructor.settings.insist_range_trigger = 3
 
         probability_constructor.insist_mode_check()
@@ -105,7 +105,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.insist_mode_active = True
         probability_constructor.insist_mode_chosen_side_li = ["left", "right", "left"]
-        probability_constructor.settings.stimulus_correct_side_history = ["left"]
+        probability_constructor.settings.chosen_sides_history = ["left"]
         probability_constructor.insist_side = "left"
         probability_constructor.settings.insist_correct_deactivate = 3
         probability_constructor.settings.insist_range_deactivate = 4
@@ -120,7 +120,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.insist_mode_active = True
         probability_constructor.insist_mode_chosen_side_li = ["left", "right", "left"]
-        probability_constructor.settings.stimulus_correct_side_history = ["right"]
+        probability_constructor.settings.chosen_sides_history = ["right"]
         probability_constructor.insist_side = "left"
         probability_constructor.settings.insist_correct_deactivate = 3
         probability_constructor.settings.insist_range_deactivate = 4
@@ -135,7 +135,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_switching_initial_trials_wait_not_switch(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 2
-        probability_constructor.settings.rule_switch_trial_check_range = 4
+        probability_constructor.settings.rule_switch_check_trial_range = 4
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
         current_trial_num = 4
         probability_constructor.settings.trials_correct_side_history = [False, True, True, True]
@@ -147,7 +147,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_switching_initial_trials_wait_switch(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 1
-        probability_constructor.settings.rule_switch_trial_check_range = 3
+        probability_constructor.settings.rule_switch_check_trial_range = 3
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
         current_trial_num = 4
         probability_constructor.settings.trials_correct_side_history = [False, True, True, True]
@@ -161,7 +161,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 2
-        probability_constructor.settings.rule_switch_trial_check_range = 10
+        probability_constructor.settings.rule_switch_check_trial_range = 10
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 6
         current_trial_num = 10
         probability_constructor.settings.trials_correct_side_history = [
@@ -188,7 +188,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     def test_rule_not_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.settings.rule_switch_initial_trials_wait = 2
-        probability_constructor.settings.rule_switch_trial_check_range = 10
+        probability_constructor.settings.rule_switch_check_trial_range = 10
         probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 7
         current_trial_num = 10
         probability_constructor.settings.trials_correct_side_history = [

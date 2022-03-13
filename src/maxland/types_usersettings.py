@@ -1,4 +1,5 @@
-from typing import Dict, List
+from enum import Enum
+from typing import Dict, List, Union
 
 from mypy_extensions import TypedDict
 
@@ -12,11 +13,21 @@ Blocks = TypedDict(
 )
 
 
+class TaskName(str, Enum):
+    GAMBLE = "gamble"
+    CONFIDENTIALITY = "conf"
+
+
+class GambleSide(str, Enum):
+    LEFT = "left"
+    RIGHT = "right"
+
+
 class UsersettingsTypes:
     def __init__(self) -> None:
-        self.TASK: str = ""
+        self.TASK: TaskName = TaskName()
 
-        self.GAMBLE_SIDE: str = ""
+        self.GAMBLE_SIDE: Union[GambleSide, None] = None
         self.BLOCKS: List[Blocks] = list()
 
         # reward in seconds
@@ -36,7 +47,7 @@ class UsersettingsTypes:
         self.TIME_INTER_TRIAL: float = float()
         # confidentiality times
         self.TIME_REWARD: float = float()
-        self.TIME_RANGE_OPEN_LOOP_WRONG_PUNISH: List[float] = list()
+        self.TIME_RANGE_NO_REWARD_PUNISH: List[float] = list()
 
         # stimulus size and color - only for moving stimulus
         self.STIMULUS_RADIUS: int = int()
@@ -64,9 +75,9 @@ class UsersettingsTypes:
         self.INSIST_RANGE_DEACTIVATE: int = int()
 
         # rule switching
-        self.RULE_SWITCH_INITIAL_WAIT: int = int()
-        self.RULE_SWITCH_RANGE: int = int()
-        self.RULE_SWITCH_CORRECT: int = int()
+        self.RULE_SWITCH_INITIAL_TRIALS_WAIT: int = int()
+        self.RULE_SWITCH_CHECK_TRIAL_RANGE: int = int()
+        self.RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH: int = int()
 
         # fade away
         self.FADE_START: int = int()

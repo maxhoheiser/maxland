@@ -4,6 +4,7 @@ from contextlib import contextmanager
 
 from pybpod_rotaryencoder_module.module_api import RotaryEncoderModule
 from pybpodapi.bpod import Bpod
+from pybpodapi.state_machine import StateMachine
 
 
 @contextmanager
@@ -30,19 +31,15 @@ def try_run_function(function_to_run):
 
 
 def post_session_cleanup(
-    bpod,
-    sma,
-    display_stim_event,
-    still_show_event,
     stimulus_game,
-    rotary_encoder_module,
+    bpod: Bpod,
+    sma: StateMachine,
+    event_flags,
 ):
     if not bpod.run_state_machine(sma):
-        still_show_event.set()
-        display_stim_event.set()
+        for event_flag in event_flags.values():
+            event_flag.set()
         try_run_function(stimulus_game.win.close())()
-        try_run_function(stimulus_game.close())()
-        try_run_function(rotary_encoder_module.close())()
         print("\nCLOSED\n")
 
 

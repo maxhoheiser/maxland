@@ -11,7 +11,6 @@ TimeDict = TypedDict(
         "time_present_stimulus": float,
         "time_open_loop": float,
         "time_open_loop_fail_punish": float,
-        "time_stimulus_presentation": float,
         "time_stimulus_freeze": float,
         "time_no_reward": float,
         "time_inter_trial": float,

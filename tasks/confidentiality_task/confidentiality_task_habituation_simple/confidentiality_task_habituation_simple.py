@@ -47,10 +47,13 @@ window.show_window()
 # create threading flags
 event_display_stimulus = threading.Event()
 event_still_show_stimulus = threading.Event()
+event_start_open_loop = threading.Event()
 event_display_stimulus.clear()
 event_still_show_stimulus.clear()
+event_start_open_loop.clear()
 event_flags = {
     "event_display_stimulus": event_display_stimulus,
+    "event_start_open_loop": event_start_open_loop,
     "event_still_show_stimulus": event_still_show_stimulus,
 }
 
@@ -70,7 +73,7 @@ if settings_obj.run_session:
         if data == settings_obj.soft_code_present_stimulus:
             event_display_stimulus.set()
         if data == settings_obj.soft_code_start_open_loop:
-            stimulus_game.stop_closed_loop_before()
+            event_start_open_loop.set()
         if data == settings_obj.soft_code_stop_open_loop:
             stimulus_game.stop_open_loop()
         if data == settings_obj.soft_code_end_present_stimulus:
@@ -128,7 +131,7 @@ if settings_obj.run_session:
         # Open Loop
         sma.add_state(
             state_name="present_stimulus",
-            state_timer=settings_obj.time_dict["time_stimulus_presentation"],
+            state_timer=settings_obj.time_dict["time_present_stimulus"],
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
             output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus)],
         )
@@ -240,9 +243,7 @@ if settings_obj.run_session:
                 stimulus_game,
                 bpod,
                 sma,
-                event_display_stimulus,
-                event_still_show_stimulus,
-                rotary_encoder_module,
+                event_flags,
             ),
         )
         closer.start()
@@ -266,4 +267,3 @@ if settings_obj.run_session:
 
 
 try_run_function(rotary_encoder_module.close())()
-try_run_function(bpod.close())()

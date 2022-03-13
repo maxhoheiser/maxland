@@ -46,12 +46,9 @@ window.show_window()
 
 # create threading flags
 event_display_stimulus = threading.Event()
-event_still_show_stimulus = threading.Event()
 event_display_stimulus.clear()
-event_still_show_stimulus.clear()
 event_flags = {
     "event_display_stimulus": event_display_stimulus,
-    "event_still_show_stimulus": event_still_show_stimulus,
 }
 
 # run session
@@ -75,7 +72,6 @@ if settings_obj.run_session:
             stimulus_game.stop_open_loop()
         if data == settings_obj.soft_code_end_present_stimulus:
             stimulus_game.stop_closed_loop_after()
-            event_still_show_stimulus.set()
         if data == settings_obj.soft_code_wheel_not_stopping:
             print("wheel not stopping")
 
@@ -90,6 +86,7 @@ if settings_obj.run_session:
     for trial in range(settings_obj.trial_number):
         # get random punish time
         punish_time = settings_obj.get_punish_time()
+        probability_obj.get_random_side()
 
         sma = StateMachine(bpod)
 
@@ -128,7 +125,7 @@ if settings_obj.run_session:
         # Open Loop
         sma.add_state(
             state_name="present_stimulus",
-            state_timer=settings_obj.time_dict["time_stimulus_presentation"],
+            state_timer=settings_obj.time_dict["time_present_stimulus"],
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
             output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus)],
         )
@@ -286,9 +283,7 @@ if settings_obj.run_session:
                 stimulus_game,
                 bpod,
                 sma,
-                event_display_stimulus,
-                event_still_show_stimulus,
-                rotary_encoder_module,
+                event_flags,
             ),
         )
         closer.start()
@@ -316,4 +311,3 @@ if settings_obj.run_session:
 
 
 try_run_function(rotary_encoder_module.close())()
-try_run_function(bpod.close())()
