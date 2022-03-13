@@ -433,4 +433,3 @@ if settings_obj.run_session:
     settings_obj.save_usersettings(session_name)
 
 try_run_function(rotary_encoder_module.close())()
-try_run_function(bpod.close())()
