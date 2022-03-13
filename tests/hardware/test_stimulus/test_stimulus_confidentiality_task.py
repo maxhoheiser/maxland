@@ -32,6 +32,7 @@ class TestStimulusGambleTask(unittest.TestCase):
         self.parameter_handler.screen_height = TEST_DISPLAY["screen_height"]
 
         self.probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        self.probability_constructor.get_random_side()
 
     def tearDown(self):
         self.parameter_handler = None
@@ -42,6 +43,8 @@ class TestStimulusGambleTask(unittest.TestCase):
         game.stop_closed_loop_before()
         time.sleep(2)
         game.stop_open_loop()
+        time.sleep(2)
+        game.stop_closed_loop_after()
 
     def test_load_stimulus_conf(self):
         rotary_encoder = MagicMock()
@@ -57,13 +60,10 @@ class TestStimulusGambleTask(unittest.TestCase):
         event_flag = MagicMock()
         event_flag.wait.return_value = time.sleep(2)
 
-        print(self.probability_constructor.stimulus_sides)
-
         game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
 
         event_flags = {
             "event_display_stimulus": event_flag,
-            "event_still_show_stimulus": event_flag,
         }
 
         thread = threading.Thread(target=self.thread_function, args=(game,))
@@ -84,7 +84,6 @@ class TestStimulusGambleTask(unittest.TestCase):
 
         event_flags = {
             "event_display_stimulus": event_flag,
-            "event_still_show_stimulus": event_flag,
         }
 
         thread = threading.Thread(target=self.thread_function, args=(game,))
@@ -105,7 +104,6 @@ class TestStimulusGambleTask(unittest.TestCase):
 
         event_flags = {
             "event_display_stimulus": event_flag,
-            "event_still_show_stimulus": event_flag,
         }
 
         thread = threading.Thread(target=self.thread_function, args=(game,))
@@ -126,6 +124,7 @@ class TestStimulusGambleTask(unittest.TestCase):
 
         event_flags = {
             "event_display_stimulus": event_flag,
+            "event_start_open_loop": event_flag,
             "event_still_show_stimulus": event_flag,
         }
 
@@ -147,7 +146,6 @@ class TestStimulusGambleTask(unittest.TestCase):
 
         event_flags = {
             "event_display_stimulus": event_flag,
-            "event_still_show_stimulus": event_flag,
         }
 
         thread = threading.Thread(target=self.thread_function, args=(game,))
@@ -168,7 +166,6 @@ class TestStimulusGambleTask(unittest.TestCase):
 
         event_flags = {
             "event_display_stimulus": event_flag,
-            "event_still_show_stimulus": event_flag,
         }
 
         thread = threading.Thread(target=self.thread_function, args=(game,))
