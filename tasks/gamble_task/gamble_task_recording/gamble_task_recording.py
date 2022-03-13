@@ -28,9 +28,8 @@ settings_obj = TrialParameterHandler(usersettings_obj, settings_folder, session_
 bpod = Bpod()
 
 window = UserInput(settings_obj)
-window.draw_window_before_gamble()
+window.draw_window_before()
 window.show_window()
-window.update_settings()
 
 # create threading flags
 event_display_stimulus = threading.Event()
