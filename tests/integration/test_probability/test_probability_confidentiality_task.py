@@ -65,7 +65,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
     # test insist mode
     def test_not_activate_insist(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["right", "left", "left", "right"]
+        probability_constructor.settings.chosen_sides_history = ["right", "left", "left", "right"]
         probability_constructor.settings.insist_range_trigger = 4
 
         probability_constructor.insist_mode_check()
@@ -74,7 +74,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
     def test_not_activate_insist_slice(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["left", "left", "left", "left", "left", "left", "right", "right"]
+        probability_constructor.settings.chosen_sides_history = ["left", "left", "left", "left", "left", "left", "right", "right"]
         probability_constructor.settings.insist_range_trigger = 5
 
         probability_constructor.insist_mode_check()
@@ -83,7 +83,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
     def test_activate_insist_left(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["right", "left", "right", "right", "right"]
+        probability_constructor.settings.chosen_sides_history = ["right", "left", "right", "right", "right"]
         probability_constructor.settings.insist_range_trigger = 3
 
         probability_constructor.insist_mode_check()
@@ -93,7 +93,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
     def test_activate_insist_right(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
-        probability_constructor.settings.stimulus_correct_side_history = ["left", "right", "left", "left", "left"]
+        probability_constructor.settings.chosen_sides_history = ["left", "right", "left", "left", "left"]
         probability_constructor.settings.insist_range_trigger = 3
 
         probability_constructor.insist_mode_check()
@@ -105,7 +105,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.insist_mode_active = True
         probability_constructor.insist_mode_chosen_side_li = ["left", "right", "left"]
-        probability_constructor.settings.stimulus_correct_side_history = ["left"]
+        probability_constructor.settings.chosen_sides_history = ["left"]
         probability_constructor.insist_side = "left"
         probability_constructor.settings.insist_correct_deactivate = 3
         probability_constructor.settings.insist_range_deactivate = 4
@@ -120,7 +120,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
         probability_constructor.insist_mode_active = True
         probability_constructor.insist_mode_chosen_side_li = ["left", "right", "left"]
-        probability_constructor.settings.stimulus_correct_side_history = ["right"]
+        probability_constructor.settings.chosen_sides_history = ["right"]
         probability_constructor.insist_side = "left"
         probability_constructor.settings.insist_correct_deactivate = 3
         probability_constructor.settings.insist_range_deactivate = 4

@@ -105,7 +105,7 @@ class TrialParameterHandler:
         # probability
         self.probability_list: List[Dict[str, bool]] = list()
         # historic trial values
-        self.stimulus_correct_side_history: List[str] = list()
+        self.chosen_sides_history: List[str] = list()
         self.trials_correct_side_history: List[bool] = list()
         self.time_punish_history: List[float] = list()
         self.insist_mode_history: List[str] = list()

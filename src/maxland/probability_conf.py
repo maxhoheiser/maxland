@@ -52,7 +52,7 @@ class ProbabilityConstructor:
             print("current side: right")
         else:
             current_side = "non"
-        self.settings.stimulus_correct_side_history.append(current_side)
+        self.settings.chosen_sides_history.append(current_side)
         # check if current trial side == correct side
         if current_side == "right" and self.stimulus_sides["right"]:
             self.settings.trials_correct_side_history.append(True)
@@ -68,16 +68,16 @@ class ProbabilityConstructor:
     def insist_mode_check(self):
         # check for insist mode activate
         if not self.insist_mode_active:
-            if len(self.settings.stimulus_correct_side_history) >= self.settings.insist_range_trigger:
-                chosen_sides_li_slice = self.settings.stimulus_correct_side_history[-self.settings.insist_range_trigger :]
+            if len(self.settings.chosen_sides_history) >= self.settings.insist_range_trigger:
+                chosen_sides_li_slice = self.settings.chosen_sides_history[-self.settings.insist_range_trigger :]
             else:
-                chosen_sides_li_slice = self.settings.stimulus_correct_side_history
+                chosen_sides_li_slice = self.settings.chosen_sides_history
             left_num_chosen = sum(map(lambda x: x == "left", chosen_sides_li_slice))
             right_num_chosen = sum(map(lambda x: x == "right", chosen_sides_li_slice))
             if left_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
                 print(self.insist_mode_active)
-                self.settings.stimulus_correct_side_history = []
+                self.settings.chosen_sides_history = []
                 self.insist_side = "right"
                 self.settings.insist_mode_history.append(self.insist_side)
                 print("\n--------------------------------\n")
@@ -86,7 +86,7 @@ class ProbabilityConstructor:
                 return
             if right_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
-                self.settings.stimulus_correct_side_history = []
+                self.settings.chosen_sides_history = []
                 self.insist_side = "left"
                 self.settings.insist_mode_history.append(self.insist_side)
                 print("\n--------------------------------\n")
@@ -96,7 +96,7 @@ class ProbabilityConstructor:
             return
         # deactivate insist mode
         if self.insist_mode_active:
-            self.insist_mode_chosen_side_li.append(self.settings.stimulus_correct_side_history[-1])
+            self.insist_mode_chosen_side_li.append(self.settings.chosen_sides_history[-1])
             if len(self.insist_mode_chosen_side_li) >= self.settings.insist_range_deactivate:
                 chosen_sides_li_slice = self.insist_mode_chosen_side_li[-self.settings.insist_range_deactivate :]
             else:
