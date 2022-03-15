@@ -1,4 +1,5 @@
 TASK = "gamble"
+STAGE = "training"
 
 GAMBLE_SIDE = "left"
 BLOCKS = [

@@ -1,11 +1,32 @@
 TASK = "conf"
-STAGE = "training"
+STAGE = "training-complex"
 
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
-STIMULUS_CORRECT = {"grating_sf": 0.01, "grating_ori": 0.1, "grating_size": 40.0, "grating_speed": 0.04}
-STIMULUS_WRONG = {"grating_sf": 0.04, "grating_ori": 90.0, "grating_size": 40.0, "grating_speed": 0.01}
+GRATING_SIZE = 100.0
+GRATING_SPEED = 0.04
 
+RULE_A = {
+    "a00b03": {"correct": True, "conflicting": False},
+    "a00b02": {"correct": True, "conflicting": False},
+    "a00b01": {"correct": True, "conflicting": False},
+    "a00b00": {"correct": True, "conflicting": False},
+    "a03b03": {"correct": False, "conflicting": False},
+    "a03b02": {"correct": False, "conflicting": False},
+    "a03b01": {"correct": False, "conflicting": False},
+    "a03b00": {"correct": False, "conflicting": False},
+}
+
+RULE_B = {
+    "a00b03": {"correct": False, "conflicting": False},
+    "a00b02": {"correct": False, "conflicting": False},
+    "a00b01": {"correct": False, "conflicting": False},
+    "a00b00": {"correct": False, "conflicting": False},
+    "a03b03": {"correct": True, "conflicting": False},
+    "a03b02": {"correct": True, "conflicting": False},
+    "a03b01": {"correct": True, "conflicting": False},
+    "a03b00": {"correct": True, "conflicting": False},
+}
 
 # reward in seconds
 REWARD = 0.12
@@ -44,7 +65,7 @@ BACKGROUND_COLOR = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]
-STIMULUS_END_POSITION = [-2048, 2048]  # pixel
+STIMULUS_END_POSITION = [-400, 400]  # pixel
 
 LIFE_PLOT = False
 # animal weight in grams

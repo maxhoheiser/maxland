@@ -1,4 +1,5 @@
 TASK = "gamble"
+STAGE = "training"
 
 GAMBLE_SIDE = "left"
 BLOCKS = [
@@ -25,7 +26,7 @@ TIME_NO_REWARD = 1.0
 TIME_INTER_TRIAL = 1.5
 
 # stimulus size and color - only for moving stimulus
-STIMULUS_RADIUS = 45  # pixel radius of stimulus
+STIMULUS_RADIUS = 150  # pixel radius of stimulus
 STIMULUS_COLOR = [0, 255, 0]  # color of stimulus
 BACKGROUND_COLOR = [0, 0, 0]
 

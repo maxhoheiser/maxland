@@ -4,9 +4,21 @@ import os
 import random
 from typing import Dict, List
 
+from mypy_extensions import TypedDict
+
 import maxland.system_constants as system_constants
 from maxland.types_time_dict import TimeDict
-from maxland.types_usersettings import GambleSide, UsersettingsTypes
+from maxland.types_usersettings import (
+    GambleSide,
+    StageName,
+    TaskName,
+    UsersettingsTypes,
+)
+
+StimulusParameter = TypedDict(
+    "StimulusParameter",
+    {"correct": bool, "conflicting": bool, "grating_sf": float, "grating_ori": float, "grating_size": float, "grating_speed": float},
+)
 
 
 class TrialParameterHandler:
@@ -25,6 +37,7 @@ class TrialParameterHandler:
         self.session_folder = session_folder
 
         self.task_name = self.usersettings.TASK
+        self.stage = self.usersettings.STAGE
         self.life_plot = self.usersettings.LIFE_PLOT
         # stimulus
         self.stimulus_radius = self.usersettings.STIMULUS_RADIUS
@@ -32,7 +45,7 @@ class TrialParameterHandler:
         self.background_color = self.usersettings.BACKGROUND_COLOR
 
         # specific for gamble task
-        if self.task_name == "gamble":
+        if self.task_name == TaskName.GAMBLE:
             self.gamble_side = self.usersettings.GAMBLE_SIDE
             self.is_gamble_side_left = self.get_is_gamble_side_left()
             self.blocks = self.usersettings.BLOCKS
@@ -41,14 +54,30 @@ class TrialParameterHandler:
             self.manual_reward: int = int()
 
         # specific for confidentiality task
-        if self.task_name == "conf":
+        if self.task_name == TaskName.CONFIDENTIALITY:
             self.reward = self.usersettings.REWARD
             self.trial_number = self.usersettings.TRIAL_NUMBER
-            # stimulus
-            self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
-            self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
             self.stimulus_type = self.usersettings.STIMULUS_TYPE
             self.gui_dropdown_list = ("three-stimuli", "two-stimuli", "one-stimulus")
+
+            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
+                # stimulus correct and wrong predefined
+                self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
+                self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
+
+            if self.stage == StageName.TRAINING_COMPLEX:
+                # rule_a and rule_b defined
+                self.grating_size = self.usersettings.GRATING_SIZE
+                self.grating_speed = self.usersettings.GRATING_SPEED
+
+                self.rule_a_definition = self.usersettings.RULE_A
+                self.rule_b_definition = self.usersettings.RULE_B
+                self.stimuli_defintions = self.get_stimuli_definitions(self.settings_folder)
+                self.rule_a = self.get_stimuli_parameter_for_rule_definition(self.rule_a_definition, self.stimuli_defintions)
+                self.rule_b = self.get_stimuli_parameter_for_rule_definition(self.rule_b_definition, self.stimuli_defintions)
+                self.rule_active = self.rule_a
+
+                self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
 
             self.reward = self.usersettings.REWARD
             # insist mode
@@ -298,7 +327,8 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'TASK="gamble"\n\n'
+                'TASK = "gamble"\n\n'
+                "STAGE = " + json.dumps(self.stage) + "\n"
                 "GAMBLE_SIDE = " + json.dumps(self.gamble_side) + "\n"
                 "BLOCKS = " + json.dumps(self.blocks) + "\n\n"
                 "# reward in seconds\n"
@@ -318,8 +348,8 @@ class TrialParameterHandler:
                 "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RADIUS = " + json.dumps(self.stimulus_radius) + " # pixel radius of stimulus\n"
-                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n\n"
-                "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n"
+                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n"
+                "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
                 "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
@@ -332,11 +362,24 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'TASK="conf"\n\n'
+                'TASK = "conf"\n'
+                "STAGE = " + json.dumps(self.stage) + "\n\n"
                 "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n"
                 "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
-                "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
-                "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
+            )
+            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
+                f.write(
+                    "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
+                    "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
+                )
+            if self.stage == StageName.TRAINING_COMPLEX:
+                f.write(
+                    "GRATING_SIZE = " + json.dumps(self.grating_size) + "\n"
+                    "GRATING_SPEED = " + json.dumps(self.grating_speed) + "\n\n"
+                    "RULE_A = " + str(self.rule_a_definition) + "\n\n"
+                    "RULE_B = " + str(self.rule_b_definition) + "\n\n"
+                )
+            f.write(
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
                 "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
@@ -364,7 +407,7 @@ class TrialParameterHandler:
                 "FADE_END = " + repr(self.fade_end) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RADIUS = " + json.dumps(self.stimulus_radius) + " # pixel radius of stimulus\n"
-                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n\n"
+                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n"
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
@@ -373,3 +416,59 @@ class TrialParameterHandler:
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
             )
+
+    # confidentiality training complex
+    def get_stimuli_definitions(self, folder):
+        with open(os.path.join(folder, "stimuli_definition.json")) as f:
+            stimuli_definitions = json.load(f)
+        return stimuli_definitions
+
+    def get_stimuli_parameter_for_rule_definition(self, rule_definition, stimuli_definition):
+        """
+        Returns a rule definition with the stimuli parameters
+        :param rule_definition:
+        :param stimuli_definitions:
+        :return:
+        """
+        rule_stimuli_defintion: Dict[str, Dict[str, StimulusParameter]] = dict()
+        rule_stimuli_defintion["correct"] = dict()
+        rule_stimuli_defintion["wrong"] = dict()
+        correct = rule_stimuli_defintion["correct"]
+        wrong = rule_stimuli_defintion["wrong"]
+
+        for key, value in rule_definition.items():
+            if value["correct"]:
+                correct[key] = {
+                    "correct": value["correct"],
+                    "conflicting": value["conflicting"],
+                    "grating_sf": stimuli_definition[key]["grating_sf"],
+                    "grating_ori": stimuli_definition[key]["grating_ori"],
+                    "grating_size": self.grating_size,
+                    "grating_speed": self.grating_speed,
+                }
+            if not value["correct"]:
+                wrong[key] = {
+                    "correct": value["correct"],
+                    "conflicting": value["conflicting"],
+                    "grating_sf": stimuli_definition[key]["grating_sf"],
+                    "grating_ori": stimuli_definition[key]["grating_ori"],
+                    "grating_size": self.grating_size,
+                    "grating_speed": self.grating_speed,
+                }
+
+        return rule_stimuli_defintion
+
+    def get_stimuli_from_rule_for_current_trial(self, rule):
+        """Randomly load a pair of stimuli from the current active rule"""
+        random_correct_key = random.choice(list(rule["correct"]))
+        random_correct = rule["correct"][random_correct_key]
+        random_correct["name"] = random_correct_key
+
+        random_wrong_key = random.choice(list(rule["wrong"]))
+        random_wrong = rule["wrong"][random_wrong_key]
+        random_wrong["name"] = random_wrong_key
+
+        return random_correct, random_wrong
+
+    def update_stimuli_from_rule_for_current_trial(self):
+        self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
