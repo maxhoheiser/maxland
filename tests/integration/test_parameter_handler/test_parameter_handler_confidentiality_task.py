@@ -356,14 +356,14 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.life_plot, NEW_LIFE_PLOT)
         self.assertEqual(usersettings_object_after.animal_weight, NEW_ANIMAL_WEIGHT)
 
-    # def test_save_complete_usersettings_to_file(self):
-    #     usersettings_object_before = TrialParameterHandler(
-    #         self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
-    #     )
-    #     usersettings_object_before.update_userinput_file_conf()
-    #     saved_file = os.path.join(self.settings_folder_path, "usersettings.py")
+    def test_save_complete_usersettings_to_file(self):
+        usersettings_object_before = TrialParameterHandler(
+            self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
+        )
+        usersettings_object_before.update_userinput_file_conf()
+        saved_file = os.path.join(self.settings_folder_path, "usersettings.py")
 
-    #     self.assertFalse(filecmp.cmp(USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK, saved_file))
+        self.assertFalse(filecmp.cmp(USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK, saved_file))
 
     def test_create_time_dict(self):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
