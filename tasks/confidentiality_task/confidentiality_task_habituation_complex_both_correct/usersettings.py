@@ -1,4 +1,5 @@
 TASK = "conf"
+STAGE = "habituation"
 
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus

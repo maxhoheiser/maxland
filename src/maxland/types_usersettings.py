@@ -30,6 +30,7 @@ class StageName(str, Enum):
     HABITUATION = "habituation"
     TRAINING = "training"
     TRAINING_COMPLEX = "training-complex"
+    RECORDING = "recording"
 
 
 class GambleSide(str, Enum):
