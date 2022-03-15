@@ -4,6 +4,7 @@ from typing import Dict, List
 import numpy as np
 
 from maxland.parameter_handler import TrialParameterHandler
+from maxland.types_usersettings import StageName
 
 
 class ProbabilityConstructor:
@@ -20,7 +21,7 @@ class ProbabilityConstructor:
         self.insist_mode_chosen_side_li: List[str] = list()
         self.insist_mode_active = False
         self.insist_side = ""
-        self.active_rule = "RU0"  # id of active rule
+        self.rule_active_id = "rule_a"
         self.is_initial_rule_active = True
 
     def get_random_side(self):
@@ -122,14 +123,20 @@ class ProbabilityConstructor:
                 # check if rule switch
                 if self.is_initial_rule_active:
                     if correct_chosen >= self.settings.rule_switch_trials_correct_trigger_switch:
-                        self.active_rule = "RU1"  # switch to rule 1
+                        self.rule_active_id = "rule_b"  # switch to rule b
 
                         self.is_initial_rule_active = False  # deactivate rule switch
                         print("\n--------------------------------\n")
                         print("\n switch to rule RU1\n")
                         print("\n--------------------------------\n")
-                        # invert stimulus configuration
-                        bk = self.settings.stimulus_correct_side.copy()
-                        self.settings.stimulus_correct_side = self.settings.stimulus_wrong_side.copy()
-                        self.settings.stimulus_wrong_side = bk
-        self.settings.active_rule_history.append(self.active_rule)
+
+                        if self.settings.stage == StageName.HABITUATION or self.settings.stage == StageName.TRAINING:
+                            # invert stimulus configuration
+                            bk = self.settings.stimulus_correct_side.copy()
+                            self.settings.stimulus_correct_side = self.settings.stimulus_wrong_side.copy()
+                            self.settings.stimulus_wrong_side = bk
+                        if self.settings.stage == StageName.TRAINING_COMPLEX:
+                            # swtich to rule b
+                            self.settings.rule_active = self.settings.rule_b
+
+        self.settings.active_rule_history.append(self.rule_active_id)
