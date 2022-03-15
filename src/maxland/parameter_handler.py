@@ -57,13 +57,13 @@ class TrialParameterHandler:
         if self.task_name == TaskName.CONFIDENTIALITY:
             self.reward = self.usersettings.REWARD
             self.trial_number = self.usersettings.TRIAL_NUMBER
+            self.stimulus_type = self.usersettings.STIMULUS_TYPE
+            self.gui_dropdown_list = ("three-stimuli", "two-stimuli", "one-stimulus")
 
             if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
                 # stimulus correct and wrong predefined
                 self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
                 self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
-                self.stimulus_type = self.usersettings.STIMULUS_TYPE
-                self.gui_dropdown_list = ("three-stimuli", "two-stimuli", "one-stimulus")
 
             if self.stage == StageName.TRAINING_COMPLEX:
                 # rule_a and rule_b defined
@@ -327,7 +327,7 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'TASK="gamble"\n\n'
+                'TASK = "gamble"\n\n'
                 "STAGE = " + json.dumps(self.stage) + "\n"
                 "GAMBLE_SIDE = " + json.dumps(self.gamble_side) + "\n"
                 "BLOCKS = " + json.dumps(self.blocks) + "\n\n"
@@ -348,8 +348,8 @@ class TrialParameterHandler:
                 "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RADIUS = " + json.dumps(self.stimulus_radius) + " # pixel radius of stimulus\n"
-                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n\n"
-                "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n"
+                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n"
+                "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
                 "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
@@ -362,12 +362,24 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'TASK="conf"\n\n'
-                "STAGE = " + json.dumps(self.stage) + "\n"
+                'TASK = "conf"\n'
+                "STAGE = " + json.dumps(self.stage) + "\n\n"
                 "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n"
                 "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
-                "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
-                "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
+            )
+            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
+                f.write(
+                    "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
+                    "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
+                )
+            if self.stage == StageName.TRAINING_COMPLEX:
+                f.write(
+                    "GRATING_SIZE = " + json.dumps(self.grating_size) + "\n"
+                    "GRATING_SPEED = " + json.dumps(self.grating_speed) + "\n\n"
+                    "RULE_A = " + str(self.rule_a_definition) + "\n\n"
+                    "RULE_B = " + str(self.rule_b_definition) + "\n\n"
+                )
+            f.write(
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
                 "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
@@ -395,7 +407,7 @@ class TrialParameterHandler:
                 "FADE_END = " + repr(self.fade_end) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RADIUS = " + json.dumps(self.stimulus_radius) + " # pixel radius of stimulus\n"
-                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n\n"
+                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n"
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
