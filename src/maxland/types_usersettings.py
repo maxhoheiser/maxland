@@ -12,10 +12,24 @@ Blocks = TypedDict(
     },
 )
 
+Rules = TypedDict(
+    "Rules",
+    {
+        "correct": bool,
+        "conflicting": bool,
+    },
+)
+
 
 class TaskName(str, Enum):
     GAMBLE = "gamble"
     CONFIDENTIALITY = "conf"
+
+
+class StageName(str, Enum):
+    HABITUATION = "habituation"
+    TRAINING = "training"
+    TRAINING_COMPLEX = "training-complex"
 
 
 class GambleSide(str, Enum):
@@ -23,9 +37,16 @@ class GambleSide(str, Enum):
     RIGHT = "right"
 
 
+class StimulusTypes(str, Enum):
+    ONE = "one-stimulus"
+    TWO = "two-stimuli"
+    THEE = "three-stimuli"
+
+
 class UsersettingsTypes:
     def __init__(self) -> None:
         self.TASK: TaskName = TaskName()
+        self.STAGE: StageName = StageName()
 
         self.GAMBLE_SIDE: Union[GambleSide, None] = None
         self.BLOCKS: List[Blocks] = list()
@@ -65,9 +86,17 @@ class UsersettingsTypes:
         # confidentiality task
         self.REWARD: float = float()
         self.TRIAL_NUMBER: int = int()
-        self.STIMULUS_TYPE: str = ""
+
+        # stimulus predefined
+        self.STIMULUS_TYPE: Union[StimulusTypes, None] = None
         self.STIMULUS_CORRECT: Dict[str, float] = dict()
         self.STIMULUS_WRONG: Dict[str, float] = dict()
+
+        # rules defined
+        self.GRATING_SPEED: float = float()
+        self.GRATING_SIZE: int = int()
+        self.RULE_A: Dict[str, Rules] = dict()
+        self.RULE_B: Dict[str, Rules] = dict()
 
         # insist mode
         self.INSIST_RANGE_TRIGGER: int = int()
@@ -75,6 +104,7 @@ class UsersettingsTypes:
         self.INSIST_RANGE_DEACTIVATE: int = int()
 
         # rule switching
+
         self.RULE_SWITCH_INITIAL_TRIALS_WAIT: int = int()
         self.RULE_SWITCH_CHECK_TRIAL_RANGE: int = int()
         self.RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH: int = int()
