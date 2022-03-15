@@ -59,7 +59,7 @@ FADE_START = 1950
 FADE_END = 3000
 
 # stimulus size and color - only for moving stimulus
-STIMULUS_RADIUS = 45  # pixel radius of stimulus
+STIMULUS_RADIUS = 150  # pixel radius of stimulus
 STIMULUS_COLOR = [0, 255, 0]  # color of stimulus
 BACKGROUND_COLOR = [0, 0, 0]
 
