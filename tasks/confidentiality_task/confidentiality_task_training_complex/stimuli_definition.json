@@ -1,66 +1,98 @@
 {
     "a00b00": {
         "grating_sf": 0.01,
-        "grating_ori": 0
+        "grating_ori": 0,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a00b01": {
         "grating_sf": 0.01,
-        "grating_ori": 30
+        "grating_ori": 30,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a00b02": {
         "grating_sf": 0.01,
-        "grating_ori": 60
+        "grating_ori": 60,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a00b03": {
         "grating_sf": 0.01,
-        "grating_ori": 90
+        "grating_ori": 90,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a01b00": {
         "grating_sf": 0.1,
-        "grating_ori": 0
+        "grating_ori": 0,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a01b01": {
         "grating_sf": 0.1,
-        "grating_ori": 30
+        "grating_ori": 30,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a01b02": {
         "grating_sf": 0.1,
-        "grating_ori": 60
+        "grating_ori": 60,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a01b03": {
         "grating_sf": 0.1,
-        "grating_ori": 90
+        "grating_ori": 90,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a02b00": {
         "grating_sf": 0.2,
-        "grating_ori": 0
+        "grating_ori": 0,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a02b01": {
         "grating_sf": 0.2,
-        "grating_ori": 30
+        "grating_ori": 30,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a02b02": {
         "grating_sf": 0.2,
-        "grating_ori": 60
+        "grating_ori": 60,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a02b03": {
         "grating_sf": 0.2,
-        "grating_ori": 90
+        "grating_ori": 90,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a03b00": {
         "grating_sf": 0.3,
-        "grating_ori": 0
+        "grating_ori": 0,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a03b01": {
         "grating_sf": 0.3,
-        "grating_ori": 30
+        "grating_ori": 30,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a03b02": {
         "grating_sf": 0.3,
-        "grating_ori": 60
+        "grating_ori": 60,
+        "grating_size": 40,
+        "grating_speed": 0.1
     },
     "a03b03": {
         "grating_sf": 0.3,
-        "grating_ori": 90
+        "grating_ori": 90,
+        "grating_size": 40,
+        "grating_speed": 0.1
     }
 }
