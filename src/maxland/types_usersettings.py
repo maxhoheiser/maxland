@@ -3,20 +3,14 @@ from typing import Dict, List, Union
 
 from mypy_extensions import TypedDict
 
+from maxland.types_rule_definition import RuleDefinitionType
+
 Blocks = TypedDict(
     "Blocks",
     {
         "trial_range_block": List[int],
         "prob_reward_gamble_block": float,
         "prob_reward_save_block": float,
-    },
-)
-
-Rules = TypedDict(
-    "Rules",
-    {
-        "correct": bool,
-        "conflicting": bool,
     },
 )
 
@@ -94,10 +88,8 @@ class UsersettingsTypes:
         self.STIMULUS_WRONG: Dict[str, float] = dict()
 
         # rules defined
-        self.GRATING_SPEED: float = float()
-        self.GRATING_SIZE: int = int()
-        self.RULE_A: Dict[str, Rules] = dict()
-        self.RULE_B: Dict[str, Rules] = dict()
+        self.RULE_A: RuleDefinitionType = dict()
+        self.RULE_B: RuleDefinitionType = dict()
 
         # insist mode
         self.INSIST_RANGE_TRIGGER: int = int()

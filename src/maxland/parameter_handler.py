@@ -4,20 +4,15 @@ import os
 import random
 from typing import Dict, List
 
-from mypy_extensions import TypedDict
-
 import maxland.system_constants as system_constants
+from maxland.types_rule_definition import RuleDefinitionType
+from maxland.types_stimuli_definition import StimulusParameter, StimulusType
 from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import (
     GambleSide,
     StageName,
     TaskName,
     UsersettingsTypes,
-)
-
-StimulusParameter = TypedDict(
-    "StimulusParameter",
-    {"correct": bool, "conflicting": bool, "grating_sf": float, "grating_ori": float, "grating_size": float, "grating_speed": float},
 )
 
 
@@ -67,9 +62,6 @@ class TrialParameterHandler:
 
             if self.stage == StageName.TRAINING_COMPLEX:
                 # rule_a and rule_b defined
-                self.grating_size = self.usersettings.GRATING_SIZE
-                self.grating_speed = self.usersettings.GRATING_SPEED
-
                 self.rule_a_definition = self.usersettings.RULE_A
                 self.rule_b_definition = self.usersettings.RULE_B
                 self.stimuli_defintions = self.get_stimuli_definitions(self.settings_folder)
@@ -373,12 +365,7 @@ class TrialParameterHandler:
                     "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
                 )
             if self.stage == StageName.TRAINING_COMPLEX:
-                f.write(
-                    "GRATING_SIZE = " + json.dumps(self.grating_size) + "\n"
-                    "GRATING_SPEED = " + json.dumps(self.grating_speed) + "\n\n"
-                    "RULE_A = " + str(self.rule_a_definition) + "\n\n"
-                    "RULE_B = " + str(self.rule_b_definition) + "\n\n"
-                )
+                f.write("RULE_A = " + str(self.rule_a_definition) + "\n\n" "RULE_B = " + str(self.rule_b_definition) + "\n\n")
             f.write(
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
@@ -423,40 +410,40 @@ class TrialParameterHandler:
             stimuli_definitions = json.load(f)
         return stimuli_definitions
 
-    def get_stimuli_parameter_for_rule_definition(self, rule_definition, stimuli_definition):
+    def get_stimuli_parameter_for_rule_definition(self, rule_definition: RuleDefinitionType, stimuli_definition: StimulusType):
         """
         Returns a rule definition with the stimuli parameters
         :param rule_definition:
         :param stimuli_definitions:
         :return:
         """
-        rule_stimuli_defintion: Dict[str, Dict[str, StimulusParameter]] = dict()
-        rule_stimuli_defintion["correct"] = dict()
-        rule_stimuli_defintion["wrong"] = dict()
-        correct = rule_stimuli_defintion["correct"]
-        wrong = rule_stimuli_defintion["wrong"]
+        rule: Dict[str, Dict[str, StimulusParameter]] = dict()
+        rule["correct"] = dict()
+        rule["wrong"] = dict()
+        correct = rule["correct"]
+        wrong = rule["wrong"]
 
         for key, value in rule_definition.items():
             if value["correct"]:
                 correct[key] = {
                     "correct": value["correct"],
                     "conflicting": value["conflicting"],
-                    "grating_sf": stimuli_definition[key]["grating_sf"],
-                    "grating_ori": stimuli_definition[key]["grating_ori"],
-                    "grating_size": self.grating_size,
-                    "grating_speed": self.grating_speed,
+                    "grating_frequency": stimuli_definition[key]["grating_frequency"],
+                    "grating_orientation": stimuli_definition[key]["grating_orientation"],
+                    "grating_size": stimuli_definition[key]["grating_size"],
+                    "grating_speed": stimuli_definition[key]["grating_speed"],
                 }
             if not value["correct"]:
                 wrong[key] = {
                     "correct": value["correct"],
                     "conflicting": value["conflicting"],
-                    "grating_sf": stimuli_definition[key]["grating_sf"],
-                    "grating_ori": stimuli_definition[key]["grating_ori"],
-                    "grating_size": self.grating_size,
-                    "grating_speed": self.grating_speed,
+                    "grating_frequency": stimuli_definition[key]["grating_frequency"],
+                    "grating_orientation": stimuli_definition[key]["grating_orientation"],
+                    "grating_size": stimuli_definition[key]["grating_size"],
+                    "grating_speed": stimuli_definition[key]["grating_speed"],
                 }
 
-        return rule_stimuli_defintion
+        return rule
 
     def get_stimuli_from_rule_for_current_trial(self, rule):
         """Randomly load a pair of stimuli from the current active rule"""
