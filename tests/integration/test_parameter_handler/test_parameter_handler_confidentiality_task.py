@@ -45,14 +45,14 @@ NEW_RULE_A_DEFINITION = [
 
 NEW_RULE_A = [
     {
-        "correct": {"grating_frequency": 0.01, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
-        "wrong": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "correct": {"grating_frequency": 0.01, "grating_orientation": 90, "grating_size": 200, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 200, "grating_speed": 0.1},
         "conflicting": False,
         "percentage": 0.5,
     },
     {
-        "correct": {"grating_frequency": 0.01, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
-        "wrong": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "correct": {"grating_frequency": 0.01, "grating_orientation": 90, "grating_size": 200, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 200, "grating_speed": 0.1},
         "conflicting": False,
         "percentage": 0.3,
     },
@@ -74,14 +74,14 @@ NEW_RULE_B_DEFINITION = [
 ]
 NEW_RULE_B = [
     {
-        "correct": {"grating_frequency": 0.01, "grating_orientation": 30, "grating_size": 40, "grating_speed": 0.1},
-        "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 40, "grating_speed": 0.1},
+        "correct": {"grating_frequency": 0.01, "grating_orientation": 30, "grating_size": 200, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 200, "grating_speed": 0.1},
         "conflicting": True,
         "percentage": 0.2,
     },
     {
-        "correct": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
-        "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 40, "grating_speed": 0.1},
+        "correct": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 200, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 200, "grating_speed": 0.1},
         "conflicting": True,
         "percentage": 0.4,
     },
