@@ -362,8 +362,8 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         # training complex specific
         self.assertEqual(usersettings_object_after.rule_a_definition, NEW_RULE_A_DEFINITION)
         self.assertEqual(usersettings_object_after.rule_b_definition, NEW_RULE_B_DEFINITION)
-        self.assertEqual(usersettings_object_after.rule_a_definition, NEW_RULE_A)
-        self.assertEqual(usersettings_object_after.rule_b_definition, NEW_RULE_B)
+        self.assertEqual(usersettings_object_after.rule_a, NEW_RULE_A)
+        self.assertEqual(usersettings_object_after.rule_b, NEW_RULE_B)
 
         self.assertEqual(usersettings_object_after.reward, NEW_REWARD)
         self.assertEqual(usersettings_object_after.last_callibration, NEW_LAST_CALLIBRATION)
