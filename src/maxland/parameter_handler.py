@@ -4,20 +4,15 @@ import os
 import random
 from typing import Dict, List
 
-from mypy_extensions import TypedDict
-
 import maxland.system_constants as system_constants
+from maxland.types_rule_definition import Rule, RuleDefinitionType, RuleType
+from maxland.types_stimuli_definition import Stimulus, StimulusType
 from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import (
     GambleSide,
     StageName,
     TaskName,
     UsersettingsTypes,
-)
-
-StimulusParameter = TypedDict(
-    "StimulusParameter",
-    {"correct": bool, "conflicting": bool, "grating_sf": float, "grating_ori": float, "grating_size": float, "grating_speed": float},
 )
 
 
@@ -67,14 +62,11 @@ class TrialParameterHandler:
 
             if self.stage == StageName.TRAINING_COMPLEX:
                 # rule_a and rule_b defined
-                self.grating_size = self.usersettings.GRATING_SIZE
-                self.grating_speed = self.usersettings.GRATING_SPEED
-
                 self.rule_a_definition = self.usersettings.RULE_A
                 self.rule_b_definition = self.usersettings.RULE_B
-                self.stimuli_defintions = self.get_stimuli_definitions(self.settings_folder)
-                self.rule_a = self.get_stimuli_parameter_for_rule_definition(self.rule_a_definition, self.stimuli_defintions)
-                self.rule_b = self.get_stimuli_parameter_for_rule_definition(self.rule_b_definition, self.stimuli_defintions)
+                self.stimulus_defintion = self.get_stimuli_definitions(self.settings_folder)
+                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimulus_defintion)
+                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimulus_defintion)
                 self.rule_active = self.rule_a
 
                 self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
@@ -373,12 +365,7 @@ class TrialParameterHandler:
                     "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
                 )
             if self.stage == StageName.TRAINING_COMPLEX:
-                f.write(
-                    "GRATING_SIZE = " + json.dumps(self.grating_size) + "\n"
-                    "GRATING_SPEED = " + json.dumps(self.grating_speed) + "\n\n"
-                    "RULE_A = " + str(self.rule_a_definition) + "\n\n"
-                    "RULE_B = " + str(self.rule_b_definition) + "\n\n"
-                )
+                f.write("RULE_A = " + str(self.rule_a_definition) + "\n\n" "RULE_B = " + str(self.rule_b_definition) + "\n\n")
             f.write(
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
@@ -423,50 +410,39 @@ class TrialParameterHandler:
             stimuli_definitions = json.load(f)
         return stimuli_definitions
 
-    def get_stimuli_parameter_for_rule_definition(self, rule_definition, stimuli_definition):
+    def get_stimulus_from_id(self, id, stimulus_definition):
+        stimulus: Stimulus = {
+            "grating_frequency": stimulus_definition[id]["grating_frequency"],
+            "grating_orientation": stimulus_definition[id]["grating_orientation"],
+            "grating_size": stimulus_definition[id]["grating_size"],
+            "grating_speed": stimulus_definition[id]["grating_speed"],
+        }
+        return stimulus
+
+    def get_rule_from_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimulus_definition: StimulusType):
         """
         Returns a rule definition with the stimuli parameters
         :param rule_definition:
         :param stimuli_definitions:
         :return:
         """
-        rule_stimuli_defintion: Dict[str, Dict[str, StimulusParameter]] = dict()
-        rule_stimuli_defintion["correct"] = dict()
-        rule_stimuli_defintion["wrong"] = dict()
-        correct = rule_stimuli_defintion["correct"]
-        wrong = rule_stimuli_defintion["wrong"]
+        rule: RuleType = list()
 
-        for key, value in rule_definition.items():
-            if value["correct"]:
-                correct[key] = {
-                    "correct": value["correct"],
-                    "conflicting": value["conflicting"],
-                    "grating_sf": stimuli_definition[key]["grating_sf"],
-                    "grating_ori": stimuli_definition[key]["grating_ori"],
-                    "grating_size": self.grating_size,
-                    "grating_speed": self.grating_speed,
-                }
-            if not value["correct"]:
-                wrong[key] = {
-                    "correct": value["correct"],
-                    "conflicting": value["conflicting"],
-                    "grating_sf": stimuli_definition[key]["grating_sf"],
-                    "grating_ori": stimuli_definition[key]["grating_ori"],
-                    "grating_size": self.grating_size,
-                    "grating_speed": self.grating_speed,
-                }
-
-        return rule_stimuli_defintion
+        for pair in rule_definition:
+            new_pair: Rule = {
+                "correct": self.get_stimulus_from_id(pair["correct"], stimulus_definition),
+                "wrong": self.get_stimulus_from_id(pair["wrong"], stimulus_definition),
+                "conflicting": pair["conflicting"],
+                "percentage": pair["percentage"],
+            }
+            rule.append(new_pair)
+        return rule
 
     def get_stimuli_from_rule_for_current_trial(self, rule):
         """Randomly load a pair of stimuli from the current active rule"""
-        random_correct_key = random.choice(list(rule["correct"]))
-        random_correct = rule["correct"][random_correct_key]
-        random_correct["name"] = random_correct_key
-
-        random_wrong_key = random.choice(list(rule["wrong"]))
-        random_wrong = rule["wrong"][random_wrong_key]
-        random_wrong["name"] = random_wrong_key
+        random_pair = random.choice(list(rule))
+        random_correct = random_pair["correct"]
+        random_wrong = random_pair["wrong"]
 
         return random_correct, random_wrong
 

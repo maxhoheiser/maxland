@@ -176,8 +176,8 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.window.on_confirm()
 
         stimulus_correct_side = {
-            "grating_sf": NEW_SPATIAL_FREQUENCY,
-            "grating_ori": NEW_ORIENTATION,
+            "grating_frequency": NEW_SPATIAL_FREQUENCY,
+            "grating_orientation": NEW_ORIENTATION,
             "grating_size": NEW_STIMULUS_SIZE,
             "grating_speed": NEW_PHASE_SPEED,
         }
@@ -192,8 +192,8 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.window.on_confirm()
 
         stimulus_wrong_side = {
-            "grating_sf": NEW_SPATIAL_FREQUENCY,
-            "grating_ori": NEW_ORIENTATION,
+            "grating_frequency": NEW_SPATIAL_FREQUENCY,
+            "grating_orientation": NEW_ORIENTATION,
             "grating_size": NEW_STIMULUS_SIZE,
             "grating_speed": NEW_PHASE_SPEED,
         }

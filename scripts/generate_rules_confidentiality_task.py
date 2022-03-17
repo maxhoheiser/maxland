@@ -24,8 +24,8 @@ for sf_key, sf_value in spatial_frequencies_defintion.items():
     for ori_key, ori_value in orientations_defintion.items():
         key = f"{sf_key}{ori_key}"
         combinations[key] = {
-            "grating_sf": sf_value,
-            "grating_ori": ori_value,
+            "grating_frequency": sf_value,
+            "grating_orientation": ori_value,
         }
 
 file_path = os.path.join(os.getcwd(), "stimuli_definition.json")

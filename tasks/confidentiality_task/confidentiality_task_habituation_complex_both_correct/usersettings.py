@@ -3,8 +3,8 @@ STAGE = "habituation"
 
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
-STIMULUS_CORRECT = {"grating_sf": 0.01, "grating_ori": 0.1, "grating_size": 40.0, "grating_speed": 0.04}
-STIMULUS_WRONG = {"grating_sf": 0.04, "grating_ori": 90.0, "grating_size": 40.0, "grating_speed": 0.01}
+STIMULUS_CORRECT = {"grating_frequency": 0.01, "grating_orientation": 0.1, "grating_size": 40.0, "grating_speed": 0.04}
+STIMULUS_WRONG = {"grating_frequency": 0.04, "grating_orientation": 90.0, "grating_size": 40.0, "grating_speed": 0.01}
 
 
 # reward in seconds
