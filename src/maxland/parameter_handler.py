@@ -64,9 +64,9 @@ class TrialParameterHandler:
                 # rule_a and rule_b defined
                 self.rule_a_definition = self.usersettings.RULE_A
                 self.rule_b_definition = self.usersettings.RULE_B
-                self.stimuli_defintions = self.get_stimuli_definitions(self.settings_folder)
-                self.rule_a = self.get_stimuli_parameter_for_rule_definition(self.rule_a_definition, self.stimuli_defintions)
-                self.rule_b = self.get_stimuli_parameter_for_rule_definition(self.rule_b_definition, self.stimuli_defintions)
+                self.stimuli_defintion = self.get_stimuli_definitions(self.settings_folder)
+                self.rule_a = self.get_rule_for_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimuli_defintion)
+                self.rule_b = self.get_rule_for_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimuli_defintion)
                 self.rule_active = self.rule_a
 
                 self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
@@ -410,7 +410,7 @@ class TrialParameterHandler:
             stimuli_definitions = json.load(f)
         return stimuli_definitions
 
-    def get_stimuli_parameter_for_rule_definition(self, rule_definition: RuleDefinitionType, stimuli_definition: StimulusType):
+    def get_rule_for_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimuli_definition: StimulusType):
         """
         Returns a rule definition with the stimuli parameters
         :param rule_definition:
