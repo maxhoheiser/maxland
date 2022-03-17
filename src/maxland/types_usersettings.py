@@ -22,6 +22,7 @@ class TaskName(str, Enum):
 
 class StageName(str, Enum):
     HABITUATION = "habituation"
+    HABITUATION_COMPLEX = "habituation-complex"
     TRAINING = "training"
     TRAINING_COMPLEX = "training-complex"
     RECORDING = "recording"
