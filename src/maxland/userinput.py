@@ -4,7 +4,7 @@ from tkinter import filedialog, ttk
 from typing import List
 
 from maxland.parameter_handler import TrialParameterHandler
-from maxland.types_usersettings import GambleSide
+from maxland.types_usersettings import GambleSide, StageName
 
 WINDOW_SIZE = [855, 1000]
 CANVAS_SIZE = [835, 920]
@@ -671,18 +671,18 @@ class UserInput:
         lbl_drp_stim = tk.Label(frame_6, text="Stimulus Type:", font=self.fontStyleRegular)
         lbl_drp_stim.grid(row=0, column=0, padx=(10, 2), pady=8)
 
-        if stage == "training":
+        if stage == StageName.TRAINING or stage == StageName.TRAINING_COMPLEX:
             self.drp_stim["values"] = self.settings.gui_dropdown_list  # ('three-stimuli','two-stimuli','one-stimulus')
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(self.settings.stimulus_type)
             self.drp_stim.current(idx)  # set current value
-        if stage == "habituation_simple":
+        if stage == StageName.HABITUATION:
             list_drp = "three-stimuli"
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(list_drp)
             self.drp_stim.current(idx)  # set current valu
-        if stage == "habituation_complex":
+        if stage == StageName.HABITUATION_COMPLEX:
             list_drp = ("three-stimuli", "two-stimuli")
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
