@@ -440,13 +440,9 @@ class TrialParameterHandler:
 
     def get_stimuli_from_rule_for_current_trial(self, rule):
         """Randomly load a pair of stimuli from the current active rule"""
-        random_correct_key = random.choice(list(rule["correct"]))
-        random_correct = rule["correct"][random_correct_key]
-        random_correct["name"] = random_correct_key
-
-        random_wrong_key = random.choice(list(rule["wrong"]))
-        random_wrong = rule["wrong"][random_wrong_key]
-        random_wrong["name"] = random_wrong_key
+        random_pair = random.choice(list(rule))
+        random_correct = random_pair["correct"]
+        random_wrong = random_pair["wrong"]
 
         return random_correct, random_wrong
 
