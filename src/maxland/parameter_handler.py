@@ -5,8 +5,8 @@ import random
 from typing import Dict, List
 
 import maxland.system_constants as system_constants
-from maxland.types_rule_definition import RuleDefinitionType
-from maxland.types_stimuli_definition import StimulusParameter, StimulusType
+from maxland.types_rule_definition import Rule, RuleDefinitionType, RuleType
+from maxland.types_stimuli_definition import Stimulus, StimulusType
 from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import (
     GambleSide,
@@ -65,8 +65,8 @@ class TrialParameterHandler:
                 self.rule_a_definition = self.usersettings.RULE_A
                 self.rule_b_definition = self.usersettings.RULE_B
                 self.stimuli_defintion = self.get_stimuli_definitions(self.settings_folder)
-                self.rule_a = self.get_rule_for_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimuli_defintion)
-                self.rule_b = self.get_rule_for_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimuli_defintion)
+                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimuli_defintion)
+                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimuli_defintion)
                 self.rule_active = self.rule_a
 
                 self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
@@ -410,39 +410,32 @@ class TrialParameterHandler:
             stimuli_definitions = json.load(f)
         return stimuli_definitions
 
-    def get_rule_for_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimuli_definition: StimulusType):
+    def get_stimulus_from_id(self, id, stimulus_definition):
+        stimulus: Stimulus = {
+            "grating_frequency": stimulus_definition[id]["grating_frequency"],
+            "grating_orientation": stimulus_definition[id]["grating_orientation"],
+            "grating_size": stimulus_definition[id]["grating_size"],
+            "grating_speed": stimulus_definition[id]["grating_speed"],
+        }
+        return stimulus
+
+    def get_rule_from_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimuli_definition: StimulusType):
         """
         Returns a rule definition with the stimuli parameters
         :param rule_definition:
         :param stimuli_definitions:
         :return:
         """
-        rule: Dict[str, Dict[str, StimulusParameter]] = dict()
-        rule["correct"] = dict()
-        rule["wrong"] = dict()
-        correct = rule["correct"]
-        wrong = rule["wrong"]
+        rule: RuleType = list()
 
-        for key, value in rule_definition.items():
-            if value["correct"]:
-                correct[key] = {
-                    "correct": value["correct"],
-                    "conflicting": value["conflicting"],
-                    "grating_frequency": stimuli_definition[key]["grating_frequency"],
-                    "grating_orientation": stimuli_definition[key]["grating_orientation"],
-                    "grating_size": stimuli_definition[key]["grating_size"],
-                    "grating_speed": stimuli_definition[key]["grating_speed"],
-                }
-            if not value["correct"]:
-                wrong[key] = {
-                    "correct": value["correct"],
-                    "conflicting": value["conflicting"],
-                    "grating_frequency": stimuli_definition[key]["grating_frequency"],
-                    "grating_orientation": stimuli_definition[key]["grating_orientation"],
-                    "grating_size": stimuli_definition[key]["grating_size"],
-                    "grating_speed": stimuli_definition[key]["grating_speed"],
-                }
-
+        for pair in rule_definition:
+            new_pair: Rule = {
+                "correct": self.get_stimulus_from_id(pair["correct"], stimuli_definition),
+                "wrong": self.get_stimulus_from_id(pair["wrong"], stimuli_definition),
+                "conflicting": pair["conflicting"],
+                "percentage": pair["percentage"],
+            }
+            rule.append(new_pair)
         return rule
 
     def get_stimuli_from_rule_for_current_trial(self, rule):

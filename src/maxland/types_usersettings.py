@@ -88,8 +88,8 @@ class UsersettingsTypes:
         self.STIMULUS_WRONG: Dict[str, float] = dict()
 
         # rules defined
-        self.RULE_A: RuleDefinitionType = dict()
-        self.RULE_B: RuleDefinitionType = dict()
+        self.RULE_A: RuleDefinitionType = list()
+        self.RULE_B: RuleDefinitionType = list()
 
         # insist mode
         self.INSIST_RANGE_TRIGGER: int = int()
