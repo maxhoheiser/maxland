@@ -251,7 +251,7 @@ class TestProbabilityConstructorModuleConfidentialityTaskComplex(unittest.TestCa
         self.parameter_handler.update_stimuli_from_rule_for_current_trial()
 
         self.assertEqual(probability_constructor.rule_active_id, INITIAL_RULE)
-        self.assertDictEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_a)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_a)
 
     def test_rule_switching_initial_trials_wait_switch(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
@@ -265,7 +265,7 @@ class TestProbabilityConstructorModuleConfidentialityTaskComplex(unittest.TestCa
         self.parameter_handler.update_stimuli_from_rule_for_current_trial()
 
         self.assertEqual(probability_constructor.rule_active_id, SWITCHED_RULE)
-        self.assertDictEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_b)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_b)
 
     def test_rule_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
@@ -292,7 +292,7 @@ class TestProbabilityConstructorModuleConfidentialityTaskComplex(unittest.TestCa
         self.parameter_handler.update_stimuli_from_rule_for_current_trial()
 
         self.assertEqual(probability_constructor.rule_active_id, SWITCHED_RULE)
-        self.assertDictEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_b)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_b)
 
     def test_rule_not_switching(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
@@ -319,4 +319,4 @@ class TestProbabilityConstructorModuleConfidentialityTaskComplex(unittest.TestCa
         self.parameter_handler.update_stimuli_from_rule_for_current_trial()
 
         self.assertEqual(probability_constructor.rule_active_id, INITIAL_RULE)
-        self.assertDictEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_a)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_a)
