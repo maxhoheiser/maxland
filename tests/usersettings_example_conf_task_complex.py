@@ -4,27 +4,47 @@ STAGE = "training-complex"
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
 
-RULE_A = {
-    "a00b03": {"correct": True, "conflicting": False},
-    "a00b02": {"correct": True, "conflicting": False},
-    "a00b01": {"correct": True, "conflicting": False},
-    "a00b00": {"correct": True, "conflicting": False},
-    "a03b03": {"correct": False, "conflicting": False},
-    "a03b02": {"correct": False, "conflicting": False},
-    "a03b01": {"correct": False, "conflicting": False},
-    "a03b00": {"correct": False, "conflicting": False},
-}
+RULE_A = [
+    {
+        "correct": "a00b03",
+        "wrong": "a03b03",
+        "conflicting": True,
+        "percentage": 0.4,
+    },
+    {
+        "correct": "a00b03",
+        "wrong": "a03b03",
+        "conflicting": True,
+        "percentage": 0.3,
+    },
+    {
+        "correct": "a00b03",
+        "wrong": "a03b03",
+        "conflicting": True,
+        "percentage": 0.3,
+    },
+]
 
-RULE_B = {
-    "a00b03": {"correct": False, "conflicting": False},
-    "a00b02": {"correct": False, "conflicting": False},
-    "a00b01": {"correct": False, "conflicting": False},
-    "a00b00": {"correct": False, "conflicting": False},
-    "a03b03": {"correct": True, "conflicting": False},
-    "a03b02": {"correct": True, "conflicting": False},
-    "a03b01": {"correct": True, "conflicting": False},
-    "a03b00": {"correct": True, "conflicting": False},
-}
+RULE_B = [
+    {
+        "correct": "a00b01",
+        "wrong": "a03b01",
+        "conflicting": True,
+        "percentage": 0.4,
+    },
+    {
+        "correct": "a03b03",
+        "wrong": "a03b01",
+        "conflicting": True,
+        "percentage": 0.3,
+    },
+    {
+        "correct": "a00b03",
+        "wrong": "a03b00",
+        "conflicting": True,
+        "percentage": 0.3,
+    },
+]
 
 # reward in seconds
 REWARD = 0.12

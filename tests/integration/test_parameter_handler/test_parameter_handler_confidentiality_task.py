@@ -28,26 +28,64 @@ NEW_STIMULUS_TYPE = "three-stimuli"  # three-stimuli #two-stimuli #one-stimulus
 NEW_STIMULUS_CORRECT = {"grating_frequency": 0.02, "grating_orientation": 0.2, "grating_size": 41.0, "grating_speed": 0.05}
 NEW_STIMULUS_WRONG = {"grating_frequency": 0.03, "grating_orientation": 91.0, "grating_size": 41.0, "grating_speed": 0.03}
 # rules defined
-NEW_RULE_A = {
-    "a00b03": {"correct": True, "conflicting": True},
-    "a00b02": {"correct": False, "conflicting": False},
-    "a00b01": {"correct": True, "conflicting": True},
-    "a00b00": {"correct": False, "conflicting": False},
-    "a03b03": {"correct": False, "conflicting": True},
-    "a03b02": {"correct": True, "conflicting": False},
-    "a03b01": {"correct": False, "conflicting": True},
-    "a03b00": {"correct": True, "conflicting": False},
-}
-NEW_RULE_B = {
-    "a00b03": {"correct": False, "conflicting": True},
-    "a00b02": {"correct": False, "conflicting": False},
-    "a00b01": {"correct": False, "conflicting": True},
-    "a00b00": {"correct": False, "conflicting": False},
-    "a03b03": {"correct": True, "conflicting": True},
-    "a03b02": {"correct": True, "conflicting": False},
-    "a03b01": {"correct": True, "conflicting": True},
-    "a03b00": {"correct": True, "conflicting": False},
-}
+NEW_RULE_A_DEFINITION = [
+    {
+        "correct": "a00b03",
+        "wrong": "a03b03",
+        "conflicting": False,
+        "percentage": 0.5,
+    },
+    {
+        "correct": "a00b03",
+        "wrong": "a03b03",
+        "conflicting": False,
+        "percentage": 0.3,
+    },
+]
+
+NEW_RULE_A = [
+    {
+        "correct": {"grating_frequency": 0.01, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "conflicting": False,
+        "percentage": 0.5,
+    },
+    {
+        "correct": {"grating_frequency": 0.01, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "conflicting": False,
+        "percentage": 0.3,
+    },
+]
+
+NEW_RULE_B_DEFINITION = [
+    {
+        "correct": "a00b01",
+        "wrong": "a03b01",
+        "conflicting": True,
+        "percentage": 0.2,
+    },
+    {
+        "correct": "a03b03",
+        "wrong": "a03b01",
+        "conflicting": True,
+        "percentage": 0.4,
+    },
+]
+NEW_RULE_B = [
+    {
+        "correct": {"grating_frequency": 0.01, "grating_orientation": 30, "grating_size": 40, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 40, "grating_speed": 0.1},
+        "conflicting": True,
+        "percentage": 0.2,
+    },
+    {
+        "correct": {"grating_frequency": 0.3, "grating_orientation": 90, "grating_size": 40, "grating_speed": 0.1},
+        "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 40, "grating_speed": 0.1},
+        "conflicting": True,
+        "percentage": 0.4,
+    },
+]
 # reward in seconds
 NEW_REWARD = 0.14
 NEW_LAST_CALLIBRATION = "2020.06.10"
@@ -266,8 +304,8 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object_before.stimulus_type = NEW_STIMULUS_TYPE
 
         # training complex specific
-        usersettings_object_before.rule_a_definition = NEW_RULE_A
-        usersettings_object_before.rule_b_definition = NEW_RULE_B
+        usersettings_object_before.rule_a_definition = NEW_RULE_A_DEFINITION
+        usersettings_object_before.rule_b_definition = NEW_RULE_B_DEFINITION
 
         usersettings_object_before.reward = NEW_REWARD
         usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
@@ -322,6 +360,8 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.stimulus_type, NEW_STIMULUS_TYPE)
 
         # training complex specific
+        self.assertEqual(usersettings_object_after.rule_a_definition, NEW_RULE_A_DEFINITION)
+        self.assertEqual(usersettings_object_after.rule_b_definition, NEW_RULE_B_DEFINITION)
         self.assertEqual(usersettings_object_after.rule_a_definition, NEW_RULE_A)
         self.assertEqual(usersettings_object_after.rule_b_definition, NEW_RULE_B)
 
