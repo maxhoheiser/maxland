@@ -91,14 +91,14 @@ class UserInput:
             self.settings.reward = float(self.var_reward.get())
 
             self.settings.stimulus_correct_side = {
-                "grating_sf": float(self.var_stim_correct_frequency.get()),
-                "grating_ori": float(self.var_stim_correct_or.get()),
+                "grating_frequency": float(self.var_stim_correct_frequency.get()),
+                "grating_orientation": float(self.var_stim_correct_or.get()),
                 "grating_size": float(self.var_stim_correct_size.get()),
                 "grating_speed": float(self.var_stim_correct_phase_speed.get()),
             }
             self.settings.stimulus_wrong_side = {
-                "grating_sf": float(self.var_stim_wrong_frequency.get()),
-                "grating_ori": float(self.var_stim_wrong_or.get()),
+                "grating_frequency": float(self.var_stim_wrong_frequency.get()),
+                "grating_orientation": float(self.var_stim_wrong_or.get()),
                 "grating_size": float(self.var_stim_wrong_size.get()),
                 "grating_speed": float(self.var_stim_wrong_phase_speed.get()),
             }
@@ -596,14 +596,14 @@ class UserInput:
         lbl_stim_correct_frequency = tk.Label(frame_5_0, text="Spatial Frequency:", font=self.fontStyleRegular)
         lbl_stim_correct_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_correct_frequency = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_sf"])
+        self.var_stim_correct_frequency = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_frequency"])
         self.etr_stim_correct_frequency = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_frequency, width=4)
         self.etr_stim_correct_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
         lbl_stim_correct_or = tk.Label(frame_5_0, text="Orientation:", font=self.fontStyleRegular)
         lbl_stim_correct_or.grid(row=1, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_correct_or = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_ori"])
+        self.var_stim_correct_or = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_orientation"])
         self.etr_stim_correct_or = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_or, width=4)
         self.etr_stim_correct_or.grid(row=1, column=3, padx=(0, 10), pady=10, sticky="W")
 
@@ -632,14 +632,14 @@ class UserInput:
         lbl_stim_wrong_frequency = tk.Label(frame_5_1, text="Spatial Frequency:", font=self.fontStyleRegular)
         lbl_stim_wrong_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_wrong_frequency = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_sf"])
+        self.var_stim_wrong_frequency = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_frequency"])
         self.etr_stim_wrong_frequency = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_frequency, width=4)
         self.etr_stim_wrong_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
         lbl_stim_wrong_or = tk.Label(frame_5_1, text="Orientation:", font=self.fontStyleRegular)
         lbl_stim_wrong_or.grid(row=1, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_wrong_or = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_ori"])
+        self.var_stim_wrong_or = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_orientation"])
         self.etr_stim_wrong_or = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_or, width=4)
         self.etr_stim_wrong_or.grid(row=1, column=3, padx=(0, 10), pady=10, sticky="W")
 

@@ -25,11 +25,9 @@ NEW_STAGE_COMPLEX = "training-complex"
 NEW_TRIAL_NUMBER = 31
 NEW_STIMULUS_TYPE = "three-stimuli"  # three-stimuli #two-stimuli #one-stimulus
 # stimuli predefined
-NEW_STIMULUS_CORRECT = {"grating_sf": 0.02, "grating_ori": 0.2, "grating_size": 41.0, "grating_speed": 0.05}
-NEW_STIMULUS_WRONG = {"grating_sf": 0.03, "grating_ori": 91.0, "grating_size": 41.0, "grating_speed": 0.03}
+NEW_STIMULUS_CORRECT = {"grating_frequency": 0.02, "grating_orientation": 0.2, "grating_size": 41.0, "grating_speed": 0.05}
+NEW_STIMULUS_WRONG = {"grating_frequency": 0.03, "grating_orientation": 91.0, "grating_size": 41.0, "grating_speed": 0.03}
 # rules defined
-NEW_GRATING_SIZE = 80.0
-NEW_GRATING_SPEED = 0.05
 NEW_RULE_A = {
     "a00b03": {"correct": True, "conflicting": True},
     "a00b02": {"correct": False, "conflicting": False},
@@ -268,8 +266,6 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object_before.stimulus_type = NEW_STIMULUS_TYPE
 
         # training complex specific
-        usersettings_object_before.grating_size = NEW_GRATING_SIZE
-        usersettings_object_before.grating_speed = NEW_GRATING_SPEED
         usersettings_object_before.rule_a_definition = NEW_RULE_A
         usersettings_object_before.rule_b_definition = NEW_RULE_B
 
@@ -326,8 +322,6 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.stimulus_type, NEW_STIMULUS_TYPE)
 
         # training complex specific
-        self.assertEqual(usersettings_object_after.grating_size, NEW_GRATING_SIZE)
-        self.assertEqual(usersettings_object_after.grating_speed, NEW_GRATING_SPEED)
         self.assertEqual(usersettings_object_after.rule_a_definition, NEW_RULE_A)
         self.assertEqual(usersettings_object_after.rule_b_definition, NEW_RULE_B)
 

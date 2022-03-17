@@ -3,8 +3,6 @@ STAGE = "training-complex"
 
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
-GRATING_SIZE = 100.0
-GRATING_SPEED = 0.04
 
 RULE_A = {
     "a00b03": {"correct": True, "conflicting": False},
