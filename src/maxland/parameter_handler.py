@@ -64,9 +64,9 @@ class TrialParameterHandler:
                 # rule_a and rule_b defined
                 self.rule_a_definition = self.usersettings.RULE_A
                 self.rule_b_definition = self.usersettings.RULE_B
-                self.stimuli_defintion = self.get_stimuli_definitions(self.settings_folder)
-                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimuli_defintion)
-                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimuli_defintion)
+                self.stimulus_defintion = self.get_stimuli_definitions(self.settings_folder)
+                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimulus_defintion)
+                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimulus_defintion)
                 self.rule_active = self.rule_a
 
                 self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
@@ -419,7 +419,7 @@ class TrialParameterHandler:
         }
         return stimulus
 
-    def get_rule_from_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimuli_definition: StimulusType):
+    def get_rule_from_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimulus_definition: StimulusType):
         """
         Returns a rule definition with the stimuli parameters
         :param rule_definition:
@@ -430,8 +430,8 @@ class TrialParameterHandler:
 
         for pair in rule_definition:
             new_pair: Rule = {
-                "correct": self.get_stimulus_from_id(pair["correct"], stimuli_definition),
-                "wrong": self.get_stimulus_from_id(pair["wrong"], stimuli_definition),
+                "correct": self.get_stimulus_from_id(pair["correct"], stimulus_definition),
+                "wrong": self.get_stimulus_from_id(pair["wrong"], stimulus_definition),
                 "conflicting": pair["conflicting"],
                 "percentage": pair["percentage"],
             }
