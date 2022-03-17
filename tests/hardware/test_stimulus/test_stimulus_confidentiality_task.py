@@ -205,11 +205,11 @@ class TestStimulusConfidentialityTaskComplex(unittest.TestCase):
         self.probability_constructor = None
 
     def thread_function(self, game):
-        time.sleep(2)
+        time.sleep(0.5)
         game.stop_closed_loop_before()
-        time.sleep(2)
+        time.sleep(0.5)
         game.stop_open_loop()
-        time.sleep(2)
+        time.sleep(0.5)
         game.stop_closed_loop_after()
 
     def test_load_stimulus_conf(self):
@@ -279,3 +279,51 @@ class TestStimulusConfidentialityTaskComplex(unittest.TestCase):
 
         thread.join()
         game.on_close()
+
+    def test_multiple_stimulus_pairs_rule_a(self):
+        self.probability_constructor.stimulus_sides = {"right": True, "left": False}
+        self.parameter_handler.rule_active = self.parameter_handler.rule_a
+        for trial in range(3):
+            rotary_encoder = MagicMock()
+            rotary_encoder.rotary_encoder.read_stream.return_value = [["a", "b", 10]]
+            event_flag = MagicMock()
+            event_flag.wait.return_value = time.sleep(2)
+
+            self.parameter_handler.update_stimuli_from_rule_for_current_trial()
+            game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
+
+            event_flags = {
+                "event_display_stimulus": event_flag,
+            }
+
+            thread = threading.Thread(target=self.thread_function, args=(game,))
+
+            thread.start()
+            game.run_game_2(event_flags)
+
+            thread.join()
+            game.on_close()
+
+    def test_multiple_stimulus_pairs_rule_b(self):
+        self.probability_constructor.stimulus_sides = {"right": True, "left": False}
+        self.parameter_handler.rule_active = self.parameter_handler.rule_b
+        for trial in range(3):
+            rotary_encoder = MagicMock()
+            rotary_encoder.rotary_encoder.read_stream.return_value = [["a", "b", 10]]
+            event_flag = MagicMock()
+            event_flag.wait.return_value = time.sleep(2)
+
+            self.parameter_handler.update_stimuli_from_rule_for_current_trial()
+            game = Stimulus(self.parameter_handler, rotary_encoder, self.probability_constructor.stimulus_sides)
+
+            event_flags = {
+                "event_display_stimulus": event_flag,
+            }
+
+            thread = threading.Thread(target=self.thread_function, args=(game,))
+
+            thread.start()
+            game.run_game_2(event_flags)
+
+            thread.join()
+            game.on_close()

@@ -12,14 +12,14 @@ RULE_A = [
         "percentage": 0.4,
     },
     {
-        "correct": "a00b03",
-        "wrong": "a03b03",
+        "correct": "a00b02",
+        "wrong": "a03b02",
         "conflicting": True,
         "percentage": 0.3,
     },
     {
-        "correct": "a00b03",
-        "wrong": "a03b03",
+        "correct": "a00b01",
+        "wrong": "a03b01",
         "conflicting": True,
         "percentage": 0.3,
     },
@@ -27,20 +27,20 @@ RULE_A = [
 
 RULE_B = [
     {
-        "correct": "a00b01",
-        "wrong": "a03b01",
+        "correct": "a03b00",
+        "wrong": "a00b00",
         "conflicting": True,
         "percentage": 0.4,
     },
     {
-        "correct": "a03b03",
-        "wrong": "a03b01",
+        "correct": "a03b01",
+        "wrong": "a00b01",
         "conflicting": True,
         "percentage": 0.3,
     },
     {
-        "correct": "a00b03",
-        "wrong": "a03b00",
+        "correct": "a03b03",
+        "wrong": "a00b03",
         "conflicting": True,
         "percentage": 0.3,
     },
