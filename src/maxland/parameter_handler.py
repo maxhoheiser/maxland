@@ -359,7 +359,7 @@ class TrialParameterHandler:
                 "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n"
                 "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
             )
-            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
+            if self.stage == StageName.HABITUATION or StageName.HABITUATION_COMPLEX or self.stage == StageName.TRAINING:
                 f.write(
                     "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
                     "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
