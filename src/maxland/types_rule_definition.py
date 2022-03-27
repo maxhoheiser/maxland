@@ -28,3 +28,10 @@ Rule = TypedDict(
 )
 
 RuleType = List[Rule]
+
+
+class RuleDefinitionTypes:
+    def __init__(self) -> None:
+        # rules defined
+        self.RULE_A: RuleDefinitionType = list()
+        self.RULE_B: RuleDefinitionType = list()
