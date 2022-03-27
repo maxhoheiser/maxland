@@ -4,10 +4,12 @@ import os
 import random
 import unittest
 from pathlib import Path
+from typing import cast
 from unittest.mock import patch
 
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_conf import ProbabilityConstructor
+from maxland.types_rule_definition import RuleDefinitionTypes
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
 USERSETTINGS_COMPLEX = os.path.join(
@@ -15,6 +17,8 @@ USERSETTINGS_COMPLEX = os.path.join(
 )
 with open(os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "stimuli_definition.json")) as f:
     STIMULI_DEFINITIONS = json.load(f)
+
+RULE_DEFINITION = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "rule_definition.py")
 
 INITIAL_RULE = "rule_a"
 SWITCHED_RULE = "rule_b"
@@ -24,6 +28,15 @@ def stimulus_exclude_name(stimulus):
     exclude_keys = {"name"}
     new_stimulus = {k: stimulus[k] for k in set(list(stimulus.keys())) - set(exclude_keys)}
     return new_stimulus
+
+
+def patch_load_rule_definition():
+    rule_definition_path = RULE_DEFINITION
+    spec = importlib.util.spec_from_file_location("rule_definition", rule_definition_path)
+    rule_definition = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rule_definition)
+    rule_definition_object = cast(RuleDefinitionTypes, rule_definition)
+    return rule_definition_object
 
 
 class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
@@ -228,8 +241,9 @@ class TestProbabilityConstructorModuleConfidentialityTaskComplex(unittest.TestCa
         self.usersettings_example_import = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.usersettings_example_import)
 
-        with patch("maxland.parameter_handler.TrialParameterHandler.get_stimuli_definitions", return_value=STIMULI_DEFINITIONS):
-            self.parameter_handler = TrialParameterHandler(self.usersettings_example_import, "", "")
+        with patch("maxland.parameter_handler.TrialParameterHandler.load_stimuli_definition", return_value=STIMULI_DEFINITIONS):
+            with patch("maxland.parameter_handler.TrialParameterHandler.load_rule_definition", return_value=patch_load_rule_definition()):
+                self.parameter_handler = TrialParameterHandler(self.usersettings_example_import, "", "")
         random.seed(666)
         self.random = random
 
