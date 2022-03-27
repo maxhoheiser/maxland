@@ -94,7 +94,7 @@ The environment and interface between the system and the mouse is provided by a 
 
 |                                    Training Box                                     |                                   Recoding System                                    |
 | :---------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------: |
-| <img src="docs/images/hardware/training_system.jpg" title="Home Page" width="100%"> | <img src="docs/images/hardware/recording_system.jpg" title="Login Page" width="90%"> |
+| <img src="docs/images/hardware/training_system.jpg" title="Home Page" height="350"> | <img src="docs/images/hardware/recording_system.jpg" title="Login Page" height="350"> |
 
 </td></tr></table>
 
@@ -108,7 +108,7 @@ The environment and interface between the system and the mouse is provided by a 
 
 |                                 PyBpod Example                                 |                                User Input Example                                 |
 | :----------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
-| <img src="docs/images/software/pybpod_gui.png" title="Home Page" width="100%"> | <img src="docs/images/software/userinput_gui.png" title="Login Page" width="78%"> |
+| <img src="docs/images/software/pybpod_gui.png" title="Home Page" height="450"> | <img src="docs/images/software/userinput_gui.png" title="Login Page" height="450"> |
 
 </td></tr></table>
 
