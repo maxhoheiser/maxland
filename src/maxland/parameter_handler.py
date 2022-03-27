@@ -74,9 +74,7 @@ class TrialParameterHandler:
                 # rule_a and rule_b defined
                 self.rule_a_definition = self.rule_definition.RULE_A
                 self.rule_b_definition = self.rule_definition.RULE_B
-                self.rule_a_definition = self.usersettings.RULE_A
-                self.rule_b_definition = self.usersettings.RULE_B
-                self.stimulus_defintion = self.get_stimuli_definitions(self.settings_folder)
+                self.stimulus_defintion = self.load_stimuli_definition(self.settings_folder)
                 self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimulus_defintion)
                 self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimulus_defintion)
                 self.rule_active = self.rule_a
@@ -415,10 +413,10 @@ class TrialParameterHandler:
             )
 
     # confidentiality training complex
-    def get_stimuli_definitions(self, folder):
+    def load_stimuli_definition(self, folder):
         with open(os.path.join(folder, "stimuli_definition.json")) as f:
-            stimuli_definitions = json.load(f)
-        return stimuli_definitions
+            stimuli_definition = json.load(f)
+        return stimuli_definition
 
     def get_stimulus_from_id(self, id, stimulus_definition):
         stimulus: Stimulus = {
@@ -433,7 +431,7 @@ class TrialParameterHandler:
         """
         Returns a rule definition with the stimuli parameters
         :param rule_definition:
-        :param stimuli_definitions:
+        :param stimuli_definition:
         :return:
         """
         rule: RuleType = list()
