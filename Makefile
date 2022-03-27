@@ -16,6 +16,9 @@ test-hardware:
 test-e2e:
 	python -m nose2 -v -B -s tests/e2e
 
+test-coverage:
+	python -m nose2 -v -B -s tests/integration tests/hardware tests/e2e--with-coverage
+
 test-ci:
 	tox
 
