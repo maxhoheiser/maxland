@@ -17,6 +17,7 @@ USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK_COMPLEX = os.path.join(
     Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task_complex.py"
 )
 STIMULI_DEFINITION = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "stimuli_definition.json")
+RULE_DEFINITION = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "rule_definition.py")
 
 # Mock usersettings data
 NEW_TASK = TaskName.CONFIDENTIALITY
@@ -140,6 +141,11 @@ def delete_folder(folder_path):
 def copy_stimulus_definition_to_test_folder_settings_folder(destination_folder):
     destination = os.path.join(destination_folder, "stimuli_definition.json")
     shutil.copy(STIMULI_DEFINITION, destination)
+
+
+def copy_rule_defintion_to_test_folder_settings_folder(destination_folder):
+    destination = os.path.join(destination_folder, "rule_definition.py")
+    shutil.copy(RULE_DEFINITION, destination)
 
 
 class TestTrialParameterHandlerConfTask(unittest.TestCase):
@@ -279,6 +285,7 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         create_folder(self.settings_folder_path)
         create_folder(self.session_folder_path)
         copy_stimulus_definition_to_test_folder_settings_folder(self.settings_folder_path)
+        copy_rule_defintion_to_test_folder_settings_folder(self.settings_folder_path)
 
         spec = importlib.util.spec_from_file_location(
             "usersettings_example_conf_task_complex", USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK_COMPLEX
@@ -293,6 +300,11 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
     def test_create_trialparameterhandler_from_usersettings(self):
         TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
 
+    def test_load_rule_defintions_to_rules(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        self.assertEqual(usersettings_object.rule_a, NEW_RULE_A)
+        self.assertEqual(usersettings_object.rule_b, NEW_RULE_B)
+
     def test_save_usersettings_to_file(self):
         usersettings_object_before = TrialParameterHandler(
             self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
@@ -302,10 +314,6 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object_before.stage = NEW_STAGE_COMPLEX
         usersettings_object_before.trial_number = NEW_TRIAL_NUMBER
         usersettings_object_before.stimulus_type = NEW_STIMULUS_TYPE
-
-        # training complex specific
-        usersettings_object_before.rule_a_definition = NEW_RULE_A_DEFINITION
-        usersettings_object_before.rule_b_definition = NEW_RULE_B_DEFINITION
 
         usersettings_object_before.reward = NEW_REWARD
         usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
@@ -360,8 +368,6 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.stimulus_type, NEW_STIMULUS_TYPE)
 
         # training complex specific
-        self.assertEqual(usersettings_object_after.rule_a_definition, NEW_RULE_A_DEFINITION)
-        self.assertEqual(usersettings_object_after.rule_b_definition, NEW_RULE_B_DEFINITION)
         self.assertEqual(usersettings_object_after.rule_a, NEW_RULE_A)
         self.assertEqual(usersettings_object_after.rule_b, NEW_RULE_B)
 
