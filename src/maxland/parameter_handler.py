@@ -1,11 +1,17 @@
 import csv
+import importlib.util
 import json
 import os
 import random
-from typing import Dict, List
+from typing import Dict, List, cast
 
 import maxland.system_constants as system_constants
-from maxland.types_rule_definition import Rule, RuleDefinitionType, RuleType
+from maxland.types_rule_definition import (
+    Rule,
+    RuleDefinitionType,
+    RuleDefinitionTypes,
+    RuleType,
+)
 from maxland.types_stimuli_definition import Stimulus, StimulusType
 from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import (
@@ -61,7 +67,13 @@ class TrialParameterHandler:
                 self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
 
             if self.stage == StageName.TRAINING_COMPLEX:
+                # load rule defintions:
+                self.rule_definition = self.load_rule_definition()
+                self.usersettings.RULE_A = self.rule_definition.RULE_A
+                self.usersettings.RULE_B = self.rule_definition.RULE_B
                 # rule_a and rule_b defined
+                self.rule_a_definition = self.rule_definition.RULE_A
+                self.rule_b_definition = self.rule_definition.RULE_B
                 self.rule_a_definition = self.usersettings.RULE_A
                 self.rule_b_definition = self.usersettings.RULE_B
                 self.stimulus_defintion = self.get_stimuli_definitions(self.settings_folder)
@@ -364,8 +376,6 @@ class TrialParameterHandler:
                     "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
                     "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
                 )
-            if self.stage == StageName.TRAINING_COMPLEX:
-                f.write("RULE_A = " + str(self.rule_a_definition) + "\n\n" "RULE_B = " + str(self.rule_b_definition) + "\n\n")
             f.write(
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
@@ -448,3 +458,11 @@ class TrialParameterHandler:
 
     def update_stimuli_from_rule_for_current_trial(self):
         self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
+
+    def load_rule_definition(self):
+        rule_definition_path = os.path.join(self.settings_folder, "rule_definition.py")
+        spec = importlib.util.spec_from_file_location("rule_definition", rule_definition_path)
+        rule_definition = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(rule_definition)
+        rule_definition_object = cast(RuleDefinitionTypes, rule_definition)
+        return rule_definition_object
