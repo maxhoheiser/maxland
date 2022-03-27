@@ -107,7 +107,12 @@ To set up a development environment, please follow these steps:
 2. Fork the project
 3. Create your feature branch (`git checkout -b feature/amazing_feature`) - clone from master for stable branches
 4. Commit your changes (`git commit -m 'feat: add amazing_feature'`) Traekka Behavior Platform uses [conventional commits](https://www.conventionalcommits.org), so please follow the specification in your commit messages.
-5. [Open a Pull Request](https://github.com/maxhoheiser/maxland/compare?expand=1) using the [PULL_REQUEST_TEMPLATE](https://github.com/maxhoheiser/maxland/blob/master/PULL_REQUEST_TEMPLATE.md). Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
+5. [Open a Pull Request](https://github.com/maxhoheiser/maxland/compare?expand=1) using the [PULL_REQUEST_TEMPLATE](https://github.com/maxhoheiser/maxland/blob/master/PULL_REQUEST_TEMPLATE.md).
+
+- Don't forget to [link PR to issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) if you are solving one.
+- Add valid label to PR for allowed labels see [LABELS](https://github.com/maxhoheiser/maxland/blob/master/labels.yml)
+
+General:
 
 - Enable the checkbox to [allow maintainer edits](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork) so the branch can be updated for a merge. Once you submit your PR, we will review your it. We may ask questions or request for additional information.
 - We may ask for changes to be made before a PR can be merged, either using [suggested changes](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/incorporating-feedback-in-your-pull-request) or pull request comments. You can apply suggested changes directly through the UI. You can make any other changes in your fork, then commit them to your branch.
