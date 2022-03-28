@@ -12,7 +12,7 @@ from maxland.types_rule_definition import (
     RuleDefinitionTypes,
     RuleType,
 )
-from maxland.types_stimuli_definition import Stimulus, StimulusType
+from maxland.types_stimuli_definition import Stimulus, StimulusHistoryType, StimulusType
 from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import (
     GambleSide,
@@ -141,6 +141,7 @@ class TrialParameterHandler:
         self.time_punish_history: List[float] = list()
         self.insist_mode_history: List[str] = list()
         self.active_rule_history: List[str] = list()
+        self.presented_stimulus_history: StimulusHistoryType = dict()
 
     def update_reward_time(self):
         if self.task_name == "gamble":
@@ -464,3 +465,6 @@ class TrialParameterHandler:
         spec.loader.exec_module(rule_definition)
         rule_definition_object = cast(RuleDefinitionTypes, rule_definition)
         return rule_definition_object
+
+    def append_current_trial_stimulus_to_history(self, trial_number):
+        self.presented_stimulus_history[trial_number] = {"correct_side": self.stimulus_correct_side, "wrong_side": self.stimulus_wrong_side}

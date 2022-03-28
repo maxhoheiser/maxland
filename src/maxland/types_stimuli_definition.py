@@ -25,3 +25,14 @@ Stimulus = TypedDict(
 )
 
 StimulusType = Dict[str, Stimulus]
+
+
+StimulusHistory = TypedDict(
+    "StimulusHistory",
+    {
+        "correct_side": StimulusParameter,
+        "wrong_side": StimulusParameter,
+    },
+)
+
+StimulusHistoryType = Dict[str, StimulusHistory]

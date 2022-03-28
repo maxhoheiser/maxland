@@ -38,6 +38,7 @@ settings_folder = os.path.dirname(__file__)
 settings_obj = TrialParameterHandler(usersettings_obj, settings_folder, session_folder)
 
 bpod = Bpod()
+session_name = bpod.session_name
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
@@ -310,7 +311,7 @@ if settings_obj.run_session:
         probability_obj.rule_switch_check(trial)
 
         # save session settings
-        session_name = bpod.session_name
+        settings_obj.append_current_trial_stimulus_to_history(trial)
         settings_obj.save_usersettings(session_name)
 
         print("---------------------------------------------------\n")
