@@ -273,6 +273,10 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
         usersettings_object.create_time_dictionary()
 
+    def test_save_usersettings_json(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        usersettings_object.save_usersettings("test")
+
 
 class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
     def setUp(self):
@@ -397,10 +401,8 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.animal_weight, NEW_ANIMAL_WEIGHT)
 
     def test_save_complete_usersettings_to_file(self):
-        usersettings_object_before = TrialParameterHandler(
-            self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
-        )
-        usersettings_object_before.update_userinput_file_conf()
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        usersettings_object.update_userinput_file_conf()
         saved_file = os.path.join(self.settings_folder_path, "usersettings.py")
 
         self.assertFalse(filecmp.cmp(USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK, saved_file))
@@ -408,3 +410,10 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
     def test_create_time_dict(self):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
         usersettings_object.create_time_dictionary()
+
+    def test_save_usersettings_json(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+
+        usersettings_object.update_stimuli_from_rule_for_current_trial()
+        usersettings_object.append_current_trial_stimulus_to_history(1)
+        usersettings_object.save_usersettings("test")
