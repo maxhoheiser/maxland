@@ -2,7 +2,9 @@ import csv
 import importlib.util
 import json
 import os
+import pathlib
 import random
+from types import ModuleType
 from typing import Dict, List, cast
 
 import maxland.system_constants as system_constants
@@ -234,10 +236,28 @@ class TrialParameterHandler:
             "usersettings",
             "stimulus_position",
             "wheel_position",
+            "file_path",
         ]
-        dictionary = self.del_from_dict(del_keys, self.__dict__)
+
+        dictionary_without_keys = self.del_from_dict(del_keys, self.__dict__)
+        dictionary_without_modules = self.delete_modules(dictionary_without_keys)
+        dictionary_without_paths = self.delete_paths(dictionary_without_modules)
         with open(file_path, "w") as f:
-            json.dump(dictionary, f, indent=4)
+            json.dump(dictionary_without_paths, f, indent=4)
+
+    def delete_modules(self, dictionary):
+        new_dictionary = dictionary.copy()
+        for key in dictionary.keys():
+            if isinstance(dictionary[key], ModuleType):
+                del new_dictionary[key]
+        return new_dictionary
+
+    def delete_paths(self, dictionary):
+        new_dictionary = dictionary.copy()
+        for key in dictionary.keys():
+            if isinstance(dictionary[key], pathlib.PurePath):
+                del new_dictionary[key]
+        return new_dictionary
 
     def update_wheel_position_log(self, log):
         self.wheel_position.append(log)
