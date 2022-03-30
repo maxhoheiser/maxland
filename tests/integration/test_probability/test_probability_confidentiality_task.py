@@ -137,7 +137,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor.insist_mode_check()
 
         self.assertEqual(probability_constructor.insist_mode_active, False)
-        self.assertEqual(probability_constructor.insist_side, None)
+        self.assertEqual(probability_constructor.insist_side, "none")
         self.assertEqual(probability_constructor.insist_mode_chosen_side_li, [])
 
     def test_not_deactivate_insist(self):
