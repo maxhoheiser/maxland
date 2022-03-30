@@ -182,7 +182,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         usersettings_object_before.stimulus_correct_side = NEW_STIMULUS_CORRECT
         usersettings_object_before.stimulus_wrong_side = NEW_STIMULUS_WRONG
         usersettings_object_before.reward = NEW_REWARD
-        usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
+        usersettings_object_before.last_calibration = NEW_LAST_CALLIBRATION
 
         new_time_dict: TimeDict = {
             "time_start": NEW_TIME_START,
@@ -236,7 +236,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         self.assertEqual(usersettings_object_after.stimulus_wrong_side, NEW_STIMULUS_WRONG)
 
         self.assertEqual(usersettings_object_after.reward, NEW_REWARD)
-        self.assertEqual(usersettings_object_after.last_callibration, NEW_LAST_CALLIBRATION)
+        self.assertEqual(usersettings_object_after.last_calibration, NEW_LAST_CALLIBRATION)
 
         for key, item in new_time_dict.items():
             self.assertEqual(usersettings_object_after.time_dict[key], item)
@@ -320,7 +320,7 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object_before.stimulus_type = NEW_STIMULUS_TYPE
 
         usersettings_object_before.reward = NEW_REWARD
-        usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
+        usersettings_object_before.last_calibration = NEW_LAST_CALLIBRATION
 
         new_time_dict: TimeDict = {
             "time_start": NEW_TIME_START,
@@ -376,7 +376,7 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.rule_b, NEW_RULE_B)
 
         self.assertEqual(usersettings_object_after.reward, NEW_REWARD)
-        self.assertEqual(usersettings_object_after.last_callibration, NEW_LAST_CALLIBRATION)
+        self.assertEqual(usersettings_object_after.last_calibration, NEW_LAST_CALLIBRATION)
 
         for key, item in new_time_dict.items():
             self.assertEqual(usersettings_object_after.time_dict[key], item)

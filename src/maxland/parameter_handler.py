@@ -76,9 +76,9 @@ class TrialParameterHandler:
                 # rule_a and rule_b defined
                 self.rule_a_definition = self.rule_definition.RULE_A
                 self.rule_b_definition = self.rule_definition.RULE_B
-                self.stimulus_defintion = self.load_stimuli_definition(self.settings_folder)
-                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimulus_defintion)
-                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimulus_defintion)
+                self.stimulus_definition = self.load_stimuli_definition(self.settings_folder)
+                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimulus_definition)
+                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimulus_definition)
                 self.rule_active = self.rule_a
 
                 self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
@@ -98,7 +98,7 @@ class TrialParameterHandler:
 
         self.time_dict: TimeDict = self.create_time_dictionary()
 
-        self.last_callibration = self.usersettings.LAST_CALLIBRATION
+        self.last_calibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
         self.stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
 
@@ -120,8 +120,8 @@ class TrialParameterHandler:
         self.serial_message_reset_rotary_encoder = system_constants.SERIAL_MESSAGE_RESET_ROTARY_ENCODER
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
         self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POSITION
-        self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
-        self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
+        self.rotary_encoder_threshold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
+        self.rotary_encoder_threshold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
         self.stimulus_threshold_left = system_constants.STIMULUS_THRESHOLD_LEFT
         self.stimulus_threshold_right = system_constants.STIMULUS_THRESHOLD_RIGHT
         self.wheel_position = List[float]
@@ -357,7 +357,7 @@ class TrialParameterHandler:
                 "# reward in seconds\n"
                 "BIG_REWARD = " + repr(self.big_reward) + "\n"
                 "SMALL_REWARD = " + repr(self.small_reward) + "\n\n"
-                "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
+                "LAST_CALLIBRATION = " + json.dumps(self.last_calibration) + "\n\n"
                 "# trial times\n"
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
@@ -398,7 +398,7 @@ class TrialParameterHandler:
             f.write(
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
-                "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
+                "LAST_CALLIBRATION = " + json.dumps(self.last_calibration) + "\n\n"
                 "# trial times\n"
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
