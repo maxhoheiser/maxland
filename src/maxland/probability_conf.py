@@ -1,10 +1,17 @@
 import random
+from enum import Enum
 from typing import Dict, List
 
 import numpy as np
 
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.types_usersettings import StageName
+
+
+class InsistSide(str, Enum):
+    LEFT = "left"
+    RIGHT = "right"
+    NONE = "none"
 
 
 class ProbabilityConstructor:
@@ -20,16 +27,16 @@ class ProbabilityConstructor:
         # insist mode tracking
         self.insist_mode_chosen_side_li: List[str] = list()
         self.insist_mode_active = False
-        self.insist_side = ""
+        self.insist_side: InsistSide = InsistSide.NONE
         self.rule_active_id = "rule_a"
         self.is_initial_rule_active = True
 
     def get_random_side(self):
         # check insist mode
         if self.insist_mode_active:
-            if self.insist_side == "left":
+            if self.insist_side == InsistSide.LEFT:
                 random_right = False
-            elif self.insist_side == "right":
+            elif self.insist_side == InsistSide.RIGHT:
                 random_right = True
         else:
             random_right = bool(random.getrandbits(1))
@@ -67,6 +74,7 @@ class ProbabilityConstructor:
         return current_side
 
     def insist_mode_check(self):
+        self.settings.insist_mode_history.append(self.insist_side)
         # check for insist mode activate
         if not self.insist_mode_active:
             if len(self.settings.chosen_sides_history) >= self.settings.insist_range_trigger:
@@ -79,8 +87,7 @@ class ProbabilityConstructor:
                 self.insist_mode_active = True
                 print(self.insist_mode_active)
                 self.settings.chosen_sides_history = []
-                self.insist_side = "right"
-                self.settings.insist_mode_history.append(self.insist_side)
+                self.insist_side = InsistSide.RIGHT
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist right")
                 print("\n--------------------------------\n")
@@ -88,8 +95,7 @@ class ProbabilityConstructor:
             if right_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
                 self.settings.chosen_sides_history = []
-                self.insist_side = "left"
-                self.settings.insist_mode_history.append(self.insist_side)
+                self.insist_side = InsistSide.LEFT
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist left")
                 print("\n--------------------------------\n")
@@ -106,8 +112,7 @@ class ProbabilityConstructor:
             insist_correct_choice = sum(map(lambda x: x == self.insist_side, chosen_sides_li_slice))
             if insist_correct_choice >= self.settings.insist_correct_deactivate:
                 self.insist_mode_active = False
-                self.insist_side = None
-                self.settings.insist_mode_history.append("none")
+                self.insist_side = InsistSide.NONE
                 self.insist_mode_chosen_side_li = []
                 print("\n---------------------\n")
                 print("INSIST MODE DEACTIVATED")

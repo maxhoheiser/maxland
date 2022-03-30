@@ -182,7 +182,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         usersettings_object_before.stimulus_correct_side = NEW_STIMULUS_CORRECT
         usersettings_object_before.stimulus_wrong_side = NEW_STIMULUS_WRONG
         usersettings_object_before.reward = NEW_REWARD
-        usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
+        usersettings_object_before.last_calibration = NEW_LAST_CALLIBRATION
 
         new_time_dict: TimeDict = {
             "time_start": NEW_TIME_START,
@@ -236,7 +236,7 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
         self.assertEqual(usersettings_object_after.stimulus_wrong_side, NEW_STIMULUS_WRONG)
 
         self.assertEqual(usersettings_object_after.reward, NEW_REWARD)
-        self.assertEqual(usersettings_object_after.last_callibration, NEW_LAST_CALLIBRATION)
+        self.assertEqual(usersettings_object_after.last_calibration, NEW_LAST_CALLIBRATION)
 
         for key, item in new_time_dict.items():
             self.assertEqual(usersettings_object_after.time_dict[key], item)
@@ -272,6 +272,10 @@ class TestTrialParameterHandlerConfTask(unittest.TestCase):
     def test_create_time_dict(self):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
         usersettings_object.create_time_dictionary()
+
+    def test_save_usersettings_json(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        usersettings_object.save_usersettings("test")
 
 
 class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
@@ -316,7 +320,7 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object_before.stimulus_type = NEW_STIMULUS_TYPE
 
         usersettings_object_before.reward = NEW_REWARD
-        usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
+        usersettings_object_before.last_calibration = NEW_LAST_CALLIBRATION
 
         new_time_dict: TimeDict = {
             "time_start": NEW_TIME_START,
@@ -372,7 +376,7 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.rule_b, NEW_RULE_B)
 
         self.assertEqual(usersettings_object_after.reward, NEW_REWARD)
-        self.assertEqual(usersettings_object_after.last_callibration, NEW_LAST_CALLIBRATION)
+        self.assertEqual(usersettings_object_after.last_calibration, NEW_LAST_CALLIBRATION)
 
         for key, item in new_time_dict.items():
             self.assertEqual(usersettings_object_after.time_dict[key], item)
@@ -397,10 +401,8 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         self.assertEqual(usersettings_object_after.animal_weight, NEW_ANIMAL_WEIGHT)
 
     def test_save_complete_usersettings_to_file(self):
-        usersettings_object_before = TrialParameterHandler(
-            self.usersettings_example_import, self.settings_folder_path, self.session_folder_path
-        )
-        usersettings_object_before.update_userinput_file_conf()
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        usersettings_object.update_userinput_file_conf()
         saved_file = os.path.join(self.settings_folder_path, "usersettings.py")
 
         self.assertFalse(filecmp.cmp(USERSETTINGS_EXAMPLE_CONFIDENTIALITY_TASK, saved_file))
@@ -408,3 +410,10 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
     def test_create_time_dict(self):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
         usersettings_object.create_time_dictionary()
+
+    def test_save_usersettings_json(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+
+        usersettings_object.update_stimuli_from_rule_for_current_trial()
+        usersettings_object.append_current_trial_stimulus_to_history(1)
+        usersettings_object.save_usersettings("test")

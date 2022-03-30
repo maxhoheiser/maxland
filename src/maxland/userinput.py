@@ -259,7 +259,7 @@ class UserInput:
         self.etr_small_reward = tk.Entry(frame_3, textvariable=self.var_small_reward, width=10)
         self.etr_small_reward.grid(row=0, column=3, pady=8)
 
-        calibrate_text = "Last time calibrated: " + self.settings.last_callibration
+        calibrate_text = "Last time calibrated: " + self.settings.last_calibration
         lbl_last_calibrate = tk.Label(frame_3, text=calibrate_text, font=self.fontStyleRegular)
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
@@ -536,7 +536,7 @@ class UserInput:
         self.etr_reward.grid(row=0, column=3, pady=8)
 
         # last time calibrated
-        calibrate_text = "Last time calibrated: " + self.settings.last_callibration
+        calibrate_text = "Last time calibrated: " + self.settings.last_calibration
         lbl_last_calibrate = tk.Label(frame_3, text=calibrate_text, font=self.fontStyleRegular)
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
