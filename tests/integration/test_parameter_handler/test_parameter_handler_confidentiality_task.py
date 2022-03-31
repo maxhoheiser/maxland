@@ -437,6 +437,18 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
         usersettings_object.create_time_dictionary()
 
+    def test_stimulus_sides_history(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+
+        for trial in range(100):
+            usersettings_object.update_stimuli_from_rule_for_current_trial()
+            usersettings_object.append_current_trial_stimulus_to_history(trial)
+            if trial == 50:
+                usersettings_object.rule_active = usersettings_object.rule_b
+
+        self.assertEqual(len(usersettings_object.presented_stimulus_history), 100)
+        usersettings_object.save_usersettings("test")
+
     def test_save_usersettings_json(self):
         usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
 
