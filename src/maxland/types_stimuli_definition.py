@@ -21,6 +21,7 @@ Stimulus = TypedDict(
         "grating_orientation": float,
         "grating_size": int,
         "grating_speed": float,
+        "stimulus_id": str,
     },
 )
 

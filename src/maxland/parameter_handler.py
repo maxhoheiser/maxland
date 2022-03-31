@@ -445,6 +445,7 @@ class TrialParameterHandler:
             "grating_orientation": stimulus_definition[id]["grating_orientation"],
             "grating_size": stimulus_definition[id]["grating_size"],
             "grating_speed": stimulus_definition[id]["grating_speed"],
+            "stimulus_id": id,
         }
         return stimulus
 
