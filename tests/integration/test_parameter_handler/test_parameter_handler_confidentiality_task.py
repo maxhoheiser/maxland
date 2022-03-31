@@ -5,6 +5,8 @@ import shutil
 import unittest
 from pathlib import Path
 
+import numpy as np
+
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.types_time_dict import TimeDict
 from maxland.types_usersettings import TaskName
@@ -76,13 +78,13 @@ NEW_RULE_B_DEFINITION = [
         "correct": "a00b01",
         "wrong": "a03b01",
         "conflicting": True,
-        "percentage": 0.2,
+        "percentage": 0.8,
     },
     {
         "correct": "a03b03",
         "wrong": "a03b01",
         "conflicting": True,
-        "percentage": 0.4,
+        "percentage": 0.2,
     },
 ]
 NEW_RULE_B = [
@@ -96,7 +98,7 @@ NEW_RULE_B = [
         },
         "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 200, "grating_speed": 0.1, "stimulus_id": "a03b01"},
         "conflicting": True,
-        "percentage": 0.2,
+        "percentage": 0.8,
     },
     {
         "correct": {
@@ -108,7 +110,7 @@ NEW_RULE_B = [
         },
         "wrong": {"grating_frequency": 0.3, "grating_orientation": 30, "grating_size": 200, "grating_speed": 0.1, "stimulus_id": "a03b01"},
         "conflicting": True,
-        "percentage": 0.4,
+        "percentage": 0.2,
     },
 ]
 # reward in seconds
@@ -441,3 +443,22 @@ class TestTrialParameterHandlerConfTaskComplex(unittest.TestCase):
         usersettings_object.update_stimuli_from_rule_for_current_trial()
         usersettings_object.append_current_trial_stimulus_to_history(1)
         usersettings_object.save_usersettings("test")
+
+    def test_rule__pair_distribution(self):
+        usersettings_object = TrialParameterHandler(self.usersettings_example_import, self.settings_folder_path, self.session_folder_path)
+        rule = usersettings_object.rule_b.copy()
+        test_pair_distribution = list()
+        trials = 10000
+        for i in range(trials):
+            random_correct, _ = usersettings_object.get_stimuli_from_rule_for_current_trial(rule)
+            test_pair_distribution.append(random_correct["stimulus_id"])
+
+        values, counts = np.unique(test_pair_distribution, return_counts=True)
+        percentages = dict()
+        for dictionary in rule:
+            stimulus_id = dictionary["correct"]["stimulus_id"]
+            percentage = dictionary["percentage"]
+            percentages[stimulus_id] = percentage
+
+        for value, count in zip(values, counts):
+            self.assertEqual(percentages[value], round(count / trials, 1))
