@@ -470,7 +470,9 @@ class TrialParameterHandler:
 
     def get_stimuli_from_rule_for_current_trial(self, rule):
         """Randomly load a pair of stimuli from the current active rule"""
-        random_pair = random.choice(list(rule))
+        percentages = [stimulus["percentage"] for stimulus in rule]
+        random_pair = random.choices(list(rule), weights=percentages)[0]
+
         random_correct = random_pair["correct"]
         random_wrong = random_pair["wrong"]
 
