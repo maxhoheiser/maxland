@@ -86,7 +86,6 @@ class ProbabilityConstructor:
             if left_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
                 print(self.insist_mode_active)
-                self.settings.chosen_sides_history = []
                 self.insist_side = InsistSide.RIGHT
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist right")
@@ -94,7 +93,6 @@ class ProbabilityConstructor:
                 return
             if right_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
-                self.settings.chosen_sides_history = []
                 self.insist_side = InsistSide.LEFT
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist left")
