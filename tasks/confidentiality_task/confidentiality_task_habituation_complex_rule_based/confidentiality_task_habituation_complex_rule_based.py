@@ -40,9 +40,9 @@ settings_obj = TrialParameterHandler(usersettings_obj, settings_folder, session_
 bpod = Bpod()
 session_name = bpod.session_name
 
-# create tkinter userinput dialoge window
+# create tkinter userinput dialogue window
 window = UserInput(settings_obj)
-window.draw_window_before(stage="training-complex-rule-based")
+window.draw_window_before(stage=settings_obj.stage)
 window.show_window()
 
 # create threading flags
@@ -164,7 +164,7 @@ if settings_obj.run_session:
             output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
         )
 
-        # reward left ------------------------------
+        # reward left -----------------------------------
         sma.add_state(
             state_name="stop_open_loop_reward_left",
             state_timer=settings_obj.time_dict["time_stimulus_freeze"],
@@ -213,7 +213,7 @@ if settings_obj.run_session:
                 output_actions=[],
             )
 
-        # reward right ------------------------------
+        # reward right -----------------------------------
         sma.add_state(
             state_name="stop_open_loop_reward_right",
             state_timer=settings_obj.time_dict["time_stimulus_freeze"],
@@ -293,28 +293,19 @@ if settings_obj.run_session:
         closer.start()
 
         try:
-            if settings_obj.stimulus_type == "three-stimuli":
-                stimulus_game.run_game_3(event_flags)
-            if settings_obj.stimulus_type == "two-stimuli":
-                stimulus_game.run_game_2(event_flags)
-            if settings_obj.stimulus_type == "one-stimulus":
-                stimulus_game.run_game_1(event_flags)
-            else:
-                print("\nNo correct stim type selected\n")
+            stimulus_game.run_game_habituation_2(event_flags)
         except Exception as e:
             print(e)
             break
 
         closer.join()
         probability_obj.get_stimulus_side(bpod.session.current_trial)
-        probability_obj.insist_mode_check()
-        probability_obj.rule_switch_check(trial)
 
         # save session settings
         settings_obj.append_current_trial_stimulus_to_history(trial)
         settings_obj.save_usersettings(session_name)
 
-        print("---------------------------------------------------\n")
+        print("---------------------------------------------------")
         print(f"{trial} finished\n")
 
 
