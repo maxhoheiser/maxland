@@ -42,7 +42,7 @@ session_name = bpod.session_name
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
-window.draw_window_before(stage="training-complex")
+window.draw_window_before(stage="training-complex-rule-based")
 window.show_window()
 
 # create threading flags

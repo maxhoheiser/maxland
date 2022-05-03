@@ -68,7 +68,7 @@ class TrialParameterHandler:
                 self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
                 self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
 
-            if self.stage == StageName.TRAINING_COMPLEX:
+            if self.stage == StageName.TRAINING_COMPLEX_RULE_BASED:
                 # load rule defintions:
                 self.rule_definition = self.load_rule_definition()
                 self.usersettings.RULE_A = self.rule_definition.RULE_A

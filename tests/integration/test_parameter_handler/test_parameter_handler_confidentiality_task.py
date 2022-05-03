@@ -24,7 +24,7 @@ RULE_DEFINITION = os.path.join(Path(os.path.dirname(__file__)).parent.absolute()
 # Mock usersettings data
 NEW_TASK = TaskName.CONFIDENTIALITY
 NEW_STAGE = "training"
-NEW_STAGE_COMPLEX = "training-complex"
+NEW_STAGE_COMPLEX = "training-complex-rule-based"
 NEW_TRIAL_NUMBER = 31
 NEW_STIMULUS_TYPE = "three-stimuli"  # three-stimuli #two-stimuli #one-stimulus
 # stimuli predefined
