@@ -124,7 +124,7 @@ class ProbabilityConstructor:
                 rule_switch_range_slice = rule_switch_range[-self.settings.rule_switch_check_trial_range :]
                 correct_chosen = sum(rule_switch_range_slice)
                 # check if rule switch
-                if self.is_initial_rule_active:
+                if self.is_initial_rule_active and not self.insist_mode_active:
                     if correct_chosen >= self.settings.rule_switch_trials_correct_trigger_switch:
                         self.rule_active_id = "rule_b"  # switch to rule b
 
