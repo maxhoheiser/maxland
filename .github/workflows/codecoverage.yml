@@ -28,6 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
           pip install coverage
+          pip install nose2
       - name: Generate Report
         run: |
           coverage run -m nose2 -v -B -s tests/integration
