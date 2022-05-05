@@ -41,7 +41,7 @@ bpod = Bpod()
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
-window.draw_window_before(stage="training")
+window.draw_window_before(stage="recording")
 window.show_window()
 
 # create threading flags
@@ -94,14 +94,20 @@ if settings_obj.run_session:
         sma.add_state(
             state_name="start",
             state_timer=settings_obj.time_dict["time_start"],
+            state_change_conditions={"Tup": "sync_state_0"},
+            output_actions=[("SoftCode", settings_obj.soft_code_start_logging), ("BNC1", 1), ("BNC2", 1)],
+        )
+        sma.add_state(
+            state_name="sync_state_0",
+            state_timer=0,
             state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
-            output_actions=[("SoftCode", settings_obj.soft_code_start_logging)],
+            output_actions=[("BNC1", 0), ("BNC2", 0)],
         )
         sma.add_state(
             state_name="reset_rotary_encoder_wheel_stopping_check",
             state_timer=0,
             state_change_conditions={"Tup": "wheel_stopping_check"},
-            output_actions=[("Serial1", settings_obj.serial_message_reset_rotary_encoder)],
+            output_actions=[("Serial1", settings_obj.serial_message_reset_rotary_encoder), ("BNC1", 0), ("BNC2", 1)],
         )
 
         # wheel not stoping check
@@ -113,27 +119,40 @@ if settings_obj.run_session:
                 settings_obj.stimulus_threshold_left: "wheel_stopping_check_failed_punish",
                 settings_obj.stimulus_threshold_right: "wheel_stopping_check_failed_punish",
             },
-            output_actions=[],
+            output_actions=[("BNC1", 0), ("BNC2", 0)],
         )
         sma.add_state(
             state_name="wheel_stopping_check_failed_punish",
             state_timer=settings_obj.time_dict["time_wheel_stopping_punish"],
+            state_change_conditions={"Tup": "sync_state_1"},
+            output_actions=[("SoftCode", settings_obj.soft_code_wheel_not_stopping), ("BNC1", 0), ("BNC2", 1)],
+        )
+
+        sma.add_state(
+            state_name="sync_state_1",
+            state_timer=0,
             state_change_conditions={"Tup": "reset_rotary_encoder_wheel_stopping_check"},
-            output_actions=[("SoftCode", settings_obj.soft_code_wheel_not_stopping)],
+            output_actions=[("BNC1", 0), ("BNC2", 0)],
         )
 
         # Open Loop
         sma.add_state(
             state_name="present_stim",
             state_timer=settings_obj.time_dict["time_present_stimulus"],
+            state_change_conditions={"Tup": "sync_state_2"},
+            output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus), ("BNC1", 0), ("BNC2", 1)],
+        )
+        sma.add_state(
+            state_name="sync_state_2",
+            state_timer=0,
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
-            output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus)],
+            output_actions=[("BNC1", 0), ("BNC2", 0)],
         )
         sma.add_state(
             state_name="reset_rotary_encoder_open_loop",
             state_timer=0,
             state_change_conditions={"Tup": "open_loop"},
-            output_actions=[("Serial1", settings_obj.serial_message_reset_rotary_encoder)],
+            output_actions=[("Serial1", settings_obj.serial_message_reset_rotary_encoder), ("BNC1", 0), ("BNC2", 1)],
         )
         sma.add_state(
             state_name="open_loop",
@@ -143,21 +162,27 @@ if settings_obj.run_session:
                 settings_obj.stimulus_threshold_left: "stop_open_loop_reward_left",
                 settings_obj.stimulus_threshold_right: "stop_open_loop_reward_right",
             },
-            output_actions=[("SoftCode", settings_obj.soft_code_start_open_loop)],
+            output_actions=[("SoftCode", settings_obj.soft_code_start_open_loop), ("BNC1", 0), ("BNC2", 0)],
         )
 
         # stop open loop fail
         sma.add_state(
             state_name="stop_open_loop_fail",
             state_timer=0,
+            state_change_conditions={"Tup": "sync_state_3"},
+            output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop), ("BNC1", 0), ("BNC2", 1)],
+        )
+        sma.add_state(
+            state_name="sync_state_3",
+            state_timer=0,
             state_change_conditions={"Tup": "open_loop_fail_punish"},
-            output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop)],
+            output_actions=[("BNC1", 0), ("BNC2", 0)],
         )
         sma.add_state(
             state_name="open_loop_fail_punish",
             state_timer=settings_obj.time_dict["time_open_loop_fail_punish"],
             state_change_conditions={"Tup": "inter_trial"},
-            output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
+            output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus), ("BNC1", 0), ("BNC2", 1)],
         )
 
         # reward left ------------------------------
@@ -165,7 +190,7 @@ if settings_obj.run_session:
             state_name="stop_open_loop_reward_left",
             state_timer=settings_obj.time_dict["time_stimulus_freeze"],
             state_change_conditions={"Tup": "check_reward_left"},
-            output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop)],
+            output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop), ("BNC1", 0), ("BNC2", 1)],
         )
 
         if probability_obj.stimulus_sides["left"]:
@@ -173,19 +198,19 @@ if settings_obj.run_session:
                 state_name="check_reward_left",
                 state_timer=0,
                 state_change_conditions={"Tup": "reward_left"},
-                output_actions=[],
+                output_actions=[("BNC1", 0), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="reward_left",
                 state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_left_waiting"},
-                output_actions=[("Valve1", 255)],
+                output_actions=[("Valve1", 255), ("BNC1", 1), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="reward_left_waiting",
                 state_timer=settings_obj.time_dict["time_reward_waiting"],
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
+                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus), ("BNC1", 0), ("BNC2", 1)],
             )
 
         else:
@@ -194,19 +219,19 @@ if settings_obj.run_session:
                 state_name="check_reward_left",
                 state_timer=0,
                 state_change_conditions={"Tup": "no_reward_left"},
-                output_actions=[],
+                output_actions=[("BNC1", 0), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="no_reward_left",
                 state_timer=0,
                 state_change_conditions={"Tup": "reward_left_waiting"},
-                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
+                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus), ("BNC1", 1), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="reward_left_waiting",
                 state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[],
+                output_actions=[("BNC1", 0), ("BNC2", 1)],
             )
 
         # reward right ------------------------------
@@ -214,7 +239,7 @@ if settings_obj.run_session:
             state_name="stop_open_loop_reward_right",
             state_timer=settings_obj.time_dict["time_stimulus_freeze"],
             state_change_conditions={"Tup": "check_reward_right"},
-            output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop)],
+            output_actions=[("SoftCode", settings_obj.soft_code_stop_open_loop), ("BNC1", 0), ("BNC2", 1)],
         )
 
         if probability_obj.stimulus_sides["right"]:
@@ -222,19 +247,19 @@ if settings_obj.run_session:
                 state_name="check_reward_right",
                 state_timer=0,
                 state_change_conditions={"Tup": "reward_right"},
-                output_actions=[],
+                output_actions=[("BNC1", 0), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="reward_right",
                 state_timer=settings_obj.time_dict["time_reward_open"],
                 state_change_conditions={"Tup": "reward_right_waiting"},
-                output_actions=[("Valve1", 255)],
+                output_actions=[("Valve1", 255), ("BNC1", 1), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="reward_right_waiting",
                 state_timer=settings_obj.time_dict["time_reward_waiting"],
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
+                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus), ("BNC1", 0), ("BNC2", 1)],
             )
 
         else:
@@ -243,27 +268,33 @@ if settings_obj.run_session:
                 state_name="check_reward_right",
                 state_timer=0,
                 state_change_conditions={"Tup": "no_reward_right"},
-                output_actions=[],
+                output_actions=[("BNC1", 0), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="no_reward_right",
                 state_timer=0,
                 state_change_conditions={"Tup": "reward_right_waiting"},
-                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus)],
+                output_actions=[("SoftCode", settings_obj.soft_code_end_present_stimulus), ("BNC1", 1), ("BNC2", 0)],
             )
             sma.add_state(
                 state_name="reward_right_waiting",
                 state_timer=punish_time,
                 state_change_conditions={"Tup": "inter_trial"},
-                output_actions=[],
+                output_actions=[("BNC1", 0), ("BNC2", 1)],
             )
 
         # inter trial time
         sma.add_state(
             state_name="inter_trial",
             state_timer=settings_obj.time_dict["time_inter_trial"],
+            state_change_conditions={"Tup": "end_state_signal"},
+            output_actions=[("BNC1", 0), ("BNC2", 0)],
+        )
+        sma.add_state(
+            state_name="end_state_signal",
+            state_timer=0,
             state_change_conditions={"Tup": "end_state"},
-            output_actions=[],
+            output_actions=[("BNC1", 1), ("BNC2", 1)],
         )
 
         # end state
@@ -271,7 +302,7 @@ if settings_obj.run_session:
             state_name="end_state",
             state_timer=0,
             state_change_conditions={"Tup": "exit"},
-            output_actions=[("SoftCode", settings_obj.soft_code_end_logging)],
+            output_actions=[("SoftCode", settings_obj.soft_code_end_logging), ("BNC1", 0), ("BNC2", 0)],
         )
 
         # send & run state machine
