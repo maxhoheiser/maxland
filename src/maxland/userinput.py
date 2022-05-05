@@ -681,9 +681,15 @@ class UserInput:
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(list_drp)
-            self.drp_stim.current(idx)  # set current valu
+            self.drp_stim.current(idx)  # set current value
         if stage == StageName.HABITUATION_COMPLEX:
             list_drp = ("three-stimuli", "two-stimuli")
+            self.drp_stim["values"] = list_drp
+            self.drp_stim.grid(column=1, row=0)
+            idx = list_drp.index(self.settings.stimulus_type)
+            self.drp_stim.current(idx)  # set current value
+        if stage == StageName.RECORDING:
+            list_drp = "two-stimuli"
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = list_drp.index(self.settings.stimulus_type)

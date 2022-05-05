@@ -1,5 +1,5 @@
 TASK = "conf"
-STAGE = "training"
+STAGE = "recording"
 
 TRIAL_NUMBER = 500
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
