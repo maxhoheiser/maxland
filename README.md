@@ -136,8 +136,90 @@ A detailed description of the hardware and software as well as the Gamble-Task c
 
 ### Installation
 
-> **[?]**
-> Describe how to install and get started with the project.
+You can use Windows, Linux or Mac based machines for developing.
+
+To set up a development environment, please follow these steps:
+
+1.  **Install dependencies**
+
+- install anaconda for your system
+- install git for your system
+- install pip
+
+2. **Clone the repo**
+
+   ```sh
+   git clone https://github.com/maxhoheiser/maxland
+   ```
+3. **Run installer script**
+
+   ```bash
+   python install.py --dev
+   ```
+
+<br>
+
+#### Development environment setup
+
+3. **Run installer script with dev flag**
+
+   ```bash
+   python install.py --dev
+   ```
+
+4. **Set up your dev environment**
+
+   - install pre-commit hooks `pre-commit install`
+   - use black for auto formatting
+   - use pylint for linting
+
+   You can use this settings for VS Code:
+
+   ```json
+   "python.linting.pylintEnabled": true,
+   "python.linting.pylintArgs": ["--enable=W0611"],
+   "python.linting.enabled": true,
+   "python.linting.pylintCategorySeverity.convention": "Hint",
+   "python.linting.maxNumberOfProblems": 120,
+   "python.linting.mypyEnabled": true,
+   "python.languageServer": "Pylance",
+   "python.formatting.provider": "black",
+   "python.sortImports.args": ["--profile", "black"],
+   "python.formatting.blackArgs": ["--line-length=140"],
+   "python.linting.pydocstyleArgs": ["--ignore=D400", "--ignore=D4"],
+   "[python]": {
+      "editor.defaultFormatter": "ms-python.python",
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+         "source.organizeImports": true
+      }
+   },
+   ```
+
+<br>
+
+5. **Writing code**
+
+   > ### **Please follow the code style guide outlined in the [README](https://github.com/maxhoheiser/maxland/blob/master/README)!!**
+
+   <br>
+
+   Type hinting:
+
+   - use `:` instead of `->`
+   - create new type definitions for custom data types where possible
+   - try to type hint input arguments as much as possible
+   - use Enum and typing Dict, List, Union
+
+   <br>
+
+   Testing:
+
+   - always write unittests for new features
+   - try to extend the end-to-end hardware in the loop tests to cover your new functionality as complete as possible
+   - always run all tests and fix broken ones
+
+<br>
 
 <br>
 
