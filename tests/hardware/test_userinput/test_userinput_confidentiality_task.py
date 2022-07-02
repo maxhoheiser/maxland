@@ -73,10 +73,10 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         return list(map(int, rgb_string.split(",")))
 
     # tests
-    def test_draw_window_habituation_simple(self):
+    def test_draw_window_habituation(self):
         self.parameter_handler.stimulus_type = "three-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation_simple")
+        window.draw_window_before(stage="habituation")
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -84,7 +84,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation_complex_three_stimuli(self):
         self.parameter_handler.stimulus_type = "three-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation_complex")
+        window.draw_window_before(stage="habituation-complex")
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -92,15 +92,23 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation_complex_two_stimuli(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation_complex")
+        window.draw_window_before(stage="habituation-complex")
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
 
-    def test_draw_window_training_simple(self):
+    def test_draw_window_training(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="training_simple")
+        window.draw_window_before(stage="training")
+        widget = window.root
+        widget.update_idletasks()
+        window.on_cancel()
+
+    def test_draw_window_training_complex(self):
+        self.parameter_handler.stimulus_type = "two-stimuli"
+        window = UserInput(self.parameter_handler)
+        window.draw_window_before(stage="training-complex-rule-based")
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -176,8 +184,8 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.window.on_confirm()
 
         stimulus_correct_side = {
-            "grating_sf": NEW_SPATIAL_FREQUENCY,
-            "grating_ori": NEW_ORIENTATION,
+            "grating_frequency": NEW_SPATIAL_FREQUENCY,
+            "grating_orientation": NEW_ORIENTATION,
             "grating_size": NEW_STIMULUS_SIZE,
             "grating_speed": NEW_PHASE_SPEED,
         }
@@ -192,8 +200,8 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
         self.window.on_confirm()
 
         stimulus_wrong_side = {
-            "grating_sf": NEW_SPATIAL_FREQUENCY,
-            "grating_ori": NEW_ORIENTATION,
+            "grating_frequency": NEW_SPATIAL_FREQUENCY,
+            "grating_orientation": NEW_ORIENTATION,
             "grating_size": NEW_STIMULUS_SIZE,
             "grating_speed": NEW_PHASE_SPEED,
         }

@@ -1,18 +1,42 @@
 import importlib.util
+import json
 import os
 import random
 import unittest
 from pathlib import Path
+from typing import cast
 from unittest.mock import patch
 
 from maxland.parameter_handler import TrialParameterHandler
 from maxland.probability_conf import ProbabilityConstructor
+from maxland.types_rule_definition import RuleDefinitionTypes
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
+USERSETTINGS_COMPLEX = os.path.join(
+    Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task_complex.py"
+)
+with open(os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "stimuli_definition.json")) as f:
+    STIMULI_DEFINITIONS = json.load(f)
+
+RULE_DEFINITION = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "rule_definition.py")
+
+INITIAL_RULE = "rule_a"
+SWITCHED_RULE = "rule_b"
 
 
-INITIAL_RULE = "RU0"
-SWITCHED_RULE = "RU1"
+def stimulus_exclude_name(stimulus):
+    exclude_keys = {"name"}
+    new_stimulus = {k: stimulus[k] for k in set(list(stimulus.keys())) - set(exclude_keys)}
+    return new_stimulus
+
+
+def patch_load_rule_definition():
+    rule_definition_path = RULE_DEFINITION
+    spec = importlib.util.spec_from_file_location("rule_definition", rule_definition_path)
+    rule_definition = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rule_definition)
+    rule_definition_object = cast(RuleDefinitionTypes, rule_definition)
+    return rule_definition_object
 
 
 class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
@@ -113,7 +137,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
         probability_constructor.insist_mode_check()
 
         self.assertEqual(probability_constructor.insist_mode_active, False)
-        self.assertEqual(probability_constructor.insist_side, None)
+        self.assertEqual(probability_constructor.insist_side, "none")
         self.assertEqual(probability_constructor.insist_mode_chosen_side_li, [])
 
     def test_not_deactivate_insist(self):
@@ -142,7 +166,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
         probability_constructor.rule_switch_check(current_trial_num)
 
-        self.assertEqual(probability_constructor.active_rule, INITIAL_RULE)
+        self.assertEqual(probability_constructor.rule_active_id, INITIAL_RULE)
 
     def test_rule_switching_initial_trials_wait_switch(self):
         probability_constructor = ProbabilityConstructor(self.parameter_handler)
@@ -154,7 +178,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
         probability_constructor.rule_switch_check(current_trial_num)
 
-        self.assertEqual(probability_constructor.active_rule, SWITCHED_RULE)
+        self.assertEqual(probability_constructor.rule_active_id, SWITCHED_RULE)
         self.assertEqual(probability_constructor.settings.stimulus_correct_side, self.usersettings_example_import.STIMULUS_WRONG)
         self.assertEqual(probability_constructor.settings.stimulus_wrong_side, self.usersettings_example_import.STIMULUS_CORRECT)
 
@@ -181,7 +205,7 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
         probability_constructor.rule_switch_check(current_trial_num)
 
-        self.assertEqual(probability_constructor.active_rule, SWITCHED_RULE)
+        self.assertEqual(probability_constructor.rule_active_id, SWITCHED_RULE)
         self.assertEqual(probability_constructor.settings.stimulus_correct_side, self.usersettings_example_import.STIMULUS_WRONG)
         self.assertEqual(probability_constructor.settings.stimulus_wrong_side, self.usersettings_example_import.STIMULUS_CORRECT)
 
@@ -208,4 +232,105 @@ class TestProbabilityConstructorModuleConfidentialityTask(unittest.TestCase):
 
         probability_constructor.rule_switch_check(current_trial_num)
 
-        self.assertEqual(probability_constructor.active_rule, INITIAL_RULE)
+        self.assertEqual(probability_constructor.rule_active_id, INITIAL_RULE)
+
+
+class TestProbabilityConstructorModuleConfidentialityTaskComplex(unittest.TestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location("usersettings_example_conf_task_complex", USERSETTINGS_COMPLEX)
+        self.usersettings_example_import = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.usersettings_example_import)
+
+        with patch("maxland.parameter_handler.TrialParameterHandler.load_stimuli_definition", return_value=STIMULI_DEFINITIONS):
+            with patch("maxland.parameter_handler.TrialParameterHandler.load_rule_definition", return_value=patch_load_rule_definition()):
+                self.parameter_handler = TrialParameterHandler(self.usersettings_example_import, "", "")
+        random.seed(666)
+        self.random = random
+
+    def tearDown(self):
+        self.parameter_handler = None
+
+    def test_load_probability_constructor_module(self):
+        ProbabilityConstructor(self.parameter_handler)
+
+    def test_rule_switching_initial_trials_wait_not_switch(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 2
+        probability_constructor.settings.rule_switch_check_trial_range = 4
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
+        current_trial_num = 4
+        probability_constructor.settings.trials_correct_side_history = [False, True, True, True]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+        self.parameter_handler.update_stimuli_from_rule_for_current_trial()
+
+        self.assertEqual(probability_constructor.rule_active_id, INITIAL_RULE)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_a)
+
+    def test_rule_switching_initial_trials_wait_switch(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 1
+        probability_constructor.settings.rule_switch_check_trial_range = 3
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 3
+        current_trial_num = 4
+        probability_constructor.settings.trials_correct_side_history = [False, True, True, True]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+        self.parameter_handler.update_stimuli_from_rule_for_current_trial()
+
+        self.assertEqual(probability_constructor.rule_active_id, SWITCHED_RULE)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_b)
+
+    def test_rule_switching(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 2
+        probability_constructor.settings.rule_switch_check_trial_range = 10
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 6
+        current_trial_num = 10
+        probability_constructor.settings.trials_correct_side_history = [
+            False,
+            True,
+            True,
+            True,
+            False,
+            False,
+            True,
+            True,
+            False,
+            True,
+            True,
+            False,
+        ]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+        self.parameter_handler.update_stimuli_from_rule_for_current_trial()
+
+        self.assertEqual(probability_constructor.rule_active_id, SWITCHED_RULE)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_b)
+
+    def test_rule_not_switching(self):
+        probability_constructor = ProbabilityConstructor(self.parameter_handler)
+        probability_constructor.settings.rule_switch_initial_trials_wait = 2
+        probability_constructor.settings.rule_switch_check_trial_range = 10
+        probability_constructor.settings.rule_switch_trials_correct_trigger_switch = 7
+        current_trial_num = 10
+        probability_constructor.settings.trials_correct_side_history = [
+            False,
+            True,
+            True,
+            True,
+            False,
+            False,
+            True,
+            True,
+            False,
+            True,
+            True,
+            False,
+        ]
+
+        probability_constructor.rule_switch_check(current_trial_num)
+        self.parameter_handler.update_stimuli_from_rule_for_current_trial()
+
+        self.assertEqual(probability_constructor.rule_active_id, INITIAL_RULE)
+        self.assertEqual(self.parameter_handler.rule_active, self.parameter_handler.rule_a)

@@ -147,34 +147,34 @@ class Stimulus:
         self.reset_loop_flags()
 
         if self.stimulus_sides["right"]:
-            right_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
-            right_or = self.settings.stimulus_correct_side["grating_ori"]
+            right_frequency = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_frequency"])
+            right_orientation = self.settings.stimulus_correct_side["grating_orientation"]
             right_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
-            right_ps = self.settings.stimulus_correct_side["grating_speed"]
-            left_sf = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_sf"])
-            left_or = self.settings.stimulus_wrong_side["grating_ori"]
+            right_speed = self.settings.stimulus_correct_side["grating_speed"]
+            left_frequency = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_frequency"])
+            left_orientation = self.settings.stimulus_wrong_side["grating_orientation"]
             left_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
-            left_ps = self.settings.stimulus_correct_side["grating_speed"]
+            left_speed = self.settings.stimulus_correct_side["grating_speed"]
 
         if self.stimulus_sides["left"]:
-            left_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
-            left_or = self.settings.stimulus_correct_side["grating_ori"]
+            left_frequency = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_frequency"])
+            left_orientation = self.settings.stimulus_correct_side["grating_orientation"]
             left_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
-            left_ps = self.settings.stimulus_correct_side["grating_speed"]
-            right_sf = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_sf"])
-            right_or = self.settings.stimulus_wrong_side["grating_ori"]
+            left_speed = self.settings.stimulus_correct_side["grating_speed"]
+            right_frequency = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_frequency"])
+            right_orientation = self.settings.stimulus_wrong_side["grating_orientation"]
             right_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
-            right_ps = self.settings.stimulus_correct_side["grating_speed"]
+            right_speed = self.settings.stimulus_correct_side["grating_speed"]
 
-        grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.stimulus_end_position[0])
-        grating_right = self.gen_grating(right_sf, right_or, right_size, self.settings.stimulus_end_position[1])
+        grating_left = self.gen_grating(left_frequency, left_orientation, left_size, self.settings.stimulus_end_position[0])
+        grating_right = self.gen_grating(right_frequency, right_orientation, right_size, self.settings.stimulus_end_position[1])
         stim = self.gen_stimulus()
 
         # on soft code of state 1 ----------------------
         event_display_stimulus.wait()
         while self.run_closed_loop_before:
-            grating_left.setPhase(left_ps, "+")
-            grating_right.setPhase(right_ps, "+")
+            grating_left.setPhase(left_speed, "+")
+            grating_right.setPhase(right_speed, "+")
             grating_left.draw()
             grating_right.draw()
             stim.draw()
@@ -189,8 +189,8 @@ class Stimulus:
 
         while self.run_open_loop:
             stream = self.rotary_encoder.rotary_encoder.read_stream()
-            grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, "+")
+            grating_left.setPhase(left_speed, "+")  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_speed, "+")
             grating_left.draw()
             grating_right.draw()
             if len(stream) > 0:
@@ -204,8 +204,8 @@ class Stimulus:
 
         # on soft code of state 3 freeze movement ---------
         while self.run_closed_loop_after:
-            grating_left.setPhase(left_ps, "+")
-            grating_right.setPhase(right_ps, "+")
+            grating_left.setPhase(left_speed, "+")
+            grating_right.setPhase(right_speed, "+")
             grating_left.draw()
             grating_right.draw()
             stim.draw()
@@ -224,33 +224,33 @@ class Stimulus:
         self.reset_loop_flags()
 
         if self.stimulus_sides["left"]:
-            right_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
-            right_or = self.settings.stimulus_correct_side["grating_ori"]
+            right_frequency = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_frequency"])
+            right_orientation = self.settings.stimulus_correct_side["grating_orientation"]
             right_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
-            right_ps = self.settings.stimulus_correct_side["grating_speed"]
-            left_sf = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_sf"])
-            left_or = self.settings.stimulus_wrong_side["grating_ori"]
+            right_speed = self.settings.stimulus_correct_side["grating_speed"]
+            left_frequency = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_frequency"])
+            left_orientation = self.settings.stimulus_wrong_side["grating_orientation"]
             left_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
-            left_ps = self.settings.stimulus_correct_side["grating_speed"]
+            left_speed = self.settings.stimulus_correct_side["grating_speed"]
 
         if self.stimulus_sides["right"]:
-            left_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
-            left_or = self.settings.stimulus_correct_side["grating_ori"]
+            left_frequency = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_frequency"])
+            left_orientation = self.settings.stimulus_correct_side["grating_orientation"]
             left_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
-            left_ps = self.settings.stimulus_correct_side["grating_speed"]
-            right_sf = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_sf"])
-            right_or = self.settings.stimulus_wrong_side["grating_ori"]
+            left_speed = self.settings.stimulus_correct_side["grating_speed"]
+            right_frequency = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_frequency"])
+            right_orientation = self.settings.stimulus_wrong_side["grating_orientation"]
             right_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
-            right_ps = self.settings.stimulus_correct_side["grating_speed"]
+            right_speed = self.settings.stimulus_correct_side["grating_speed"]
 
-        grating_left = self.gen_grating(left_sf, left_or, left_size, self.settings.stimulus_end_position[0])
-        grating_right = self.gen_grating(right_sf, right_or, right_size, self.settings.stimulus_end_position[1])
+        grating_left = self.gen_grating(left_frequency, left_orientation, left_size, self.settings.stimulus_end_position[0])
+        grating_right = self.gen_grating(right_frequency, right_orientation, right_size, self.settings.stimulus_end_position[1])
 
         # on soft code of state 1 ----------------------
         event_display_stimulus.wait()
         while self.run_closed_loop_before:
-            grating_left.setPhase(left_ps, "+")
-            grating_right.setPhase(right_ps, "+")
+            grating_left.setPhase(left_speed, "+")
+            grating_right.setPhase(right_speed, "+")
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
@@ -264,8 +264,8 @@ class Stimulus:
 
         while self.run_open_loop:
             stream = self.rotary_encoder.rotary_encoder.read_stream()
-            grating_left.setPhase(left_ps, "+")  # advance phase by 0.05 of a cycle
-            grating_right.setPhase(right_ps, "+")
+            grating_left.setPhase(left_speed, "+")  # advance phase by 0.05 of a cycle
+            grating_right.setPhase(right_speed, "+")
             if len(stream) > 0:
                 change = (pos - stream[-1][2]) * self.gain
                 # if ceil -> if very fast rotation still threshold, but stimulus not there
@@ -287,8 +287,8 @@ class Stimulus:
 
         # on soft code of state 3 freez movement ---------
         while self.run_closed_loop_after:
-            grating_left.setPhase(left_ps, "+")
-            grating_right.setPhase(right_ps, "+")
+            grating_left.setPhase(left_speed, "+")
+            grating_right.setPhase(right_speed, "+")
             grating_left.draw()
             grating_right.draw()
             self.win.flip()
@@ -306,8 +306,8 @@ class Stimulus:
             stimulus = self.settings.stimulus_correct_side
         if self.stimulus_sides["left"]:
             stimulus = self.settings.stimulus_wrong_side
-        stim_sf = self.get_grating_frequency(stimulus["grating_sf"])
-        stim_or = stimulus["grating_ori"]
+        stim_sf = self.get_grating_frequency(stimulus["grating_frequency"])
+        stim_or = stimulus["grating_orientation"]
         stim_size = self.get_grating_size(stimulus["grating_size"])
         stim_ps = stimulus["grating_speed"]
 
@@ -397,16 +397,16 @@ class Stimulus:
     def run_game_habituation_3_complex(self, event_flags: EventFlags):
         event_display_stimulus = event_flags["event_display_stimulus"]
 
-        grating_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
-        grating_or = self.settings.stimulus_correct_side["grating_ori"]
+        grating_frequency = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_frequency"])
+        grating_or = self.settings.stimulus_correct_side["grating_orientation"]
         grating_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
         grating_ps = self.settings.stimulus_correct_side["grating_speed"]
 
         if self.stimulus_sides["right"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[1])
+            grating = self.gen_grating(grating_frequency, grating_or, grating_size, self.settings.stimulus_end_position[1])
 
         if self.stimulus_sides["left"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[0])
+            grating = self.gen_grating(grating_frequency, grating_or, grating_size, self.settings.stimulus_end_position[0])
 
         stim = self.gen_stimulus()
         stim.draw()
@@ -460,21 +460,21 @@ class Stimulus:
         random_grating = bool(random.getrandbits(1))
 
         if random_grating:
-            grating_sf = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_sf"])
-            grating_or = self.settings.stimulus_correct_side["grating_ori"]
+            grating_frequency = self.get_grating_frequency(self.settings.stimulus_correct_side["grating_frequency"])
+            grating_or = self.settings.stimulus_correct_side["grating_orientation"]
             grating_size = self.get_grating_size(self.settings.stimulus_correct_side["grating_size"])
             grating_ps = self.settings.stimulus_correct_side["grating_speed"]
         else:
-            grating_sf = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_sf"])
-            grating_or = self.settings.stimulus_wrong_side["grating_ori"]
+            grating_frequency = self.get_grating_frequency(self.settings.stimulus_wrong_side["grating_frequency"])
+            grating_or = self.settings.stimulus_wrong_side["grating_orientation"]
             grating_size = self.get_grating_size(self.settings.stimulus_wrong_side["grating_size"])
             grating_ps = self.settings.stimulus_wrong_side["grating_speed"]
 
         if self.stimulus_sides["right"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[0])
+            grating = self.gen_grating(grating_frequency, grating_or, grating_size, self.settings.stimulus_end_position[0])
 
         if self.stimulus_sides["left"]:
-            grating = self.gen_grating(grating_sf, grating_or, grating_size, self.settings.stimulus_end_position[1])
+            grating = self.gen_grating(grating_frequency, grating_or, grating_size, self.settings.stimulus_end_position[1])
 
         # on soft code of state 1 ----------------------
         event_display_stimulus.wait()

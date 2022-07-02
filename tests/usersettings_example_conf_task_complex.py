@@ -1,11 +1,8 @@
 TASK = "conf"
-STAGE = "training"
+STAGE = "training-complex-rule-based"
 
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
-STIMULUS_CORRECT = {"grating_frequency": 0.01, "grating_orientation": 0.1, "grating_size": 40.0, "grating_speed": 0.04}
-STIMULUS_WRONG = {"grating_frequency": 0.04, "grating_orientation": 90.0, "grating_size": 40.0, "grating_speed": 0.01}
-
 
 # reward in seconds
 REWARD = 0.12
@@ -38,13 +35,13 @@ FADE_START = 1950
 FADE_END = 3000
 
 # stimulus size and color - only for moving stimulus
-STIMULUS_RADIUS = 45  # pixel radius of stimulus
+STIMULUS_RADIUS = 150  # pixel radius of stimulus
 STIMULUS_COLOR = [0, 255, 0]  # color of stimulus
 BACKGROUND_COLOR = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]
-STIMULUS_END_POSITION = [-2048, 2048]  # pixel
+STIMULUS_END_POSITION = [-400, 400]  # pixel
 
 LIFE_PLOT = False
 # animal weight in grams
