@@ -1,5 +1,5 @@
 TASK = "conf"
-STAGE = "training-complex"
+STAGE = "habituation-complex-rule-based"
 
 TRIAL_NUMBER = 30
 STIMULUS_TYPE = "two-stimuli"  # three-stimuli #two-stimuli #one-stimulus
@@ -41,7 +41,7 @@ BACKGROUND_COLOR = [0, 0, 0]
 
 # thresholds
 ROTARYENCODER_THRESHOLDS = [-90, 90, -2, 2]
-STIMULUS_END_POSITION = [-400, 400]  # pixel
+STIMULUS_END_POSITION = [-2048, 2048]  # pixel
 
 LIFE_PLOT = False
 # animal weight in grams

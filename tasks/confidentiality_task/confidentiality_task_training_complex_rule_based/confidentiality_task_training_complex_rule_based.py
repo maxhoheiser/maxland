@@ -42,7 +42,7 @@ session_name = bpod.session_name
 
 # create tkinter userinput dialoge window
 window = UserInput(settings_obj)
-window.draw_window_before(stage="training-complex")
+window.draw_window_before(stage="training-complex-rule-based")
 window.show_window()
 
 # create threading flags
@@ -113,7 +113,7 @@ if settings_obj.run_session:
             state_name="wheel_stopping_check",
             state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
             state_change_conditions={
-                "Tup": "present_stim",
+                "Tup": "present_stimulus",
                 settings_obj.stimulus_threshold_left: "wheel_stopping_check_failed_punish",
                 settings_obj.stimulus_threshold_right: "wheel_stopping_check_failed_punish",
             },
@@ -128,7 +128,7 @@ if settings_obj.run_session:
 
         # Open Loop
         sma.add_state(
-            state_name="present_stim",
+            state_name="present_stimulus",
             state_timer=settings_obj.time_dict["time_present_stimulus"],
             state_change_conditions={"Tup": "reset_rotary_encoder_open_loop"},
             output_actions=[("SoftCode", settings_obj.soft_code_present_stimulus)],

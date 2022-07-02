@@ -63,12 +63,12 @@ class TrialParameterHandler:
             self.stimulus_type = self.usersettings.STIMULUS_TYPE
             self.gui_dropdown_list = ("three-stimuli", "two-stimuli", "one-stimulus")
 
-            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
+            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING or self.stage == StageName.RECORDING:
                 # stimulus correct and wrong predefined
                 self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
                 self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
 
-            if self.stage == StageName.TRAINING_COMPLEX:
+            if self.stage == StageName.HABITUATION_COMPLEX_RULE_BASED or self.stage == StageName.TRAINING_COMPLEX_RULE_BASED:
                 # load rule defintions:
                 self.rule_definition = self.load_rule_definition()
                 self.usersettings.RULE_A = self.rule_definition.RULE_A
@@ -390,7 +390,12 @@ class TrialParameterHandler:
                 "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n"
                 "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
             )
-            if self.stage == StageName.HABITUATION or StageName.HABITUATION_COMPLEX or self.stage == StageName.TRAINING:
+            if (
+                self.stage == StageName.HABITUATION
+                or StageName.HABITUATION_COMPLEX
+                or self.stage == StageName.TRAINING
+                or self.stage == StageName.RECORDING
+            ):
                 f.write(
                     "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
                     "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"

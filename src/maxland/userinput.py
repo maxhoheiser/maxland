@@ -569,7 +569,7 @@ class UserInput:
         self.etr_stimulus_end_pos_right.grid(row=0, column=5, padx=(2, 10), pady=8, sticky="W")
 
         # # wheel rotation
-        lbl_stimulus_position = tk.Label(frame_4_1, text="Wheel threhsold [deg]:", font=self.fontStyleRegular)
+        lbl_stimulus_position = tk.Label(frame_4_1, text="Wheel threshold [deg]:", font=self.fontStyleRegular)
         lbl_stimulus_position.grid(row=0, column=6, padx=(10, 5), pady=8)
 
         self.var_rotary_thresh_left = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_thresholds[0])
@@ -681,9 +681,15 @@ class UserInput:
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(list_drp)
-            self.drp_stim.current(idx)  # set current valu
+            self.drp_stim.current(idx)  # set current value
         if stage == StageName.HABITUATION_COMPLEX:
             list_drp = ("three-stimuli", "two-stimuli")
+            self.drp_stim["values"] = list_drp
+            self.drp_stim.grid(column=1, row=0)
+            idx = list_drp.index(self.settings.stimulus_type)
+            self.drp_stim.current(idx)  # set current value
+        if stage == StageName.HABITUATION_COMPLEX_RULE_BASED or stage == StageName.TRAINING_COMPLEX_RULE_BASED or StageName.RECORDING:
+            list_drp = "two-stimuli"
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = list_drp.index(self.settings.stimulus_type)
