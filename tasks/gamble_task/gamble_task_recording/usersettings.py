@@ -1,5 +1,4 @@
 TASK = "gamble"
-STAGE = "recording"
 
 GAMBLE_SIDE = "left"
 BLOCKS = [

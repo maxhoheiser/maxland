@@ -1,17 +1,9 @@
 import random
-from enum import Enum
 from typing import Dict, List
 
 import numpy as np
 
 from maxland.parameter_handler import TrialParameterHandler
-from maxland.types_usersettings import StageName
-
-
-class InsistSide(str, Enum):
-    LEFT = "left"
-    RIGHT = "right"
-    NONE = "none"
 
 
 class ProbabilityConstructor:
@@ -27,16 +19,16 @@ class ProbabilityConstructor:
         # insist mode tracking
         self.insist_mode_chosen_side_li: List[str] = list()
         self.insist_mode_active = False
-        self.insist_side: InsistSide = InsistSide.NONE
-        self.rule_active_id = "rule_a"
+        self.insist_side = ""
+        self.active_rule = "RU0"  # id of active rule
         self.is_initial_rule_active = True
 
     def get_random_side(self):
         # check insist mode
         if self.insist_mode_active:
-            if self.insist_side == InsistSide.LEFT:
+            if self.insist_side == "left":
                 random_right = False
-            elif self.insist_side == InsistSide.RIGHT:
+            elif self.insist_side == "right":
                 random_right = True
         else:
             random_right = bool(random.getrandbits(1))
@@ -74,7 +66,6 @@ class ProbabilityConstructor:
         return current_side
 
     def insist_mode_check(self):
-        self.settings.insist_mode_history.append(self.insist_side)
         # check for insist mode activate
         if not self.insist_mode_active:
             if len(self.settings.chosen_sides_history) >= self.settings.insist_range_trigger:
@@ -86,14 +77,18 @@ class ProbabilityConstructor:
             if left_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
                 print(self.insist_mode_active)
-                self.insist_side = InsistSide.RIGHT
+                self.settings.chosen_sides_history = []
+                self.insist_side = "right"
+                self.settings.insist_mode_history.append(self.insist_side)
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist right")
                 print("\n--------------------------------\n")
                 return
             if right_num_chosen >= self.settings.insist_range_trigger:
                 self.insist_mode_active = True
-                self.insist_side = InsistSide.LEFT
+                self.settings.chosen_sides_history = []
+                self.insist_side = "left"
+                self.settings.insist_mode_history.append(self.insist_side)
                 print("\n--------------------------------\n")
                 print("INSIST MODE ACTIVATED: insist left")
                 print("\n--------------------------------\n")
@@ -110,7 +105,8 @@ class ProbabilityConstructor:
             insist_correct_choice = sum(map(lambda x: x == self.insist_side, chosen_sides_li_slice))
             if insist_correct_choice >= self.settings.insist_correct_deactivate:
                 self.insist_mode_active = False
-                self.insist_side = InsistSide.NONE
+                self.insist_side = None
+                self.settings.insist_mode_history.append("none")
                 self.insist_mode_chosen_side_li = []
                 print("\n---------------------\n")
                 print("INSIST MODE DEACTIVATED")
@@ -126,20 +122,14 @@ class ProbabilityConstructor:
                 # check if rule switch
                 if self.is_initial_rule_active:
                     if correct_chosen >= self.settings.rule_switch_trials_correct_trigger_switch:
-                        self.rule_active_id = "rule_b"  # switch to rule b
+                        self.active_rule = "RU1"  # switch to rule 1
 
                         self.is_initial_rule_active = False  # deactivate rule switch
                         print("\n--------------------------------\n")
                         print("\n switch to rule RU1\n")
                         print("\n--------------------------------\n")
-
-                        if self.settings.stage == StageName.HABITUATION or self.settings.stage == StageName.TRAINING:
-                            # invert stimulus configuration
-                            bk = self.settings.stimulus_correct_side.copy()
-                            self.settings.stimulus_correct_side = self.settings.stimulus_wrong_side.copy()
-                            self.settings.stimulus_wrong_side = bk
-                        if self.settings.stage == StageName.TRAINING_COMPLEX_RULE_BASED:
-                            # switch to rule b
-                            self.settings.rule_active = self.settings.rule_b
-
-        self.settings.active_rule_history.append(self.rule_active_id)
+                        # invert stimulus configuration
+                        bk = self.settings.stimulus_correct_side.copy()
+                        self.settings.stimulus_correct_side = self.settings.stimulus_wrong_side.copy()
+                        self.settings.stimulus_wrong_side = bk
+        self.settings.active_rule_history.append(self.active_rule)
