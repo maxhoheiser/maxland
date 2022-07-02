@@ -94,7 +94,7 @@ class TestTrialParameterHandlerGambleTask(unittest.TestCase):
         usersettings_object_before.blocks = NEW_BLOCKS
         usersettings_object_before.big_reward = NEW_BIG_REWARD
         usersettings_object_before.small_reward = NEW_SMALL_REWARD
-        usersettings_object_before.last_calibration = NEW_LAST_CALLIBRATION
+        usersettings_object_before.last_callibration = NEW_LAST_CALLIBRATION
 
         new_time_dict: TimeDict = {
             "time_start": NEW_TIME_START,
@@ -133,7 +133,7 @@ class TestTrialParameterHandlerGambleTask(unittest.TestCase):
         self.assertEqual(usersettings_object_after.blocks, NEW_BLOCKS)
         self.assertEqual(usersettings_object_after.big_reward, NEW_BIG_REWARD)
         self.assertEqual(usersettings_object_after.small_reward, NEW_SMALL_REWARD)
-        self.assertEqual(usersettings_object_after.last_calibration, NEW_LAST_CALLIBRATION)
+        self.assertEqual(usersettings_object_after.last_callibration, NEW_LAST_CALLIBRATION)
 
         for key, item in new_time_dict.items():
             self.assertEqual(usersettings_object_after.time_dict[key], item)

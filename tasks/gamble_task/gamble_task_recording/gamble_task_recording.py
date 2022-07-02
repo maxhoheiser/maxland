@@ -109,8 +109,8 @@ if settings_obj.run_session:
             state_timer=settings_obj.time_dict["time_wheel_stopping_check"],
             state_change_conditions={
                 "Tup": "present_stimulus",
-                settings_obj.rotary_encoder_threshold_left: "wheel_stopping_check_failed_punish",
-                settings_obj.rotary_encoder_threshold_right: "wheel_stopping_check_failed_punish",
+                settings_obj.rotary_encoder_threshhold_left: "wheel_stopping_check_failed_punish",
+                settings_obj.rotary_encoder_threshhold_right: "wheel_stopping_check_failed_punish",
             },
             output_actions=[("BNC1", 0), ("BNC2", 0)],
         )

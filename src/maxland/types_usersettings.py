@@ -3,8 +3,6 @@ from typing import Dict, List, Union
 
 from mypy_extensions import TypedDict
 
-from maxland.types_rule_definition import RuleDefinitionType
-
 Blocks = TypedDict(
     "Blocks",
     {
@@ -20,31 +18,14 @@ class TaskName(str, Enum):
     CONFIDENTIALITY = "conf"
 
 
-class StageName(str, Enum):
-    HABITUATION = "habituation"
-    HABITUATION_COMPLEX = "habituation-complex"
-    HABITUATION_COMPLEX_RULE_BASED = "habituation-complex-rule-based"
-    TRAINING = "training"
-    TRAINING_COMPLEX = "training-complex"
-    TRAINING_COMPLEX_RULE_BASED = "training-complex-rule-based"
-    RECORDING = "recording"
-
-
 class GambleSide(str, Enum):
     LEFT = "left"
     RIGHT = "right"
 
 
-class StimulusTypes(str, Enum):
-    ONE = "one-stimulus"
-    TWO = "two-stimuli"
-    THEE = "three-stimuli"
-
-
 class UsersettingsTypes:
     def __init__(self) -> None:
         self.TASK: TaskName = TaskName()
-        self.STAGE: StageName = StageName()
 
         self.GAMBLE_SIDE: Union[GambleSide, None] = None
         self.BLOCKS: List[Blocks] = list()
@@ -84,15 +65,9 @@ class UsersettingsTypes:
         # confidentiality task
         self.REWARD: float = float()
         self.TRIAL_NUMBER: int = int()
-
-        # stimulus predefined
-        self.STIMULUS_TYPE: Union[StimulusTypes, None] = None
+        self.STIMULUS_TYPE: str = ""
         self.STIMULUS_CORRECT: Dict[str, float] = dict()
         self.STIMULUS_WRONG: Dict[str, float] = dict()
-
-        # rules defined
-        self.RULE_A: RuleDefinitionType = list()
-        self.RULE_B: RuleDefinitionType = list()
 
         # insist mode
         self.INSIST_RANGE_TRIGGER: int = int()
@@ -100,7 +75,6 @@ class UsersettingsTypes:
         self.INSIST_RANGE_DEACTIVATE: int = int()
 
         # rule switching
-
         self.RULE_SWITCH_INITIAL_TRIALS_WAIT: int = int()
         self.RULE_SWITCH_CHECK_TRIAL_RANGE: int = int()
         self.RULE_SWITCH_TRIALS_CORRECT_TRIGGER_SWITCH: int = int()

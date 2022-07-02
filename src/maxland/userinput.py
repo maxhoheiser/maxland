@@ -4,7 +4,7 @@ from tkinter import filedialog, ttk
 from typing import List
 
 from maxland.parameter_handler import TrialParameterHandler
-from maxland.types_usersettings import GambleSide, StageName
+from maxland.types_usersettings import GambleSide
 
 WINDOW_SIZE = [855, 1000]
 CANVAS_SIZE = [835, 920]
@@ -91,14 +91,14 @@ class UserInput:
             self.settings.reward = float(self.var_reward.get())
 
             self.settings.stimulus_correct_side = {
-                "grating_frequency": float(self.var_stim_correct_frequency.get()),
-                "grating_orientation": float(self.var_stim_correct_or.get()),
+                "grating_sf": float(self.var_stim_correct_frequency.get()),
+                "grating_ori": float(self.var_stim_correct_or.get()),
                 "grating_size": float(self.var_stim_correct_size.get()),
                 "grating_speed": float(self.var_stim_correct_phase_speed.get()),
             }
             self.settings.stimulus_wrong_side = {
-                "grating_frequency": float(self.var_stim_wrong_frequency.get()),
-                "grating_orientation": float(self.var_stim_wrong_or.get()),
+                "grating_sf": float(self.var_stim_wrong_frequency.get()),
+                "grating_ori": float(self.var_stim_wrong_or.get()),
                 "grating_size": float(self.var_stim_wrong_size.get()),
                 "grating_speed": float(self.var_stim_wrong_phase_speed.get()),
             }
@@ -259,7 +259,7 @@ class UserInput:
         self.etr_small_reward = tk.Entry(frame_3, textvariable=self.var_small_reward, width=10)
         self.etr_small_reward.grid(row=0, column=3, pady=8)
 
-        calibrate_text = "Last time calibrated: " + self.settings.last_calibration
+        calibrate_text = "Last time calibrated: " + self.settings.last_callibration
         lbl_last_calibrate = tk.Label(frame_3, text=calibrate_text, font=self.fontStyleRegular)
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
@@ -536,7 +536,7 @@ class UserInput:
         self.etr_reward.grid(row=0, column=3, pady=8)
 
         # last time calibrated
-        calibrate_text = "Last time calibrated: " + self.settings.last_calibration
+        calibrate_text = "Last time calibrated: " + self.settings.last_callibration
         lbl_last_calibrate = tk.Label(frame_3, text=calibrate_text, font=self.fontStyleRegular)
         lbl_last_calibrate.grid(row=0, column=4, padx=(30, 5), pady=8)
 
@@ -569,7 +569,7 @@ class UserInput:
         self.etr_stimulus_end_pos_right.grid(row=0, column=5, padx=(2, 10), pady=8, sticky="W")
 
         # # wheel rotation
-        lbl_stimulus_position = tk.Label(frame_4_1, text="Wheel threshold [deg]:", font=self.fontStyleRegular)
+        lbl_stimulus_position = tk.Label(frame_4_1, text="Wheel threhsold [deg]:", font=self.fontStyleRegular)
         lbl_stimulus_position.grid(row=0, column=6, padx=(10, 5), pady=8)
 
         self.var_rotary_thresh_left = tk.StringVar(frame_4_1, value=self.settings.rotaryencoder_thresholds[0])
@@ -596,14 +596,14 @@ class UserInput:
         lbl_stim_correct_frequency = tk.Label(frame_5_0, text="Spatial Frequency:", font=self.fontStyleRegular)
         lbl_stim_correct_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_correct_frequency = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_frequency"])
+        self.var_stim_correct_frequency = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_sf"])
         self.etr_stim_correct_frequency = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_frequency, width=4)
         self.etr_stim_correct_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
         lbl_stim_correct_or = tk.Label(frame_5_0, text="Orientation:", font=self.fontStyleRegular)
         lbl_stim_correct_or.grid(row=1, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_correct_or = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_orientation"])
+        self.var_stim_correct_or = tk.StringVar(frame_5_0, value=self.settings.stimulus_correct_side["grating_ori"])
         self.etr_stim_correct_or = tk.Entry(frame_5_0, textvariable=self.var_stim_correct_or, width=4)
         self.etr_stim_correct_or.grid(row=1, column=3, padx=(0, 10), pady=10, sticky="W")
 
@@ -632,14 +632,14 @@ class UserInput:
         lbl_stim_wrong_frequency = tk.Label(frame_5_1, text="Spatial Frequency:", font=self.fontStyleRegular)
         lbl_stim_wrong_frequency.grid(row=1, column=0, padx=(10, 0), pady=0, sticky="E")
 
-        self.var_stim_wrong_frequency = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_frequency"])
+        self.var_stim_wrong_frequency = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_sf"])
         self.etr_stim_wrong_frequency = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_frequency, width=4)
         self.etr_stim_wrong_frequency.grid(row=1, column=1, padx=(0, 0), pady=0, sticky="W")
         # orientation
         lbl_stim_wrong_or = tk.Label(frame_5_1, text="Orientation:", font=self.fontStyleRegular)
         lbl_stim_wrong_or.grid(row=1, column=2, padx=(10, 2), pady=0, sticky="E")
 
-        self.var_stim_wrong_or = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_orientation"])
+        self.var_stim_wrong_or = tk.StringVar(frame_5_1, value=self.settings.stimulus_wrong_side["grating_ori"])
         self.etr_stim_wrong_or = tk.Entry(frame_5_1, textvariable=self.var_stim_wrong_or, width=4)
         self.etr_stim_wrong_or.grid(row=1, column=3, padx=(0, 10), pady=10, sticky="W")
 
@@ -671,25 +671,19 @@ class UserInput:
         lbl_drp_stim = tk.Label(frame_6, text="Stimulus Type:", font=self.fontStyleRegular)
         lbl_drp_stim.grid(row=0, column=0, padx=(10, 2), pady=8)
 
-        if stage == StageName.TRAINING or stage == StageName.TRAINING_COMPLEX:
+        if stage == "training":
             self.drp_stim["values"] = self.settings.gui_dropdown_list  # ('three-stimuli','two-stimuli','one-stimulus')
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(self.settings.stimulus_type)
             self.drp_stim.current(idx)  # set current value
-        if stage == StageName.HABITUATION:
+        if stage == "habituation_simple":
             list_drp = "three-stimuli"
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = self.settings.gui_dropdown_list.index(list_drp)
             self.drp_stim.current(idx)  # set current valu
-        if stage == StageName.HABITUATION_COMPLEX:
+        if stage == "habituation_complex":
             list_drp = ("three-stimuli", "two-stimuli")
-            self.drp_stim["values"] = list_drp
-            self.drp_stim.grid(column=1, row=0)
-            idx = list_drp.index(self.settings.stimulus_type)
-            self.drp_stim.current(idx)  # set current value
-        if stage == StageName.HABITUATION_COMPLEX_RULE_BASED or stage == StageName.TRAINING_COMPLEX_RULE_BASED:
-            list_drp = "two-stimuli"
             self.drp_stim["values"] = list_drp
             self.drp_stim.grid(column=1, row=0)
             idx = list_drp.index(self.settings.stimulus_type)

@@ -1,27 +1,12 @@
 import csv
-import importlib.util
 import json
 import os
-import pathlib
 import random
-from types import ModuleType
-from typing import Dict, List, cast
+from typing import Dict, List
 
 import maxland.system_constants as system_constants
-from maxland.types_rule_definition import (
-    Rule,
-    RuleDefinitionType,
-    RuleDefinitionTypes,
-    RuleType,
-)
-from maxland.types_stimuli_definition import Stimulus, StimulusHistoryType, StimulusType
 from maxland.types_time_dict import TimeDict
-from maxland.types_usersettings import (
-    GambleSide,
-    StageName,
-    TaskName,
-    UsersettingsTypes,
-)
+from maxland.types_usersettings import GambleSide, UsersettingsTypes
 
 
 class TrialParameterHandler:
@@ -40,7 +25,6 @@ class TrialParameterHandler:
         self.session_folder = session_folder
 
         self.task_name = self.usersettings.TASK
-        self.stage = self.usersettings.STAGE
         self.life_plot = self.usersettings.LIFE_PLOT
         # stimulus
         self.stimulus_radius = self.usersettings.STIMULUS_RADIUS
@@ -48,7 +32,7 @@ class TrialParameterHandler:
         self.background_color = self.usersettings.BACKGROUND_COLOR
 
         # specific for gamble task
-        if self.task_name == TaskName.GAMBLE:
+        if self.task_name == "gamble":
             self.gamble_side = self.usersettings.GAMBLE_SIDE
             self.is_gamble_side_left = self.get_is_gamble_side_left()
             self.blocks = self.usersettings.BLOCKS
@@ -57,31 +41,14 @@ class TrialParameterHandler:
             self.manual_reward: int = int()
 
         # specific for confidentiality task
-        if self.task_name == TaskName.CONFIDENTIALITY:
+        if self.task_name == "conf":
             self.reward = self.usersettings.REWARD
             self.trial_number = self.usersettings.TRIAL_NUMBER
+            # stimulus
+            self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
+            self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
             self.stimulus_type = self.usersettings.STIMULUS_TYPE
             self.gui_dropdown_list = ("three-stimuli", "two-stimuli", "one-stimulus")
-
-            if self.stage == StageName.HABITUATION or self.stage == StageName.TRAINING:
-                # stimulus correct and wrong predefined
-                self.stimulus_correct_side = self.usersettings.STIMULUS_CORRECT
-                self.stimulus_wrong_side = self.usersettings.STIMULUS_WRONG
-
-            if self.stage == StageName.HABITUATION_COMPLEX_RULE_BASED or self.stage == StageName.TRAINING_COMPLEX_RULE_BASED:
-                # load rule defintions:
-                self.rule_definition = self.load_rule_definition()
-                self.usersettings.RULE_A = self.rule_definition.RULE_A
-                self.usersettings.RULE_B = self.rule_definition.RULE_B
-                # rule_a and rule_b defined
-                self.rule_a_definition = self.rule_definition.RULE_A
-                self.rule_b_definition = self.rule_definition.RULE_B
-                self.stimulus_definition = self.load_stimuli_definition(self.settings_folder)
-                self.rule_a = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_a_definition, self.stimulus_definition)
-                self.rule_b = self.get_rule_from_rule_definition_and_stimuli_definition(self.rule_b_definition, self.stimulus_definition)
-                self.rule_active = self.rule_a
-
-                self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
 
             self.reward = self.usersettings.REWARD
             # insist mode
@@ -98,7 +65,7 @@ class TrialParameterHandler:
 
         self.time_dict: TimeDict = self.create_time_dictionary()
 
-        self.last_calibration = self.usersettings.LAST_CALLIBRATION
+        self.last_callibration = self.usersettings.LAST_CALLIBRATION
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
         self.stimulus_end_position = self.usersettings.STIMULUS_END_POSITION
 
@@ -120,8 +87,8 @@ class TrialParameterHandler:
         self.serial_message_reset_rotary_encoder = system_constants.SERIAL_MESSAGE_RESET_ROTARY_ENCODER
         self.rotaryencoder_thresholds = self.usersettings.ROTARYENCODER_THRESHOLDS
         self.rotaryencoder_stimulus_end_pos = self.usersettings.STIMULUS_END_POSITION
-        self.rotary_encoder_threshold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
-        self.rotary_encoder_threshold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
+        self.rotary_encoder_threshhold_left = system_constants.ROTARY_ENCODER_THRESHHOLD_LEFT
+        self.rotary_encoder_threshhold_right = system_constants.ROTARY_ENCODER_THRESHHOLD_RIGHT
         self.stimulus_threshold_left = system_constants.STIMULUS_THRESHOLD_LEFT
         self.stimulus_threshold_right = system_constants.STIMULUS_THRESHOLD_RIGHT
         self.wheel_position = List[float]
@@ -143,7 +110,6 @@ class TrialParameterHandler:
         self.time_punish_history: List[float] = list()
         self.insist_mode_history: List[str] = list()
         self.active_rule_history: List[str] = list()
-        self.presented_stimulus_history: StimulusHistoryType = dict()
 
     def update_reward_time(self):
         if self.task_name == "gamble":
@@ -236,28 +202,10 @@ class TrialParameterHandler:
             "usersettings",
             "stimulus_position",
             "wheel_position",
-            "file_path",
         ]
-
-        dictionary_without_keys = self.del_from_dict(del_keys, self.__dict__)
-        dictionary_without_modules = self.delete_modules(dictionary_without_keys)
-        dictionary_without_paths = self.delete_paths(dictionary_without_modules)
+        dictionary = self.del_from_dict(del_keys, self.__dict__)
         with open(file_path, "w") as f:
-            json.dump(dictionary_without_paths, f, indent=4)
-
-    def delete_modules(self, dictionary):
-        new_dictionary = dictionary.copy()
-        for key in dictionary.keys():
-            if isinstance(dictionary[key], ModuleType):
-                del new_dictionary[key]
-        return new_dictionary
-
-    def delete_paths(self, dictionary):
-        new_dictionary = dictionary.copy()
-        for key in dictionary.keys():
-            if isinstance(dictionary[key], pathlib.PurePath):
-                del new_dictionary[key]
-        return new_dictionary
+            json.dump(dictionary, f, indent=4)
 
     def update_wheel_position_log(self, log):
         self.wheel_position.append(log)
@@ -350,14 +298,13 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'TASK = "gamble"\n\n'
-                "STAGE = " + json.dumps(self.stage) + "\n"
+                'TASK="gamble"\n\n'
                 "GAMBLE_SIDE = " + json.dumps(self.gamble_side) + "\n"
                 "BLOCKS = " + json.dumps(self.blocks) + "\n\n"
                 "# reward in seconds\n"
                 "BIG_REWARD = " + repr(self.big_reward) + "\n"
                 "SMALL_REWARD = " + repr(self.small_reward) + "\n\n"
-                "LAST_CALLIBRATION = " + json.dumps(self.last_calibration) + "\n\n"
+                "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
                 "# trial times\n"
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
@@ -371,8 +318,8 @@ class TrialParameterHandler:
                 "TIME_INTER_TRIAL = " + repr(self.time_dict["time_inter_trial"]) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RADIUS = " + json.dumps(self.stimulus_radius) + " # pixel radius of stimulus\n"
-                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n"
-                "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
+                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n\n"
+                "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
                 "STIMULUS_END_POSITION = " + json.dumps(self.stimulus_end_position) + " # pixel\n\n"
@@ -385,20 +332,14 @@ class TrialParameterHandler:
         """updates usersettings file with new variable values"""
         with open(os.path.join(self.settings_folder, "usersettings.py"), "w") as f:
             f.write(
-                'TASK = "conf"\n'
-                "STAGE = " + json.dumps(self.stage) + "\n\n"
+                'TASK="conf"\n\n'
                 "TRIAL_NUMBER = " + json.dumps(self.trial_number) + "\n"
                 "STIMULUS_TYPE = " + json.dumps(self.stimulus_type) + " #three-stimuli #two-stimuli #one-stimulus\n"
-            )
-            if self.stage == StageName.HABITUATION or StageName.HABITUATION_COMPLEX or self.stage == StageName.TRAINING:
-                f.write(
-                    "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
-                    "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
-                )
-            f.write(
+                "STIMULUS_CORRECT = " + json.dumps(self.stimulus_correct_side) + "\n"
+                "STIMULUS_WRONG = " + json.dumps(self.stimulus_wrong_side) + "\n\n"
                 "# reward in seconds\n"
                 "REWARD = " + json.dumps(self.reward) + "\n"
-                "LAST_CALLIBRATION = " + json.dumps(self.last_calibration) + "\n\n"
+                "LAST_CALLIBRATION = " + json.dumps(self.last_callibration) + "\n\n"
                 "# trial times\n"
                 "TIME_START = " + repr(self.time_dict["time_start"]) + "\n"
                 "TIME_WHEEL_STOPPING_CHECK = " + repr(self.time_dict["time_wheel_stopping_check"]) + "\n"
@@ -423,7 +364,7 @@ class TrialParameterHandler:
                 "FADE_END = " + repr(self.fade_end) + "\n\n"
                 "# stimulus size and color - only for moving stimulus\n"
                 "STIMULUS_RADIUS = " + json.dumps(self.stimulus_radius) + " # pixel radius of stimulus\n"
-                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n"
+                "STIMULUS_COLOR = " + json.dumps(self.stimulus_color) + " #color of stimulus\n\n"
                 "BACKGROUND_COLOR = " + json.dumps(self.background_color) + "\n\n"
                 "# thresholds\n"
                 "ROTARYENCODER_THRESHOLDS = " + json.dumps(self.rotaryencoder_thresholds) + "\n"
@@ -432,62 +373,3 @@ class TrialParameterHandler:
                 "# animal weight in grams\n"
                 "ANIMAL_WEIGHT = " + repr(self.animal_weight) + "\n\n"
             )
-
-    # confidentiality training complex
-    def load_stimuli_definition(self, folder):
-        with open(os.path.join(folder, "stimuli_definition.json")) as f:
-            stimuli_definition = json.load(f)
-        return stimuli_definition
-
-    def get_stimulus_from_id(self, id, stimulus_definition):
-        stimulus: Stimulus = {
-            "grating_frequency": stimulus_definition[id]["grating_frequency"],
-            "grating_orientation": stimulus_definition[id]["grating_orientation"],
-            "grating_size": stimulus_definition[id]["grating_size"],
-            "grating_speed": stimulus_definition[id]["grating_speed"],
-            "stimulus_id": id,
-        }
-        return stimulus
-
-    def get_rule_from_rule_definition_and_stimuli_definition(self, rule_definition: RuleDefinitionType, stimulus_definition: StimulusType):
-        """
-        Returns a rule definition with the stimuli parameters
-        :param rule_definition:
-        :param stimuli_definition:
-        :return:
-        """
-        rule: RuleType = list()
-
-        for pair in rule_definition:
-            new_pair: Rule = {
-                "correct": self.get_stimulus_from_id(pair["correct"], stimulus_definition),
-                "wrong": self.get_stimulus_from_id(pair["wrong"], stimulus_definition),
-                "conflicting": pair["conflicting"],
-                "percentage": pair["percentage"],
-            }
-            rule.append(new_pair)
-        return rule
-
-    def get_stimuli_from_rule_for_current_trial(self, rule):
-        """Randomly load a pair of stimuli from the current active rule"""
-        percentages = [stimulus["percentage"] for stimulus in rule]
-        random_pair = random.choices(list(rule), weights=percentages)[0]
-
-        random_correct = random_pair["correct"]
-        random_wrong = random_pair["wrong"]
-
-        return random_correct, random_wrong
-
-    def update_stimuli_from_rule_for_current_trial(self):
-        self.stimulus_correct_side, self.stimulus_wrong_side = self.get_stimuli_from_rule_for_current_trial(self.rule_active)
-
-    def load_rule_definition(self):
-        rule_definition_path = os.path.join(self.settings_folder, "rule_definition.py")
-        spec = importlib.util.spec_from_file_location("rule_definition", rule_definition_path)
-        rule_definition = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(rule_definition)
-        rule_definition_object = cast(RuleDefinitionTypes, rule_definition)
-        return rule_definition_object
-
-    def append_current_trial_stimulus_to_history(self, trial_number):
-        self.presented_stimulus_history[trial_number] = {"correct_side": self.stimulus_correct_side, "wrong_side": self.stimulus_wrong_side}
