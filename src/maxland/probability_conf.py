@@ -133,7 +133,11 @@ class ProbabilityConstructor:
                         print("\n switch to rule RU1\n")
                         print("\n--------------------------------\n")
 
-                        if self.settings.stage == StageName.HABITUATION or self.settings.stage == StageName.TRAINING:
+                        if (
+                            self.settings.stage == StageName.HABITUATION
+                            or self.settings.stage == StageName.TRAINING
+                            or self.settings.stage == StageName.RECORDING
+                        ):
                             # invert stimulus configuration
                             bk = self.settings.stimulus_correct_side.copy()
                             self.settings.stimulus_correct_side = self.settings.stimulus_wrong_side.copy()
