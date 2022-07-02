@@ -142,8 +142,8 @@ class ProbabilityConstructor:
                             bk = self.settings.stimulus_correct_side.copy()
                             self.settings.stimulus_correct_side = self.settings.stimulus_wrong_side.copy()
                             self.settings.stimulus_wrong_side = bk
-                        if self.settings.stage == StageName.TRAINING_COMPLEX:
-                            # swtich to rule b
+                        if self.settings.stage == StageName.TRAINING_COMPLEX_RULE_BASED:
+                            # switch to rule b
                             self.settings.rule_active = self.settings.rule_b
 
         self.settings.active_rule_history.append(self.rule_active_id)

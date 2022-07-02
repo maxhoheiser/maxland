@@ -108,7 +108,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_training_complex(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="training-complex")
+        window.draw_window_before(stage="training-complex-rule-based")
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
