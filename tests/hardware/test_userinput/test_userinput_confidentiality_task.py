@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from maxland.parameter_handler import TrialParameterHandler
+from maxland.types_usersettings import StageName
 from maxland.userinput import UserInput
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
@@ -77,7 +78,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation(self):
         self.parameter_handler.stimulus_type = "three-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation")
+        window.draw_window_before(stage=StageName.HABITUATION)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -85,7 +86,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation_complex_three_stimuli(self):
         self.parameter_handler.stimulus_type = "three-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation-complex")
+        window.draw_window_before(stage=StageName.HABITUATION_COMPLEX)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -93,7 +94,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation_complex_two_stimuli(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation-complex")
+        window.draw_window_before(stage=StageName.HABITUATION_COMPLEX)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -101,7 +102,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_training(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="training")
+        window.draw_window_before(stage=StageName.TRAINING)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -109,7 +110,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_training_complex(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="training-complex-rule-based")
+        window.draw_window_before(stage=StageName.TRAINING_COMPLEX)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
