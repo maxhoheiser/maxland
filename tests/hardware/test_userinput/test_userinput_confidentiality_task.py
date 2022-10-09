@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from maxland.parameter_handler import TrialParameterHandler
+from maxland.types_usersettings import StageName
 from maxland.userinput import UserInput
 
 USERSETTINGS = os.path.join(Path(os.path.dirname(__file__)).parent.absolute().parent.absolute(), "usersettings_example_conf_task.py")
@@ -26,6 +27,7 @@ NEW_INSIST_MODE_TRIGGER_RANGE = 93
 # time
 NEW_TIME_VALUE = 77.4
 NEW_STIMULUS_TYPE = "three-stimuli "
+NEW_TIME_RANGE_NO_REWARD_PUNISH = [10, 11]
 # insist
 NEW_INSIST_TRIGGER_RANGE = 28
 NEW_INSIST_CORRECT_DEACTIVATE = 4
@@ -76,7 +78,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation(self):
         self.parameter_handler.stimulus_type = "three-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation")
+        window.draw_window_before(stage=StageName.HABITUATION)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -84,7 +86,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation_complex_three_stimuli(self):
         self.parameter_handler.stimulus_type = "three-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation-complex")
+        window.draw_window_before(stage=StageName.HABITUATION_COMPLEX)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -92,7 +94,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_habituation_complex_two_stimuli(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="habituation-complex")
+        window.draw_window_before(stage=StageName.HABITUATION_COMPLEX)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -100,7 +102,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_training(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="training")
+        window.draw_window_before(stage=StageName.TRAINING)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -108,7 +110,7 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_draw_window_training_complex(self):
         self.parameter_handler.stimulus_type = "two-stimuli"
         window = UserInput(self.parameter_handler)
-        window.draw_window_before(stage="training-complex-rule-based")
+        window.draw_window_before(stage=StageName.TRAINING_COMPLEX)
         widget = window.root
         widget.update_idletasks()
         window.on_cancel()
@@ -291,3 +293,11 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_time_open_loop_fail_punish(self):
         time_dict_key = "time_open_loop_fail_punish"
         self.times_tester(time_dict_key)
+
+    def test_time_range_no_reward_punish(self):
+        self.window.time_no_reward_punish.var_1.set(NEW_TIME_RANGE_NO_REWARD_PUNISH[0])
+        self.window.time_no_reward_punish.var_2.set(NEW_TIME_RANGE_NO_REWARD_PUNISH[1])
+
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+        self.assertEqual(self.parameter_handler.time_dict["time_range_no_reward_punish"], NEW_TIME_RANGE_NO_REWARD_PUNISH)
