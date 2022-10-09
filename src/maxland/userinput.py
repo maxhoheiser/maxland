@@ -108,7 +108,7 @@ class UserInput:
             self.settings.insist_range_trigger = int(self.var_insist_range_trigger.get())
             self.settings.insist_range_deactivate = int(self.var_insist_range_deact.get())
             self.settings.insist_correct_deactivate = int(self.var_insist_cor.get())
-            self.settings.time_dict["time_range_noreward_punish"] = [
+            self.settings.time_dict["time_range_no_reward_punish"] = [
                 float(self.time_no_reward_punish.var_1.get()),
                 float(self.time_no_reward_punish.var_2.get()),
             ]
