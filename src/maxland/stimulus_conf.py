@@ -136,6 +136,11 @@ class Stimulus:
         opacity = (self.fade_end - abs(pos)) / self.fade_range
         return round(opacity, 1)
 
+    def get_stim_end_position(self):
+        pos_x = self.settings.stimulus_end_position[0]
+        pos_y = 0
+        return [pos_x, pos_y]
+
     # Main psychpy loop
     EventFlags = Dict[str, Event]
 
@@ -203,6 +208,7 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
+        stim.pos = self.get_stim_end_position()
         while self.run_closed_loop_after:
             grating_left.setPhase(left_speed, "+")
             grating_right.setPhase(right_speed, "+")
@@ -340,6 +346,7 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
+        grating.pos = self.get_stim_end_position()
         while self.run_closed_loop_after:
             grating.setPhase(stim_ps, "+")
             grating.draw()
@@ -384,6 +391,7 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
+        stim.pos = self.get_stim_end_position()
         event_still_show_stimulus.wait()
         self.win.flip()
 
@@ -442,6 +450,7 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
+        stim.pos = self.get_stim_end_position()
         while self.run_closed_loop_after:
             grating.setPhase(grating_ps, "+")
             grating.draw()
@@ -503,6 +512,7 @@ class Stimulus:
         self.rotary_encoder.rotary_encoder.disable_stream()
 
         # on soft code of state 3 freeze movement ---------
+        grating.pos = self.get_stim_end_position()
         while self.run_closed_loop_after:
             grating.setPhase(grating_ps, "+")
             grating.draw()
