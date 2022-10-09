@@ -26,6 +26,7 @@ NEW_INSIST_MODE_TRIGGER_RANGE = 93
 # time
 NEW_TIME_VALUE = 77.4
 NEW_STIMULUS_TYPE = "three-stimuli "
+NEW_TIME_RANGE_NO_REWARD_PUNISH = [10, 11]
 # insist
 NEW_INSIST_TRIGGER_RANGE = 28
 NEW_INSIST_CORRECT_DEACTIVATE = 4
@@ -291,3 +292,11 @@ class TestUserInputConfidentialityTask(unittest.TestCase):
     def test_time_open_loop_fail_punish(self):
         time_dict_key = "time_open_loop_fail_punish"
         self.times_tester(time_dict_key)
+
+    def test_time_range_no_reward_punish(self):
+        self.window.time_no_reward_punish.var_1.set(NEW_TIME_RANGE_NO_REWARD_PUNISH[0])
+        self.window.time_no_reward_punish.var_2.set(NEW_TIME_RANGE_NO_REWARD_PUNISH[1])
+
+        self.widget.update_idletasks()
+        self.window.on_confirm()
+        self.assertEqual(self.parameter_handler.time_dict["time_range_no_reward_punish"], NEW_TIME_RANGE_NO_REWARD_PUNISH)
